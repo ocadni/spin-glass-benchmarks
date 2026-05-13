@@ -1,0 +1,20 @@
+next week, benchmark website; different type of energy
+
+made architecture
+regularisation
+curba clider
+
+
+optimisation:
+ising model, benchmark
+redoo the results
+EA 2D
+random graphs
+(GSET)
+SK
+greedy
+quantum anhealing
+SA
+PA
+PT
+
