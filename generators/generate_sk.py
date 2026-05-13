@@ -1,39 +1,41 @@
+import math
+
 import numpy as np
 
-def generate_sk(N, j_dist='gaussian'):
-    """
-    Generates a Sherrington-Kirkpatrick (SK) model instance.
 
-    Args:
-        N (int): The number of spins.
-        j_dist (str): The distribution of coupling strengths ('bimodal' or 'gaussian').
+def sample_couplings(rng, count, mean=0.0, std=1.0, distribution="gaussian"):
+    if distribution == "gaussian":
+        return rng.normal(mean, std, size=count)
+    if distribution in {"rademacher", "radamacher"}:
+        return mean + std * rng.choice([-1.0, 1.0], size=count)
+    raise ValueError("distribution must be 'gaussian' or 'rademacher'")
 
-    Returns:
-        tuple: A tuple containing:
-            - N (int): The number of spins.
-            - couplings (list): A list of (i, j, J_ij) tuples.
+
+def generate_sk(N, mean_j=0.0, distribution="gaussian", field=0.0, seed=None):
     """
+    Generate a Sherrington-Kirkpatrick instance on N spins.
+
+    Couplings are sampled with standard deviation 1/sqrt(N).
+    """
+    if N < 1:
+        raise ValueError("N must be positive")
+
+    rng = np.random.default_rng(seed)
     num_couplings = N * (N - 1) // 2
-    
-    if j_dist == 'bimodal':
-        J = np.random.choice([-1.0, 1.0], size=num_couplings)
-    elif j_dist == 'gaussian':
-        # Standard SK model has variance 1/N
-        J = np.random.normal(0, 1.0 / np.sqrt(N), size=num_couplings)
-    else:
-        raise ValueError("j_dist must be 'bimodal' or 'gaussian'.")
+    values = sample_couplings(
+        rng,
+        num_couplings,
+        mean=mean_j,
+        std=1.0 / math.sqrt(N),
+        distribution=distribution,
+    )
 
     couplings = []
-    j_idx = 0
+    value_index = 0
     for i in range(N):
         for j in range(i + 1, N):
-            couplings.append((i, j, J[j_idx]))
-            j_idx += 1
-            
-    return N, couplings
+            couplings.append((i, j, float(values[value_index])))
+            value_index += 1
 
-if __name__ == '__main__':
-    N, couplings = generate_sk(N=10)
-    print(f"Generated SK model with {N} spins.")
-    # for c in couplings:
-    #     print(f"{c[0]} {c[1]} {c[2]}")
+    fields = [(i, float(field)) for i in range(N)]
+    return fields, couplings

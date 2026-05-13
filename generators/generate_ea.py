@@ -1,59 +1,67 @@
 import numpy as np
-import itertools
 
-def generate_ea(L, dim=2, j_dist='bimodal'):
+
+def sample_couplings(rng, count, mean=0.0, std=1.0, distribution="gaussian"):
+    if distribution == "gaussian":
+        return rng.normal(mean, std, size=count)
+    if distribution in {"rademacher", "radamacher"}:
+        return mean + std * rng.choice([-1.0, 1.0], size=count)
+    raise ValueError("distribution must be 'gaussian' or 'rademacher'")
+
+
+def _linear_index(coords, L):
+    index = 0
+    for coord in coords:
+        index = index * L + coord
+    return index
+
+
+def _coordinates(index, L, dim):
+    coords = [0] * dim
+    for axis in range(dim - 1, -1, -1):
+        coords[axis] = index % L
+        index //= L
+    return coords
+
+
+def generate_ea(N, dim=2, mean_j=0.0, distribution="gaussian", field=0.0, seed=None):
     """
-    Generates a 2D or 3D Edwards-Anderson (EA) model instance.
+    Generate a 2D or 3D Edwards-Anderson lattice instance on N spins.
 
-    Args:
-        L (int): The linear size of the lattice.
-        dim (int): The dimension of the lattice (2 or 3).
-        j_dist (str): The distribution of coupling strengths ('bimodal' or 'gaussian').
-
-    Returns:
-        tuple: A tuple containing:
-            - N (int): The number of spins.
-            - couplings (list): A list of (i, j, J_ij) tuples.
+    N must be a perfect square for dim=2 or a perfect cube for dim=3.
+    Periodic boundary conditions are used. Couplings have standard deviation 1.
     """
-    if dim not in [2, 3]:
-        raise ValueError("Dimension must be 2 or 3.")
+    if dim not in {2, 3}:
+        raise ValueError("dim must be 2 or 3")
+    if N < 1:
+        raise ValueError("N must be positive")
 
-    N = L ** dim
-    couplings = []
-    
-    if j_dist == 'bimodal':
-        J = np.random.choice([-1.0, 1.0], size=N*dim)
-    elif j_dist == 'gaussian':
-        J = np.random.normal(0, 1, size=N*dim)
-    else:
-        raise ValueError("j_dist must be 'bimodal' or 'gaussian'.")
+    L = round(N ** (1.0 / dim))
+    if L**dim != N:
+        raise ValueError(f"N must be a perfect {dim}D hypercube size, got N={N}")
 
-    j_idx = 0
+    edges = []
+    seen = set()
     for i in range(N):
-        coords = []
-        temp_i = i
-        for d in range(dim - 1, -1, -1):
-            coord = temp_i // (L ** d)
-            coords.append(coord)
-            temp_i %= (L ** d)
-        
-        for d in range(dim):
-            # Periodic boundary conditions
-            neighbor_coords = list(coords)
-            neighbor_coords[d] = (neighbor_coords[d] + 1) % L
-            
-            j = 0
-            for k in range(dim):
-                j += neighbor_coords[k] * (L ** (dim - 1 - k))
+        coords = _coordinates(i, L, dim)
+        for axis in range(dim):
+            neighbor = list(coords)
+            neighbor[axis] = (neighbor[axis] + 1) % L
+            j = _linear_index(neighbor, L)
+            edge = (min(i, j), max(i, j))
+            if edge not in seen:
+                seen.add(edge)
+                edges.append(edge)
 
-            if i < j:
-                couplings.append((i, j, J[j_idx]))
-                j_idx += 1
+    rng = np.random.default_rng(seed)
+    values = sample_couplings(
+        rng,
+        len(edges),
+        mean=mean_j,
+        std=1.0,
+        distribution=distribution,
+    )
 
-    return N, couplings
-
-if __name__ == '__main__':
-    N, couplings = generate_ea(L=4, dim=2)
-    print(f"Generated 2D EA model with {N} spins.")
-    # for c in couplings:
-    #     print(f"{c[0]} {c[1]} {c[2]}")
+    fields = [(i, float(field)) for i in range(N)]
+    couplings = [(i, j, float(values[index])) for index, (i, j) in enumerate(edges)]
+    return fields, couplings
