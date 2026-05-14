@@ -15,6 +15,7 @@ sys.path.insert(0, str(GENERATORS))
 from generate_ea import generate_ea  # noqa: E402
 from generate_rrg import generate_rrg  # noqa: E402
 from generate_sk import generate_sk  # noqa: E402
+from generate_xorsat import generate_sets, generate_xorsat  # noqa: E402
 
 
 def coupling_values(couplings):
@@ -214,6 +215,47 @@ def test_generate_rrg_coupling_distribution_moments_and_cumulants(
     )
 
 
+def test_generate_xorsat_structure_and_fields():
+    K = 7
+    field = 0.25
+    fields, couplings, metadata = generate_xorsat(K, field=field, seed=13)
+
+    assert len(fields) == 2 * K
+    assert len(couplings) == 6 * K
+    assert metadata["K"] == K
+    assert len(metadata["triples"]) == K
+    assert len(metadata["b"]) == K
+    assert len(metadata["s_planted"]) == K
+    assert all(0 <= i < 2 * K for i, _ in fields)
+    assert all(0 <= i < j < 2 * K for i, j, _ in couplings)
+
+    auxiliary_fields = dict(fields)
+    for aux in range(K, 2 * K):
+        assert auxiliary_fields[aux] in {field - 2.0, field + 2.0}
+
+
+def test_generate_xorsat_triples_do_not_reuse_pairs():
+    triples = generate_sets(9, seed=21)
+    used_pairs = set()
+
+    for triple in triples:
+        assert len(triple) == 3
+        assert tuple(sorted(triple)) == triple
+        p, q, k = triple
+        for pair in ((p, q), (p, k), (q, k)):
+            assert pair not in used_pairs
+            used_pairs.add(pair)
+
+
+def test_generate_xorsat_is_reproducible_for_same_seed():
+    assert generate_xorsat(7, seed=31) == generate_xorsat(7, seed=31)
+
+
+def test_generate_xorsat_rejects_invalid_k():
+    with pytest.raises(ValueError, match="K must satisfy"):
+        generate_xorsat(8, seed=1)
+
+
 def run_generator(*args):
     return subprocess.run(
         [sys.executable, str(GENERATORS / "generator.py"), *args],
@@ -245,6 +287,27 @@ def test_cli_writes_ea_dimension_in_filename_and_header(tmp_path):
     lines = output_path.read_text(encoding="utf-8").splitlines()
     assert lines[0].startswith("# model=ea2d N=9 meanJ=0 seed=17")
     assert lines[1] == "0 0.20000000000000001"
+
+
+def test_cli_writes_xorsat_total_spin_count_and_k_metadata(tmp_path):
+    result = run_generator(
+        "xorsat",
+        "7",
+        "--seed",
+        "19",
+        "--outdir",
+        str(tmp_path),
+        "--field",
+        "0.1",
+    )
+
+    assert result.returncode == 0, result.stderr
+    output_path = tmp_path / "xorsat_couplings_N14_J0_seed19.txt"
+    assert output_path.exists()
+    lines = output_path.read_text(encoding="utf-8").splitlines()
+    assert lines[0].startswith("# model=xorsat N=14 meanJ=0 seed=19")
+    assert " K=7" in lines[0]
+    assert len(lines) == 1 + 14 + 42
 
 
 @pytest.mark.parametrize(

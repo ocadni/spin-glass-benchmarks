@@ -84,9 +84,21 @@ Numerical tolerances for these RRG tests:
 | Third cumulant | `0.2` |
 | Fourth cumulant | `0.5` |
 
+## XORSAT Generator
+
+- Checks that a XORSAT instance with `K` physical variables has `2K` Ising spins.
+- Checks that a XORSAT instance has `6K` pair couplings after quadratization.
+- Checks that the generator returns `K` triples, `K` right-hand sides, and a planted physical spin assignment.
+- Checks that all field and coupling indices are within the expected `0, ..., 2K - 1` range.
+- Checks that auxiliary fields have the expected values `field - 2` or `field + 2`.
+- Checks that generated triples are sorted, contain three distinct variables, and do not reuse any pair of physical variables.
+- Checks that using the same seed gives the same generated XORSAT instance.
+- Checks that invalid `K` values are rejected when they do not satisfy `K = 1 mod 6` or `K = 3 mod 6`.
+
 ## Command-Line Generator
 
 - Checks that EA output files include the dimension in the model name, for example `ea2d`.
+- Checks that XORSAT output files use the total Ising spin count in the filename and store the physical variable count as `K` metadata.
 - Checks that the first header line contains the expected model, `N`, mean coupling, and seed metadata.
 - Checks that field lines are written after the header.
 - Checks that model-specific arguments fail on the wrong models:

@@ -4,19 +4,36 @@ from pathlib import Path
 from generate_ea import generate_ea
 from generate_rrg import generate_rrg
 from generate_sk import generate_sk
+from generate_xorsat import generate_xorsat
 
 
 def _format_number(value):
     return f"{value:g}"
 
 
-def _write_instance(path, model, N, mean_j, seed, distribution, field, fields, couplings):
+def _write_instance(
+    path,
+    model,
+    N,
+    mean_j,
+    seed,
+    distribution,
+    field,
+    fields,
+    couplings,
+    extra_metadata=None,
+):
+    extra_metadata = extra_metadata or {}
     with path.open("w", encoding="utf-8") as handle:
+        extra = "".join(
+            f" {key}={value}" for key, value in extra_metadata.items()
+        )
         handle.write(
             "# "
             f"model={model} N={N} meanJ={mean_j:g} seed={seed} "
             f"distribution={distribution} field={field:g} "
-            f"num_fields={len(fields)} num_couplings={len(couplings)}\n"
+            f"num_fields={len(fields)} num_couplings={len(couplings)}"
+            f"{extra}\n"
         )
         for index, value in fields:
             handle.write(f"{index} {value:.17g}\n")
@@ -30,14 +47,17 @@ def parse_args():
     )
     parser.add_argument(
         "model",
-        choices=["sk", "ea", "rrg"],
+        choices=["sk", "ea", "rrg", "xorsat"],
         help="Model to generate.",
     )
     parser.add_argument(
         "N",
         type=int,
         nargs="?",
-        help="Number of spins. Required for SK/RRG; optional for EA if --L is given.",
+        help=(
+            "Number of spins for SK/RRG, physical variables K for XORSAT, "
+            "or optional EA spins if --L is given."
+        ),
     )
     parser.add_argument("--seed", type=int, required=True, help="Random seed.")
     parser.add_argument(
@@ -93,6 +113,10 @@ def parse_args():
         parser.error("--dim can only be used with the EA model")
     if args.model != "rrg" and args.degree is not None:
         parser.error("--degree/-k can only be used with the RRG model")
+    if args.model == "xorsat" and args.distribution != "gaussian":
+        parser.error("--distribution is not used by the XORSAT model")
+    if args.model == "xorsat" and args.mean_j != 0.0:
+        parser.error("--meanJ/--mean-j is not used by the XORSAT model")
 
     if args.model == "ea":
         args.dim = 2 if args.dim is None else args.dim
@@ -118,6 +142,8 @@ def main():
         raise ValueError(f"N is required for model '{args.model}'")
 
     output_model = args.model
+    output_N = N
+    extra_metadata = {}
 
     if args.model == "sk":
         fields, couplings = generate_sk(
@@ -137,7 +163,7 @@ def main():
             field=args.field,
             seed=args.seed,
         )
-    else:
+    elif args.model == "rrg":
         fields, couplings = generate_rrg(
             N,
             degree=args.degree,
@@ -146,24 +172,33 @@ def main():
             field=args.field,
             seed=args.seed,
         )
+    else:
+        fields, couplings, metadata = generate_xorsat(
+            N,
+            field=args.field,
+            seed=args.seed,
+        )
+        output_N = len(fields)
+        extra_metadata = {"K": metadata["K"]}
 
     outdir = Path(args.outdir)
     outdir.mkdir(parents=True, exist_ok=True)
     filename = (
-        f"{output_model}_couplings_N{N}_"
+        f"{output_model}_couplings_N{output_N}_"
         f"J{_format_number(args.mean_j)}_seed{args.seed}.txt"
     )
     path = outdir / filename
     _write_instance(
         path,
         output_model,
-        N,
+        output_N,
         args.mean_j,
         args.seed,
         distribution,
         args.field,
         fields,
         couplings,
+        extra_metadata=extra_metadata,
     )
     print(path)
 
