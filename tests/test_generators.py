@@ -1,8 +1,10 @@
 import subprocess
 import sys
 from collections import Counter
+from math import sqrt
 from pathlib import Path
 
+import numpy as np
 import pytest
 
 
@@ -13,6 +15,39 @@ sys.path.insert(0, str(GENERATORS))
 from generate_ea import generate_ea  # noqa: E402
 from generate_rrg import generate_rrg  # noqa: E402
 from generate_sk import generate_sk  # noqa: E402
+
+
+def coupling_values(couplings):
+    return np.array([value for _, _, value in couplings])
+
+
+def assert_coupling_distribution(
+    values,
+    expected_mean,
+    expected_std,
+    expected_third_cumulant=0.0,
+    expected_fourth_cumulant=0.0,
+    mean_tolerance=0.05,
+    std_tolerance=0.05,
+    third_cumulant_tolerance=0.2,
+    fourth_cumulant_tolerance=0.4,
+):
+    mean = float(np.mean(values))
+    std = float(np.std(values))
+    centered = values - mean
+    third_cumulant = float(np.mean(centered**3))
+    fourth_cumulant = float(np.mean(centered**4) - 3.0 * np.var(values) ** 2)
+
+    assert mean == pytest.approx(expected_mean, abs=mean_tolerance * expected_std)
+    assert std == pytest.approx(expected_std, rel=std_tolerance)
+    assert third_cumulant == pytest.approx(
+        expected_third_cumulant,
+        abs=third_cumulant_tolerance * expected_std**3,
+    )
+    assert fourth_cumulant == pytest.approx(
+        expected_fourth_cumulant,
+        abs=fourth_cumulant_tolerance * expected_std**4,
+    )
 
 
 def test_generate_sk_complete_graph_and_fields():
@@ -46,6 +81,29 @@ def test_generate_sk_rademacher_values_include_sk_scaling_and_mean():
 
 
 @pytest.mark.parametrize(
+    ("N", "mean_j", "distribution", "expected_fourth_cumulant"),
+    [
+        (350, 0.3, "gaussian", 0.0),
+        (350, -0.2, "rademacher", -2.0 * (1.0 / sqrt(350)) ** 4),
+    ],
+)
+def test_generate_sk_coupling_distribution_moments_and_cumulants(
+    N,
+    mean_j,
+    distribution,
+    expected_fourth_cumulant,
+):
+    _, couplings = generate_sk(N, mean_j=mean_j, distribution=distribution, seed=101)
+
+    assert_coupling_distribution(
+        coupling_values(couplings),
+        expected_mean=mean_j,
+        expected_std=1.0 / sqrt(N),
+        expected_fourth_cumulant=expected_fourth_cumulant,
+    )
+
+
+@pytest.mark.parametrize(
     ("dim", "N", "expected_edges"),
     [
         (2, 9, 18),
@@ -73,6 +131,34 @@ def test_generate_ea_rademacher_values_have_unit_scale():
     assert values <= {-0.5, 1.5}
 
 
+@pytest.mark.parametrize(
+    ("mean_j", "distribution", "expected_fourth_cumulant"),
+    [
+        (-0.2, "gaussian", 0.0),
+        (0.5, "rademacher", -2.0),
+    ],
+)
+def test_generate_ea_coupling_distribution_moments_and_cumulants(
+    mean_j,
+    distribution,
+    expected_fourth_cumulant,
+):
+    _, couplings = generate_ea(
+        10000,
+        dim=2,
+        mean_j=mean_j,
+        distribution=distribution,
+        seed=202,
+    )
+
+    assert_coupling_distribution(
+        coupling_values(couplings),
+        expected_mean=mean_j,
+        expected_std=1.0,
+        expected_fourth_cumulant=expected_fourth_cumulant,
+    )
+
+
 def test_generate_rrg_degree_and_edge_count():
     N = 10
     degree = 3
@@ -97,6 +183,35 @@ def test_generate_rrg_degree_and_edge_count():
 def test_generate_rrg_rejects_invalid_degree(N, degree, message):
     with pytest.raises(ValueError, match=message):
         generate_rrg(N, degree=degree)
+
+
+@pytest.mark.parametrize(
+    ("mean_j", "distribution", "expected_fourth_cumulant"),
+    [
+        (0.1, "gaussian", 0.0),
+        (-0.4, "rademacher", -2.0),
+    ],
+)
+def test_generate_rrg_coupling_distribution_moments_and_cumulants(
+    mean_j,
+    distribution,
+    expected_fourth_cumulant,
+):
+    _, couplings = generate_rrg(
+        2000,
+        degree=4,
+        mean_j=mean_j,
+        distribution=distribution,
+        seed=303,
+    )
+
+    assert_coupling_distribution(
+        coupling_values(couplings),
+        expected_mean=mean_j,
+        expected_std=1.0,
+        expected_fourth_cumulant=expected_fourth_cumulant,
+        fourth_cumulant_tolerance=0.5,
+    )
 
 
 def run_generator(*args):
