@@ -88,9 +88,10 @@ Numerical tolerances for these RRG tests:
 
 - Checks that a XORSAT instance with `K` physical variables has `2K` Ising spins.
 - Checks that a XORSAT instance has `6K` pair couplings after quadratization.
-- Checks that the generator returns `K` triples, `K` right-hand sides, and a planted physical spin assignment.
+- Checks that the generator returns `K` triples and `K` right-hand sides.
+- Checks that all XORSAT right-hand sides are zero in the non-planted generator.
 - Checks that all field and coupling indices are within the expected `0, ..., 2K - 1` range.
-- Checks that auxiliary fields have the expected values `field - 2` or `field + 2`.
+- Checks that auxiliary fields have the expected value `field + 2`.
 - Checks that generated triples are sorted, contain three distinct variables, and do not reuse any pair of physical variables.
 - Checks that using the same seed gives the same generated XORSAT instance.
 - Checks that invalid `K` values are rejected when they do not satisfy `K = 1 mod 6` or `K = 3 mod 6`.

@@ -225,13 +225,14 @@ def test_generate_xorsat_structure_and_fields():
     assert metadata["K"] == K
     assert len(metadata["triples"]) == K
     assert len(metadata["b"]) == K
-    assert len(metadata["s_planted"]) == K
+    assert set(metadata) == {"K", "triples", "b"}
+    assert metadata["b"] == [0 for _ in range(K)]
     assert all(0 <= i < 2 * K for i, _ in fields)
     assert all(0 <= i < j < 2 * K for i, j, _ in couplings)
 
     auxiliary_fields = dict(fields)
     for aux in range(K, 2 * K):
-        assert auxiliary_fields[aux] in {field - 2.0, field + 2.0}
+        assert auxiliary_fields[aux] == field + 2.0
 
 
 def test_generate_xorsat_triples_do_not_reuse_pairs():

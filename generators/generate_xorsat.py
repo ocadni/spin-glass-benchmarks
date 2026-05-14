@@ -53,27 +53,23 @@ def generate_sets(K, seed=None, max_attempts=100000):
 
 def generate_xorsat(K, field=0.0, seed=None):
     """
-    Generate a planted 3-XORSAT Ising instance.
+    Generate a satisfiable 3-XORSAT Ising instance.
 
     K is the number of physical variables and clauses. The returned Ising
     instance has 2K spins because each clause gets one auxiliary spin.
     """
     triples = generate_sets(K, seed=seed)
-    rng = np.random.default_rng(seed)
 
-    x_planted = rng.integers(0, 2, size=K)
-    s_planted = 2 * x_planted - 1
     b = []
     pair_couplings = {}
     fields = {i: float(field) for i in range(2 * K)}
 
     for clause_index, (p, q, k) in enumerate(triples):
         aux = K + clause_index
-        planted_product = s_planted[p] * s_planted[q] * s_planted[k]
-        clause_b = int((1 - planted_product) // 2)
+        clause_b = 0
         b.append(clause_b)
 
-        sign = 1 if clause_b == 0 else -1
+        sign = 1
         physical_coupling = -1.0
         auxiliary_coupling = -2.0
         physical_field = sign * 1.0
@@ -103,7 +99,6 @@ def generate_xorsat(K, field=0.0, seed=None):
         "K": K,
         "triples": triples,
         "b": b,
-        "s_planted": s_planted.tolist(),
     }
     return field_list, coupling_list, metadata
 
@@ -113,7 +108,7 @@ def generate_XORSAT(K, rng=None):
     Compatibility wrapper for older code.
 
     Returns dictionaries for couplings and fields, plus the XORSAT triples,
-    right-hand sides, and planted physical spin solution.
+    right-hand sides, and an all-ones satisfying physical spin solution.
     """
     seed = rng if isinstance(rng, int) else None
     fields, couplings, metadata = generate_xorsat(K, seed=seed)
@@ -124,5 +119,5 @@ def generate_XORSAT(K, rng=None):
         h,
         metadata["triples"],
         np.array(metadata["b"]),
-        np.array(metadata["s_planted"]),
+        np.ones(K),
     )
