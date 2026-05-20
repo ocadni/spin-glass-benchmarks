@@ -279,15 +279,16 @@ def test_cli_writes_ea_dimension_in_filename_and_header(tmp_path):
         "--outdir",
         str(tmp_path),
         "--field",
-        "0.2",
+        "0.234567",
     )
 
     assert result.returncode == 0, result.stderr
-    output_path = tmp_path / "ea2d_couplings_N9_J0_seed17.txt"
+    output_path = tmp_path / "N9" / "ea2d_couplings_N9_J0_seed17.txt"
     assert output_path.exists()
     lines = output_path.read_text(encoding="utf-8").splitlines()
     assert lines[0].startswith("# model=ea2d N=9 meanJ=0 seed=17")
-    assert lines[1] == "0 0.20000000000000001"
+    assert " field=0.23457 " in lines[0]
+    assert lines[1] == "0 0.23457"
 
 
 def test_cli_writes_xorsat_total_spin_count_and_k_metadata(tmp_path):
@@ -303,7 +304,7 @@ def test_cli_writes_xorsat_total_spin_count_and_k_metadata(tmp_path):
     )
 
     assert result.returncode == 0, result.stderr
-    output_path = tmp_path / "xorsat_couplings_N14_J0_seed19.txt"
+    output_path = tmp_path / "N14" / "xorsat_couplings_N14_J0_seed19.txt"
     assert output_path.exists()
     lines = output_path.read_text(encoding="utf-8").splitlines()
     assert lines[0].startswith("# model=xorsat N=14 meanJ=0 seed=19")

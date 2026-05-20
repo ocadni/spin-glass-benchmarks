@@ -8,7 +8,8 @@ from generate_xorsat import generate_xorsat
 
 
 def _format_number(value):
-    return f"{value:g}"
+    text = f"{value:.5f}".rstrip("0").rstrip(".")
+    return "0" if text in {"", "-0"} else text
 
 
 def _write_instance(
@@ -30,15 +31,15 @@ def _write_instance(
         )
         handle.write(
             "# "
-            f"model={model} N={N} meanJ={mean_j:g} seed={seed} "
-            f"distribution={distribution} field={field:g} "
+            f"model={model} N={N} meanJ={_format_number(mean_j)} seed={seed} "
+            f"distribution={distribution} field={_format_number(field)} "
             f"num_fields={len(fields)} num_couplings={len(couplings)}"
             f"{extra}\n"
         )
         for index, value in fields:
-            handle.write(f"{index} {value:.17g}\n")
+            handle.write(f"{index} {_format_number(value)}\n")
         for i, j, value in couplings:
-            handle.write(f"{i} {j} {value:.17g}\n")
+            handle.write(f"{i} {j} {_format_number(value)}\n")
 
 
 def parse_args():
@@ -182,6 +183,9 @@ def main():
         extra_metadata = {"K": metadata["K"]}
 
     outdir = Path(args.outdir)
+    size_dir = f"N{output_N}"
+    if outdir.name != size_dir:
+        outdir = outdir / size_dir
     outdir.mkdir(parents=True, exist_ok=True)
     filename = (
         f"{output_model}_couplings_N{output_N}_"

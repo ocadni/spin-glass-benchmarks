@@ -28,7 +28,7 @@ def discover_coupling_files(benchmarks_dir, limit=25):
     model_dirs = ["sk", "ea2d", "ea3d", "rrg"]
     grouped = []
     for model_dir in model_dirs:
-        grouped.append(sorted((benchmarks_dir / model_dir).glob("*_couplings_*.txt")))
+        grouped.append(sorted((benchmarks_dir / model_dir).rglob("*_couplings_*.txt")))
 
     selected = []
     index = 0

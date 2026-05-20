@@ -14,7 +14,8 @@ CouplingSet = namedtuple("CouplingSet", ["path", "metadata", "fields", "interact
 
 
 def _format_number(value):
-    return f"{value:g}"
+    text = f"{value:.5f}".rstrip("0").rstrip(".")
+    return "0" if text in {"", "-0"} else text
 
 
 def _parse_header(line):

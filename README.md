@@ -34,11 +34,12 @@ This model is defined on a random graph where every node (spin) has the same deg
 
 1.  **Generate an instance:**
     ```bash
-    python generators/generate_sk.py > benchmarks/sk_N100.txt
+    python generators/generator.py sk 100 --seed 1 --outdir benchmarks/sk --meanJ 0 --distribution gaussian --field 0
     ```
+    This writes an instance such as `benchmarks/sk/N100/sk_couplings_N100_J0_seed1.txt`.
 
 2.  **Run a solver:**
     ```bash
     # (Assuming solver is adapted to read from file)
-    python solvers/sa.py benchmarks/sk_N100.txt
+    python solvers/sa.py benchmarks/sk/N100/sk_couplings_N100_J0_seed1.txt
     ```
