@@ -1,0 +1,66 @@
+.hero {
+  align-items: center;
+  background: linear-gradient(135deg, #f7f9fb 0%, #eef5f2 52%, #f8f2e8 100%);
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+  min-height: 62vh;
+  padding: clamp(2rem, 6vw, 5rem);
+}
+
+.hero h1 {
+  font-size: clamp(2.4rem, 4rem, 4.4rem);
+  line-height: 1.02;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  color: #334155;
+  font-size: 1.12rem;
+  max-width: 68ch;
+}
+
+.hero .btn {
+  margin: 0.75rem 0.6rem 0 0;
+}
+
+.hero-visual img {
+  display: block;
+  height: auto;
+  margin-inline: auto;
+  max-width: min(100%, 440px);
+}
+
+.content-band {
+  padding: clamp(2rem, 5vw, 4rem) clamp(1.25rem, 6vw, 5rem);
+}
+
+.content-band.muted {
+  background: #f8fafc;
+}
+
+.content-band .grid > div {
+  border-left: 3px solid #277da1;
+  padding-left: 1rem;
+}
+
+.content-band h3 {
+  font-size: 1.05rem;
+  margin-top: 0;
+}
+
+.content-band table {
+  background: white;
+}
+
+@media (max-width: 780px) {
+  .hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    padding-top: 2.5rem;
+  }
+
+  .hero h1 {
+    font-size: 2.45rem;
+  }
+}

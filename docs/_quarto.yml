@@ -1,0 +1,46 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - "*.qmd"
+
+website:
+  title: "Spin Glass Benchmarks"
+  site-url: "https://ocadni.github.io/spin-glass-benchmarks/"
+  repo-url: "https://github.com/ocadni/spin-glass-benchmarks"
+  repo-actions: [source, issue]
+  navbar:
+    left:
+      - text: "Home"
+        href: index.qmd
+      - text: "Problem Families"
+        href: benchmark_problem_families.qmd
+      - text: "Quantum Rationale"
+        href: quantum_benchmark_rationale.qmd
+      - text: "File Format"
+        href: file_format.qmd
+      - text: "Project Contract"
+        href: project_contract.qmd
+    right:
+      - icon: github
+        href: "https://github.com/ocadni/spin-glass-benchmarks"
+        aria-label: "GitHub repository"
+  page-footer:
+    left: "Spin Glass Benchmarks"
+    right: "Built with Quarto"
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    code-copy: true
+    code-fold: true
+    css: styles.css
+
+bibliography: references.bib
+link-citations: true
+reference-section-title: "References"
+
+execute:
+  freeze: auto

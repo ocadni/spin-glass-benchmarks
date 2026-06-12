@@ -1,0 +1,560 @@
+---
+title: "Benchmark Problem Families for BENQODHI"
+subtitle: "Design philosophy, core instance families, hardware-native extensions, and protocol"
+author:
+  - name: "BENQODHI Working Group"
+    affiliation: "Joint Research Centre (European Commission) · Sapienza University of Rome"
+date: last-modified
+abstract: |
+  This document specifies the benchmark design for BENQODHI. We first set out a
+  design philosophy in which instances are positioned along controlled axes ---
+  connectivity, locality (k-locality), disorder, frustration, hardness, and
+  hardware compatibility --- rather than collected ad hoc. We then define the
+  core spin-glass families (Sherrington--Kirkpatrick, Edwards--Anderson in 2D and
+  3D, sparse random-graph spin glasses, and 3-XORSAT), giving for each the
+  mathematical definition, the rationale for inclusion, its strengths and
+  limitations as a benchmark, and the algorithms that characteristically use it.
+  We propose hardware-native extensions (D-Wave Chimera/Pegasus/Zephyr, IBM
+  heavy-hex, neutral-atom unit-disk graphs, and optional low-degree lattices) and
+  explain why native topology is itself a benchmark axis. Finally we propose a
+  metadata schema and an evaluation protocol designed for reproducibility and for
+  re-evaluation against improving classical baselines.
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    theme: cosmo
+    code-fold: true
+    fig-cap-location: bottom
+  pdf:
+    toc: true
+    number-sections: true
+    geometry: margin=1in
+bibliography: references.bib
+link-citations: true
+reference-section-title: "References"
+---
+
+# Design philosophy {#sec-design}
+
+A benchmark suite is not a list of problems; it is a *coordinate system* for
+hardness. The guiding principle of BENQODHI is that every instance should occupy
+a known position along a small set of physically meaningful axes, so that when a
+solver succeeds or fails we can read off *which property* of the instance was
+responsible. This converts benchmarking from a leaderboard into a diagnostic
+instrument. The lesson of the "glassy Chimera" analysis [@katzgraber2014] ---
+that an entire generation of advantage studies was confounded by an instance
+family whose hardness had not been characterized --- is the negative example we
+design against.
+
+We adopt six axes.
+
+**Connectivity.** From the complete graph (Sherrington--Kirkpatrick) through
+sparse random regular and Erdős--Rényi graphs to finite-dimensional lattices
+(Edwards--Anderson). Connectivity controls both the intrinsic statistical physics
+(mean-field versus finite-dimensional behaviour) and the embedding cost on real
+hardware. It is the primary axis because it simultaneously governs hardness and
+hardware compatibility.
+
+**Locality ($k$-locality).** Whether interactions are 2-local (pairwise Ising) or
+$k$-local ($k$-body, e.g. the 3-body terms of 3-XORSAT, or higher-order Ising
+terms native to whole-chip QAOA experiments [@pelofske2024]). Locality determines
+the encoding burden: $k$-local terms with $k>2$ must be quadratized (introducing
+ancillas and penalties) for hardware that supports only pairwise couplers, and
+they change which devices can address a family natively.
+
+**Disorder.** The coupling distribution: bimodal $J_{ij}\in\{-1,+1\}$, Gaussian,
+or higher-precision continuous couplings. Disorder type matters both physically
+(bimodal models have ground-state degeneracy and different finite-size behaviour
+than Gaussian ones) and operationally (analog machines and annealers have limited
+coupling dynamic range, so high-precision couplings are a distinct stress test
+[@munozbauza2025]).
+
+**Frustration.** The density and arrangement of frustrated plaquettes. Frustration
+is the engine of glassiness; controlling it (e.g. via the fraction of
+antiferromagnetic bonds, or by lattice geometry as in frustrated fullerenes
+[@lopezbezanilla2025]) tunes the ruggedness of the landscape.
+
+**Hardness, and the *mechanism* of hardness.** Beyond a scalar difficulty, we
+distinguish *energetic* barriers (where quantum tunnelling may help) from
+*entropic* barriers (where it should not) [@bellitti2021], and *random* from
+*planted* instances [@hen2019; @kowalsky2022]. Tunability is essential: we want
+families in which a single parameter sweeps the instance from easy to hard, so
+the quantum--classical crossover can be *located*, and we want the planted-solution
+option so that success can be measured exactly at sizes beyond exact solvers
+[@hen2019].
+
+**Hardware compatibility.** Whether a family is native to a given architecture's
+coupler graph (Chimera/Pegasus/Zephyr, heavy-hex, unit-disk) or requires
+embedding. Because topology determines hardness and embedding overhead can
+dominate runtime, we treat compatibility as an explicit axis rather than an
+afterthought, and we provide the *same physics on multiple topologies* so the two
+can be disentangled.
+
+The remainder of this document instantiates these axes: @sec-core defines the
+core families, @sec-ext the hardware-native and geometric extensions, and
+@sec-meta the metadata and protocol that record an instance's position on every
+axis.
+
+
+# Core benchmark families {#sec-core}
+
+## Sherrington--Kirkpatrick (SK): the mean-field anchor
+
+**Definition.** The SK model is an Ising spin glass on the complete graph of $N$
+spins with independent Gaussian couplings,
+$$
+H_{\mathrm{SK}}(\mathbf{s}) \;=\; -\sum_{1\le i<j\le N} J_{ij}\, s_i s_j ,
+\qquad J_{ij}\sim\mathcal{N}\!\left(0,\tfrac{1}{N}\right),
+$$
+the $1/N$ variance scaling making the energy extensive [@sherrington1975]. Its
+equilibrium thermodynamics is governed by Parisi's full replica-symmetry-breaking
+solution, with an infinite hierarchy of overlaps and a non-trivial overlap
+distribution $P(q)$ [@parisi1979; @parisi1980; @mezard1987]. The ground-state
+energy density converges to the Parisi constant $\epsilon_\infty \approx
+-0.7632$.
+
+**Why included.** SK is the canonical *all-to-all* problem and the natural limit
+in which to test dense-connectivity solvers. It is the setting for the sharpest
+QAOA theory --- closed-form infinite-size performance [@farhi2022sk] and the
+recent depth--quality scaling $\mathcal{O}(n/\epsilon^{1.13})$ via the spin-boson
+mapping [@boulebnane2025] --- and the natural stressor for encodings, as the
+parity-QAOA vanishing-performance result demonstrates [@wybo2024]. It is also the
+limit in which fully connected quantum annealing was first benchmarked
+[@venturelli2015].
+
+**Strengths.** Analytically pristine: the ground-state energy density,
+fluctuations, and overlap structure are known, providing exact targets and
+calibration. Maximally demanding of connectivity, so it cleanly separates devices
+by their ability to realize dense couplings.
+
+**Limitations.** All-to-all connectivity is the *worst case* for hardware
+embedding --- an $N$-spin SK instance needs $\Theta(N^2)$ couplers and, on planar
+chips, deep swap networks or quadratic-overhead encodings. SK is therefore a
+better benchmark of *algorithmic* quality (and of dense-native machines such as
+some photonic Ising machines) than of sparse superconducting hardware. Finite-size
+corrections are also large, so size ranges must be chosen with care.
+
+**Characteristic algorithms.** Infinite-size and finite-size QAOA
+[@farhi2022sk; @boulebnane2025]; parity-encoded QAOA [@wybo2024]; fully connected
+quantum annealing [@venturelli2015]; simulated-bifurcation and coherent Ising
+machines on dense problems [@goto2021sbm; @mohseni2022]; classical baselines via
+parallel tempering and extremal/message-passing heuristics.
+
+## Edwards--Anderson (EA) in 2D and 3D: the finite-dimensional anchor
+
+**Definition.** The EA model places couplings on nearest-neighbour edges of a
+$d$-dimensional lattice (with periodic boundaries unless stated),
+$$
+H_{\mathrm{EA}}(\mathbf{s}) \;=\; -\sum_{\langle i,j\rangle} J_{ij}\, s_i s_j ,
+\qquad J_{ij}\sim \mathcal{D},
+$$
+with $\mathcal{D}$ bimodal ($\pm 1$) or Gaussian [@edwards1975]. The lattice
+encodes locality directly, making EA the family whose geometry most resembles
+physical qubit arrays.
+
+**The 2D/3D dichotomy.** This is the single most important reason to include both
+dimensions. In **two dimensions with no external field**, computing the
+ground-state energy of an EA spin glass is *polynomial*: it maps to a minimum-weight
+perfect matching on the dual lattice (planar-graph methods), so exact ground
+states are obtainable for large systems. This makes 2D-EA an invaluable
+*ground-truth* family --- one can certify optima at substantial sizes and use
+them to validate heuristic and quantum solvers. The catch, exploited in recent
+hardware experiments, is that the *quantum dynamics* of crossing the transverse-field
+transition can still be classically nontrivial, and the *gap* behaviour is itself
+the object of study: restricting excitation symmetry can keep the gap closing
+algebraic rather than exponential [@bernaschi2024], with reproducible
+high-performance codes available [@bernaschi2024qisg]. Adding a field, or moving
+to **three dimensions**, makes ground-state search *NP-hard* [@barahona1982]: 3D-EA
+has a finite-temperature spin-glass transition, genuine RSB-like complexity, and
+is the family on which the headline quantum-annealing simulations and their
+classical rebuttals were fought [@king2023; @king2025beyond; @tindall2026;
+@mauron2025; @chowdhury2025].
+
+**Why included.** EA provides the locality axis and the ground-truth/NP-hard
+contrast in one family. 2D-EA (no field) supplies exact optima and a clean test
+of approximate-optimization metrics [@munozbauza2025]; 3D-EA supplies a genuinely
+hard, transition-bearing target that is the *de facto* reference battleground of
+the field.
+
+**Strengths.** Hardware-realistic locality; exact ground truth in 2D; rich,
+well-characterized physics; direct comparability to the most-cited recent
+experiments. High-precision-coupling 2D variants add a coupler-dynamic-range
+stress test [@munozbauza2025].
+
+**Limitations.** 2D-EA without a field can be *too easy* if used naively (the
+planar solver dispatches it), so it must be used as ground truth or augmented
+(fields, higher precision, frustration tuning) to be hard. 3D-EA hardness is
+strong but its instance-to-instance fluctuations require careful disorder
+averaging.
+
+**Characteristic algorithms.** Quantum annealing and annealing-correction
+[@king2023; @munozbauza2025; @zhang2024cyclic]; tensor-network and t-VMC classical
+simulators [@tindall2026; @mauron2025]; probabilistic-computer DT-SQA/APT
+[@chowdhury2025]; entanglement-assisted variational ansätze [@fioroni2025];
+ML-enhanced and reinforcement-learning heuristics [@delbono2026; @boettcher2023;
+@fan2023]; exact 2D matching solvers for ground truth.
+
+## Sparse random-graph spin glasses: the bridge
+
+**Definition.** Spin glasses on sparse random graphs --- random $c$-regular
+graphs (each vertex degree exactly $c$) or Erdős--Rényi graphs $G(N,p)$ with mean
+degree $O(1)$ --- with $J_{ij}$ bimodal or Gaussian:
+$$
+H(\mathbf{s}) \;=\; -\sum_{(i,j)\in E(G)} J_{ij}\, s_i s_j ,
+\qquad G \sim \mathrm{RandomRegular}(N,c)\ \text{or}\ G(N,p).
+$$
+
+**Why included.** Sparse random graphs *bridge* the dense mean-field SK limit and
+the local finite-dimensional EA limit. They are locally tree-like (high girth),
+so they admit cavity / belief-propagation analysis and have a well-developed
+mean-field-on-sparse-graphs theory, yet they retain $O(1)$ degree like physical
+hardware. This makes them the ideal setting for the *locality bottleneck* of
+constant-depth QAOA, which is provably limited on large sparse hypergraphs and
+spin-glass models [@basso2022; @basso2022highdepth] --- the limitation cannot be
+seen on SK (too dense) or trivially on 2D lattices (too structured). They also
+interpolate hardware overhead: sparser graphs embed more cheaply than SK while
+remaining harder and less structured than lattices.
+
+**Strengths.** Tunable mean degree as a continuous hardness/connectivity knob;
+amenable to analytic prediction (cavity method); the natural test of QAOA locality
+limits and of message-passing-style classical algorithms. Closer to the
+connectivity of near-term gate-based devices than SK.
+
+**Limitations.** Random topology is *not* hardware-native for any current device,
+so on real hardware it incurs embedding overhead (which is itself worth measuring).
+Finite-size effects on random graphs (degree fluctuations for ER, rare dense
+subgraphs) require care in instance generation and filtering.
+
+**Characteristic algorithms.** Constant- and high-depth QAOA
+[@basso2022; @basso2022highdepth; @farhi2014qaoa]; cavity / belief-propagation and
+survey-propagation-style solvers; parallel tempering; physics-inspired graph
+neural networks [@schuetz2022gnn] and autoregressive neural samplers
+[@biazzo2024] that operate naturally on graph-structured instances.
+
+## 3-XORSAT: higher-order interactions and planted hardness
+
+**Definition.** A 3-XORSAT instance is a system of $M$ linear equations over
+$\mathrm{GF}(2)$, each involving three variables,
+$$
+x_{a} \oplus x_{b} \oplus x_{c} \;=\; b_{\ell}\quad (\ell = 1,\dots,M),
+\qquad x \in \{0,1\},
+$$
+typically with each variable appearing in exactly three equations (the *3-regular*
+ensemble). Mapping $x\mapsto s=(-1)^x$ turns each clause into a 3-body Ising term;
+the energy counts violated clauses,
+$$
+H_{\mathrm{XOR}}(\mathbf{s}) \;=\; -\sum_{\ell=1}^{M} (-1)^{b_\ell}\,
+s_{a_\ell} s_{b_\ell} s_{c_\ell},
+$$
+which is a *3-local* (cubic) Ising Hamiltonian. Because the linear system is
+solvable in polynomial time by Gaussian elimination, a satisfying assignment (the
+*planted solution*, energy at the global minimum) is known by construction, even
+though local search finds it exceptionally hard [@kowalsky2022].
+
+**Clause structure and the "golf-course" landscape.** The 3-regular ensemble sits
+at a point where the solution set forms isolated clusters separated by extensive
+Hamming distance, producing a flat high-entropy plateau with a narrow deep well ---
+the "golf course." The dominant obstruction is *entropic*: the difficulty is
+finding the well, not climbing out of energy barriers, and this impedes simulated
+annealing, parallel tempering, and quantum annealing in comparable ways
+[@bellitti2021; @bernaschi2021xorsat]. This makes 3-XORSAT the family that most
+cleanly isolates the *mechanism-of-hardness* axis.
+
+**Reduction to QUBO.** Hardware with only pairwise couplers cannot represent the
+3-body term directly; it must be *quadratized*. The standard route introduces, for
+each cubic monomial $s_a s_b s_c$, an auxiliary spin and penalty terms that enforce
+the auxiliary equals (say) $s_a s_b$, reducing the cubic term to quadratic at the
+cost of extra variables and an energy-scale penalty. Quadratization is not free:
+it inflates qubit count, enlarges the required coupler dynamic range, and can
+soften the landscape, so the *embedding/quadratization overhead* is itself a
+benchmark quantity. By contrast, devices that support higher-order terms natively
+(whole-chip QAOA with cubic terms [@pelofske2024; @pelofske2024short;
+@pelofske2026transfer]) can address 3-XORSAT *without* quadratization --- which is
+exactly why including a higher-order family is essential for evaluating those
+platforms fairly.
+
+**Why included.** 3-XORSAT supplies (i) the $k$-locality axis ($k=3$), (ii) the
+planted-solution capability for exact success measurement at scale [@hen2019], and
+(iii) the entropic-barrier mechanism that distinguishes it from energy-barrier-
+dominated families. It is the canonical higher-order, solution-known stress test
+for both classical and quantum heuristics [@kowalsky2022].
+
+**Strengths.** Known global optimum at arbitrary size; tunable via clause/variable
+ratio and regularity; uniquely diagnostic of entropic hardness; native to
+higher-order-capable platforms.
+
+**Limitations.** As a *decision/feasibility*-flavoured problem its energy landscape
+is less generic than a random spin glass; its very specific structure means strong
+performance on 3-XORSAT does not by itself imply strong performance on dense or
+finite-dimensional glasses. It is therefore a *complement* to SK/EA, not a
+substitute.
+
+**Characteristic algorithms.** Quantum annealing analysis of XORSAT
+[@bellitti2021; @bernaschi2021xorsat]; planted-benchmark comparisons of classical
+and quantum heuristics [@kowalsky2022]; higher-order QAOA on hardware-native cubic
+terms [@pelofske2024]; GPU-accelerated classical record-holders
+[@bernaschi2021xorsat]; survey/belief-propagation-style solvers.
+
+
+# Proposed extensions: hardware-native and geometric families {#sec-ext}
+
+The core families above are defined by their *physics*. The extensions below are
+defined by their *hardware*: each is the family that a particular architecture can
+realize natively, with no embedding overhead. Including them lets BENQODHI measure
+the intrinsic capability of each platform and --- by comparing native versus
+embedded versions of the same physics --- isolate the embedding cost that
+otherwise silently distorts cross-platform comparisons.
+
+## Why native topology matters
+
+Any logical interaction graph must be mapped to a device's fixed coupler graph.
+When the logical and physical graphs differ, *minor embedding* represents each
+logical variable by a connected chain of physical qubits held together by strong
+ferromagnetic couplings; the overhead grows with the mismatch and can dominate
+both qubit budget and effective runtime. Two consequences follow. First, a family
+that is hard in the abstract may become *artificially* hard (or easy) once embedded,
+so abstract benchmarks mis-rank devices. Second, the embedding overhead is a real,
+measurable cost that belongs in any honest time-to-solution. The remedy is to
+benchmark each architecture on instances defined *directly on its native graph*,
+and to record embedding overhead explicitly when a non-native family is run. This
+is why the glassy-Chimera caution [@katzgraber2014] and the heavy-hex and unit-disk
+literatures [@pelofske2024; @ebadi2022; @andrist2023] all point to the same design
+choice.
+
+## D-Wave native topologies: Chimera, Pegasus, Zephyr
+
+D-Wave's superconducting annealers expose a sequence of increasingly connected
+coupler graphs, and spin glasses defined on each are the natural native family for
+that generation of hardware.
+
+- **Chimera** is the original quasi-2D topology: a lattice of $K_{4,4}$ bipartite
+  unit cells, qubit degree 6. Its low treewidth is precisely what made naive
+  Chimera spin glasses too easy to reveal speedup [@katzgraber2014]; it is included
+  as a *historical baseline and negative control*, not as a frontier family.
+
+- **Pegasus** is the next-generation topology with qubit degree 15 and native
+  $K_4$ and $K_{6,6}$ subgraphs, supporting far more efficient embeddings of
+  cliques, bicliques, and 3D lattices, and introducing couplers useful for error
+  correction [@boothby2020pegasus; @dattani2019pegasus]. Pegasus-native spin
+  glasses are substantially harder than Chimera-native ones and are the relevant
+  family for Advantage-class hardware.
+
+- **Zephyr** is the most connected topology in the series, with still higher qubit
+  degree and denser native cliques, used in the Advantage2 generation on which the
+  recent beyond-classical and cyclic-annealing results were obtained
+  [@king2025beyond; @zhang2024cyclic]. Zephyr-native instances are the current
+  frontier family for annealing hardware.
+
+Including all three lets one track how intrinsic hardness and solver performance
+scale *with topology* at fixed underlying physics, and provides the embedded-vs-native
+contrast for SK and 3D-EA (which must be minor-embedded onto these graphs).
+
+## IBM heavy-hex: routing overhead and higher-order QAOA
+
+IBM's superconducting processors use the *heavy-hexagon* lattice: a degree-3
+(plus degree-2) graph chosen to suppress cross-talk and frequency collisions. Its
+low, fixed degree makes it an excellent testbed for two distinct effects. First,
+**routing overhead for QAOA**: realizing interactions beyond nearest neighbours
+requires SWAP networks whose depth grows with the logical graph's mismatch to
+heavy-hex, so heavy-hex-native spin glasses isolate device capability from routing
+cost. Second, **higher-order terms natively**: whole-chip QAOA experiments
+construct random-coefficient, heavy-hex-compatible spin-glass Ising models *with
+cubic terms*, demonstrating strong parameter concentration and transferable angles
+across sizes up to 127+ qubits [@pelofske2024; @pelofske2024short;
+@pelofske2023qavqaoa], with the limits of parameter transfer for geometrically
+local cubic terms now being charted [@pelofske2026transfer]. A heavy-hex family
+(2-local and cubic variants) is therefore essential both for QAOA-vs-annealing
+comparisons on identical instances and for evaluating gate-based devices fairly.
+
+## Neutral-atom geometric graphs: Rydberg and unit-disk
+
+Neutral-atom (Rydberg) platforms encode optimization through the *Rydberg
+blockade*: two atoms within a blockade radius cannot both be excited, which
+naturally implements the independence constraint of the maximum-independent-set
+(MIS) problem on *unit-disk graphs* (UDGs) --- graphs whose edges connect vertices
+within unit Euclidean distance [@ebadi2022; @pichler2018]. The native family is
+thus *geometric*: vertices are atom positions in the plane and the graph is
+determined by the blockade radius. Arbitrary-connectivity problems can be mapped to
+weighted UD-MIS with at most quadratic qubit overhead [@nguyen2023], and frustrated
+geometric graphs such as Ising fullerenes have been realized on annealers too
+[@lopezbezanilla2025]. Crucially, naive UDG instances can be classically easy:
+quasi-planar Union-Jack-like connectivity is solvable to optimality for thousands
+of nodes in minutes, and hardness must be *deliberately tuned* [@andrist2023]. The
+BENQODHI geometric family therefore consists of UDG-MIS and weighted-UDG instances
+generated with controlled hardness (following the tuning protocols of
+[@andrist2023]), parameterized by atom density and blockade radius, providing the
+native family for neutral-atom platforms and a geometric counterpoint to the
+lattice and random-graph families.
+
+## Optional low-degree lattices: honeycomb and hexagonal
+
+Honeycomb (degree-3) and related low-degree planar lattices merit *limited*
+inclusion, for three reasons. First, they provide a clean, fixed, low-degree
+geometry intermediate between the degree-3 heavy-hex chip and the random sparse
+graphs, supplying a controlled reference point on the connectivity axis with
+*regular* (rather than random) structure. Second, low-degree planar geometries are
+the setting in which confinement-type and frustrated quantum dynamics have been
+studied as classical-simulation testbeds, so they connect directly to the
+tensor-network benchmarking programme that now sets the classical bar
+[@tindall2026]. Third, frustrated low-degree geometries (e.g. the fullerene graphs
+realized on annealing hardware [@lopezbezanilla2025]) bridge toward the
+neutral-atom geometric family while remaining trivially describable.
+
+The honest caveat is that *unfrustrated* or weakly-frustrated low-degree planar
+lattices are, like 2D-EA without a field, often classically easy and so risk being
+uninformative as stand-alone hardness benchmarks. Our recommendation is therefore
+to include honeycomb/hexagonal lattices *only* in their frustrated or
+field-augmented variants, and to treat them primarily as (i) controlled
+interpolation points and (ii) cross-checks against tensor-network simulators,
+rather than as frontier hardness instances in their own right. On balance they are
+worth including in a clearly-labelled "auxiliary / controlled-geometry" tier rather
+than the core suite.
+
+
+# Metadata schema and benchmark protocol {#sec-meta}
+
+A benchmark suite is only as useful as the metadata that lets others reproduce,
+interpret, and re-run it. We propose that every instance ship with a structured
+metadata record, and that every reported result conform to a fixed protocol. This
+section specifies both. The design goal is the one identified in the companion
+rationale: results must remain *re-evaluable* as classical baselines improve, so
+that progress toward quantum advantage is tracked rather than re-litigated, in the
+spirit of standardized libraries such as QOBLIB [@koch2025qoblib] but specialized
+to the physics-grounded, topology-aware setting of spin glasses.
+
+## Per-instance metadata fields
+
+Each instance carries the following fields (a suggested JSON/YAML sidecar schema).
+The fields map one-to-one onto the design axes of @sec-design, so an instance's
+record *is* its position in the coordinate system of hardness.
+
+*Identity and provenance.*
+
+- `instance_id` --- globally unique identifier (hash of the instance file).
+- `family` --- one of `SK`, `EA2D`, `EA3D`, `sparse_RR`, `sparse_ER`, `XORSAT3`,
+  and for extensions `native_chimera`, `native_pegasus`, `native_zephyr`,
+  `native_heavyhex`, `geometric_udg`, `aux_honeycomb`.
+- `generator` and `generator_version` --- the code and version that produced it.
+- `random_seed` --- the seed, so the instance is bit-for-bit regenerable.
+
+*Size and structure.*
+
+- `num_variables` ($N$) --- number of spins / binary variables.
+- `num_couplings` ($|E|$) --- number of nonzero pairwise terms.
+- `num_higher_order_terms` and `max_locality` ($k$) --- count and order of any
+  $k$-body terms ($k=2$ for pairwise families; $k=3$ for 3-XORSAT, higher-order
+  heavy-hex).
+- `graph_degree` --- degree sequence summary (min / mean / max), or the constant
+  degree $c$ for regular graphs.
+- `connectivity_class` --- `complete` / `lattice_2d` / `lattice_3d` /
+  `random_regular` / `erdos_renyi` / `unit_disk` / `hardware_native`.
+
+*Disorder and frustration.*
+
+- `coupler_distribution` --- `bimodal_pm1` / `gaussian` / `high_precision` (with
+  the numerical dynamic range, important for analog/annealing hardware
+  [@munozbauza2025]).
+- `field` --- present/absent and distribution (note: a transverse-field study is a
+  *protocol* choice; this field refers to a longitudinal $h_i$ in $H$).
+- `frustration_fraction` --- fraction of frustrated plaquettes / fraction of
+  antiferromagnetic bonds, as a frustration proxy.
+
+*Hardness and solution information.*
+
+- `planted_solution` --- present/absent; if present, the assignment and its energy.
+- `exact_optimum_known` --- boolean, and the value if known.
+- `optimum_provenance` --- `exact_solver` (e.g. 2D matching, branch-and-bound,
+  ILP), `planted`, or `best_known` (a running record).
+- `hardness_mechanism` --- `energetic` / `entropic` / `mixed` (where
+  characterizable [@bellitti2021]); this is the field that turns a leaderboard
+  into a diagnostic.
+- `tuning_parameter` and `tuning_value` --- the single knob (mean degree,
+  clause/variable ratio, precision, frustration) and its value, so instances form
+  an ordered hardness sweep.
+- `spectral_gap_estimate` --- where computed (e.g. for small EA2D via the QISG-type
+  codes [@bernaschi2024qisg]), the minimum transverse-field gap, with method.
+
+*Hardware compatibility.*
+
+- `native_topologies` --- list of architectures for which the instance is native
+  (empty if the instance requires embedding everywhere).
+- `embedding_overhead` --- per target architecture, the qubit-overhead factor and
+  median chain length from a reference embedding (or `native` when no embedding is
+  needed); this is the quantity that makes cross-platform comparison fair.
+
+*Certificates.*
+
+- `approximation_certificate` --- where available, a bound (e.g. an SDP/relaxation
+  bound, or a dual bound from an ILP solver) that certifies how far a reported
+  energy is from optimal even when the optimum is unknown.
+
+## Reporting protocol
+
+A *result* is a (solver, instance, run-configuration) triple with an outcome. We
+propose the following fixed reporting contract.
+
+**Metric.** Report *both* an exact-optimization metric and an
+approximate-optimization metric, because the right notion of success is
+problem- and claim-dependent and conflating them has historically distorted
+comparisons [@ronnow2014; @munozbauza2025]:
+
+- *Time-to-solution* (TTS): wall-clock (and, separately, device-time) to reach the
+  certified optimum with target probability (default $0.99$), reported as
+  $\mathrm{TTS} = t_{\text{run}}\,\dfrac{\ln(1-0.99)}{\ln(1-p_s)}$ where $p_s$ is
+  the per-run success probability.
+- *Time-to-target-$\epsilon$* (TT$\epsilon$): wall-clock to reach an energy within
+  a relative gap $\epsilon$ of the optimum (or of the best-known / certificate
+  bound), reported for a small grid of $\epsilon$ (e.g. $\{0.01, 0.02, 0.05\}$).
+
+**Scaling, not single points.** Because advantage is a statement about *scaling*,
+results must be reported across a size sweep with proper disorder averaging:
+median and inter-quartile range over $\ge 100$ disorder instances per size (more
+for small sizes where fluctuations dominate), with bootstrap confidence intervals.
+A single-size data point is not an admissible advantage claim.
+
+**Baselines bundled, not assumed.** Each result is reported *alongside* the same
+metric for the reference classical and quantum-inspired baselines run under
+matched conditions: parallel tempering with isoenergetic cluster moves, population
+annealing, simulated bifurcation [@goto2021sbm], probabilistic-computer DT-SQA/APT
+[@chowdhury2025], and ML-enhanced Monte Carlo [@delbono2026]. The suite ships
+reference implementations so that "state of the art classical" is a concrete,
+versioned, re-runnable artifact rather than a claim --- the precise lesson of the
+King-vs-Tindall episode [@king2025beyond; @tindall2026; @mauron2025].
+
+**Full accounting of overhead.** Quantum results must report device-time *and*
+wall-clock, and must include compilation/embedding overhead (using the
+`embedding_overhead` metadata) in the wall-clock figure for any non-native family.
+Programming, readout, and repetition counts are reported explicitly.
+
+**Versioning and reproducibility.** Every result records solver version, hardware
+calibration identifier (for physical devices), instance hash, random seeds, and
+the metric definitions used, so that a later reader can reproduce the number or
+re-evaluate it against an improved baseline. Results are stored in a versioned,
+append-only track record, mirroring the standardized-reporting philosophy of
+QOBLIB [@koch2025qoblib] while specializing it to spin-glass families and
+hardware-native topologies.
+
+## Summary: families against axes
+
+Taken together, the four core families and their extensions span the design axes
+with deliberate overlap and contrast. SK fixes maximal connectivity and pristine
+mean-field theory; EA-2D supplies exact ground truth and the algebraic-gap
+question, EA-3D the canonical NP-hard battleground; sparse random graphs bridge
+the two and expose the QAOA locality bottleneck; 3-XORSAT adds higher-order
+locality, planted solutions, and the entropic-barrier mechanism. The hardware-native
+extensions (Chimera/Pegasus/Zephyr, heavy-hex, unit-disk) re-express the same
+physics on real coupler graphs so that intrinsic device capability and embedding
+overhead can be separated, and the auxiliary low-degree lattices provide controlled
+interpolation and tensor-network cross-checks. The metadata schema records each
+instance's coordinates on every axis, and the protocol ensures that what is
+measured against them remains reproducible and re-evaluable as the classical
+frontier advances --- which is, ultimately, the property that distinguishes a
+durable benchmark from a transient advantage claim.
+
+
+## References {.unnumbered}
+
+::: {#refs}
+:::

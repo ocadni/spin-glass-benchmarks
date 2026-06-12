@@ -1,0 +1,83 @@
+---
+title: "Project Contract"
+subtitle: "Version 0 contributor and implementation agreement"
+date: last-modified
+---
+
+# Project Contract (V0)
+
+This is a practical one-page contract for contributors and agentic implementation.
+It is intentionally minimal and can evolve.
+
+## Scope
+
+- Problem types in scope: spin-glass and XORSAT.
+- Immediate goal: reproducible instance generation and standardized solver execution.
+- Non-goal for V0: perfect architecture, heavy governance, or final performance tuning.
+
+## Required Interfaces
+
+### Generator interface
+
+Each generator must expose:
+
+- `name: str`
+- `generate(params: Mapping[str, Any], seed: int | None = None) -> Instance`
+
+Rules:
+
+- Must be deterministic given identical `params` and `seed`.
+- Must include enough metadata to regenerate the instance.
+
+### Solver interface
+
+Each solver must expose:
+
+- `name: str`
+- `solve(instance: Instance, params: Mapping[str, Any], seed: int | None = None) -> SolveResult`
+
+Rules:
+
+- Must return standardized status (`ok`, `timeout`, `error`).
+- Must return objective value and assignment.
+- Assignment convention for Ising-like variables: values in `{-1, 1}`.
+
+## Canonical Data Structures
+
+`Instance` fields:
+
+- `problem_type` (example: `spin_glass`, `xorsat`)
+- `family` (example: `sk`, `ea_2d`, `rrg`, `3xorsat`)
+- `num_variables`
+- `interactions` (problem-specific tuples; spin-glass uses `(i, j, J_ij)`)
+- `metadata` (seed, params, schema version, notes)
+
+`SolveResult` fields:
+
+- `status`
+- `objective`
+- `assignment`
+- `metrics` (runtime, iterations, extra solver stats)
+
+## Reproducibility Requirements
+
+- Every generated instance must store generation seed and parameters in metadata.
+- Every solver run must store solver name, solver params, seed, and timestamp in persisted results.
+- A run is reproducible when the same instance plus same solver config produce equivalent outputs.
+
+## Storage (V0)
+
+- Keep storage simple and text-readable.
+- Use existing instance file format for spin-glass while adding sidecar metadata where needed.
+- Keep a small index file for generated instances and benchmark runs.
+
+## Human Checkpoints
+
+- Checkpoint A: approve this contract before broader refactoring.
+- Checkpoint B: verify one generator and one solver through shared API.
+- Checkpoint C: verify seed-based regeneration and standardized run output.
+
+## Revision Policy
+
+- Small, frequent updates are preferred over large redesigns.
+- Breaking interface changes require a short migration note in README.

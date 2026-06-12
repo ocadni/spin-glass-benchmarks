@@ -1,0 +1,71 @@
+---
+title: "Spin Glass Benchmarks"
+subtitle: "Reproducible instance families, file formats, and solver contracts for spin-glass optimization."
+page-layout: full
+toc: false
+---
+
+:::: {.hero}
+::: {.hero-copy}
+# Spin Glass Benchmarks
+
+A repository for benchmark instances and solver conventions across dense, sparse, and lattice spin-glass models. The documentation collects the scientific rationale, the benchmark family design, the instance file format, and the implementation contract used by contributors.
+
+[Problem families](benchmark_problem_families.qmd){.btn .btn-primary .btn-lg}
+[File format](file_format.qmd){.btn .btn-outline-primary .btn-lg}
+:::
+
+::: {.hero-visual}
+![A stylized spin-glass coupling graph with positive and negative interactions.](assets/spin-glass-network.svg)
+:::
+::::
+
+::::: {.content-band}
+## Documentation Map
+
+:::: {.grid}
+::: {.g-col-12 .g-col-md-6 .g-col-xl-3}
+### Benchmark Problem Families
+
+Design philosophy, core instance families, hardware-native extensions, metadata, and evaluation protocol.
+
+[Read the design](benchmark_problem_families.qmd)
+:::
+
+::: {.g-col-12 .g-col-md-6 .g-col-xl-3}
+### Quantum Benchmark Rationale
+
+Scientific motivation for spin-glass benchmarks in quantum optimization and quantum-inspired solvers.
+
+[Read the rationale](quantum_benchmark_rationale.qmd)
+:::
+
+::: {.g-col-12 .g-col-md-6 .g-col-xl-3}
+### Instance File Format
+
+Plain-text representation for external fields and pairwise couplings used by generated benchmark instances.
+
+[Read the format](file_format.qmd)
+:::
+
+::: {.g-col-12 .g-col-md-6 .g-col-xl-3}
+### Project Contract
+
+Minimal interface and reproducibility expectations for generators, solvers, and benchmark runs.
+
+[Read the contract](project_contract.qmd)
+:::
+::::
+:::::
+
+::: {.content-band .muted}
+## Current Scope
+
+| Area | Repository convention |
+|---|---|
+| Instance families | SK, EA 2D/3D, random regular graph, and XORSAT-oriented extensions |
+| Instance storage | Text-readable coupling files under `benchmarks/<model>/N<size>/` |
+| Generator contract | Deterministic generation from explicit parameters and seed |
+| Solver contract | Standardized status, objective, assignment, and metrics |
+| Publishing | Quarto website rendered from `docs/` and deployed through GitHub Pages |
+:::

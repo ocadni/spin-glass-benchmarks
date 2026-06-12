@@ -1,3 +1,9 @@
+---
+title: "Instance File Format"
+subtitle: "Text format for spin-glass benchmark instances"
+date: last-modified
+---
+
 # Instance File Format
 
 This document describes the simple text-based format used for storing spin glass instances in this repository.
