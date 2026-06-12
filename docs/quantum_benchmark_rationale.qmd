@@ -26,10 +26,6 @@ format:
     theme: cosmo
     code-fold: true
     fig-cap-location: bottom
-  pdf:
-    toc: true
-    number-sections: true
-    geometry: margin=1in
 bibliography: references.bib
 link-citations: true
 reference-section-title: "References"

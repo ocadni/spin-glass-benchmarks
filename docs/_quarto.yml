@@ -8,6 +8,7 @@ website:
   title: "Spin Glass Benchmarks"
   site-url: "https://ocadni.github.io/spin-glass-benchmarks/"
   repo-url: "https://github.com/ocadni/spin-glass-benchmarks"
+  repo-subdir: docs
   repo-actions: [source, issue]
   navbar:
     left:
