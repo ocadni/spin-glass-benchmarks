@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_load_existing_benchmark_format():
-    path = ROOT / "benchmarks" / "sk" / "N50" / "sk_couplings_N50_J0_seed329670.txt"
+    path = ROOT / "tests_data" / "instances" / "sk" / "N50" / "sk_couplings_N50_J0_seed329670.txt"
 
     instance = load_pairwise_instance(path)
 
@@ -84,7 +84,7 @@ def test_writer_uses_legacy_five_decimal_format(tmp_path):
 
 
 def test_rrg_loader_infers_graph_generation_metadata():
-    path = ROOT / "benchmarks" / "rrg" / "N50" / "rrg_couplings_N50_J0_seed2844268.txt"
+    path = ROOT / "tests_data" / "instances" / "rrg" / "N50" / "rrg_couplings_N50_J0_seed2844268.txt"
 
     instance = load_pairwise_instance(path)
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Copy existing benchmark instances into the canonical instances/ tree."""
+"""Copy reference pairwise instances into the canonical instances/ tree."""
 
 from __future__ import annotations
 
@@ -10,8 +10,8 @@ from pairwise_io import benchmark_files, load_pairwise_instance, write_pairwise_
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Materialize canonical instances from benchmarks.")
-    parser.add_argument("--source", type=Path, default=Path("benchmarks"))
+    parser = argparse.ArgumentParser(description="Materialize canonical instances from reference data.")
+    parser.add_argument("--source", type=Path, default=Path("tests_data/instances"))
     parser.add_argument("--target", type=Path, default=Path("instances"))
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
