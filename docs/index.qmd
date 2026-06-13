@@ -9,10 +9,10 @@ toc: false
 ::: {.hero-copy}
 # Spin-Glass and XORSAT Benchmarks
 
-A repository for benchmark instances and solver conventions across dense, sparse, and lattice spin-glass models, plus XORSAT-oriented higher-order families. The documentation collects the scientific rationale, benchmark family design, instance file formats, and implementation contract used by contributors.
+A repository for benchmark instances and solver conventions across dense, sparse, and lattice spin-glass models, plus XORSAT-oriented higher-order families. The documentation collects problem definitions, literature references, benchmark results, file formats, and implementation status.
 
-[Problem families](benchmark_problem_families.qmd){.btn .btn-primary .btn-lg}
-[File format](file_format.qmd){.btn .btn-outline-primary .btn-lg}
+[Problem definition](problem_definition.qmd){.btn .btn-primary .btn-lg}
+[Literature references](literature_references.qmd){.btn .btn-outline-primary .btn-lg}
 :::
 
 ::: {.hero-visual}
@@ -25,35 +25,35 @@ A repository for benchmark instances and solver conventions across dense, sparse
 
 :::: {.grid}
 ::: {.g-col-12 .g-col-md-6 .g-col-xl-3}
-### Benchmark Problem Families
+### Problem Definition
 
-Design philosophy, core instance families, hardware-native extensions, metadata, and evaluation protocol.
+Mathematical definitions and benchmark roles for spin-glass and XORSAT problem families.
 
-[Read the design](benchmark_problem_families.qmd)
+[Read the definitions](problem_definition.qmd)
 :::
 
 ::: {.g-col-12 .g-col-md-6 .g-col-xl-3}
-### Quantum Benchmark Rationale
+### Literature References
 
-Scientific motivation for spin-glass and XORSAT benchmarks in quantum optimization and quantum-inspired solvers.
+Classical, AI-based, quantum-inspired, and quantum algorithm references for benchmark design.
 
-[Read the rationale](quantum_benchmark_rationale.qmd)
+[Read the references](literature_references.qmd)
 :::
 
 ::: {.g-col-12 .g-col-md-6 .g-col-xl-3}
-### Instance File Format
+### Results
 
-Plain-text representation for external fields and pairwise couplings used by generated benchmark instances.
+Benchmark instance sets, solver configurations, metrics, and reported outputs.
 
-[Read the format](file_format.qmd)
+[View results](results.qmd)
 :::
 
 ::: {.g-col-12 .g-col-md-6 .g-col-xl-3}
-### Project Contract
+### Implementation
 
-Minimal interface and reproducibility expectations for generators, solvers, and benchmark runs.
+Repository status, implementation roadmap, missing pieces, and related project contracts.
 
-[Read the contract](project_contract.qmd)
+[Read the plan](implementation.qmd)
 :::
 ::::
 :::::

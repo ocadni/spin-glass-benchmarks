@@ -2,7 +2,13 @@ project:
   type: website
   output-dir: _site
   render:
-    - "*.qmd"
+    - index.qmd
+    - problem_definition.qmd
+    - literature_references.qmd
+    - results.qmd
+    - implementation.qmd
+    - file_format.qmd
+    - project_contract.qmd
 
 website:
   title: "Spin-Glass and XORSAT Benchmarks"
@@ -20,8 +26,8 @@ website:
             href: problem_definition.qmd
           - text: "File Format"
             href: file_format.qmd
-      - text: "Literature Review"
-        href: literature_review.qmd
+      - text: "Literature References"
+        href: literature_references.qmd
       - text: "Results"
         href: results.qmd
       - text: "Implementation"

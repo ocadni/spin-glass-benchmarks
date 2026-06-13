@@ -1,0 +1,131 @@
+---
+title: "Literature References"
+subtitle: "Algorithms, benchmark practices, and application mappings for spin-glass and XORSAT optimisation"
+date: last-modified
+bibliography: references.bib
+link-citations: true
+reference-section-title: "References"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    number-sections: true
+---
+
+# Purpose and scope
+
+This page is a compact reference map for the benchmark repository. It does not aim to be a complete review of spin glasses, XORSAT, quantum optimisation, or machine-learning methods. Its purpose is narrower: to identify the main algorithmic families, benchmark-design principles, and application mappings that motivate the selected problem families.
+
+The central benchmark objects are hard discrete optimisation problems expressed as Ising, QUBO, or XORSAT-like energy functions. Spin glasses provide canonical examples of frustrated binary systems with rugged landscapes, while XORSAT provides a structured constraint-satisfaction family whose algebraic simplicity can coexist with hard optimisation behaviour once represented as an energy landscape or QUBO instance [@sherrington1975; @edwards1975; @mezard1987; @barahona1982; @hen2019; @kowalsky2022]. The literature below is organised around the question: which algorithms and benchmark practices should be considered when evaluating classical, AI-based, quantum-inspired, and quantum-computing approaches on these problems?
+
+# Algorithms for hard discrete optimisation
+
+## Standard classical baselines
+
+Any benchmark of spin-glass or XORSAT optimisation should start from strong classical baselines. The simplest class is local Monte Carlo dynamics: configurations are modified by local moves, usually single-spin flips, and accepted according to a rule such as Metropolis--Hastings [@metropolis1953]. Simulated annealing turns this into an optimisation method by gradually lowering an effective temperature, and remains a standard baseline because it is simple, general, and directly applicable to both pairwise Ising spin glasses and clause-based XORSAT cost functions [@kirkpatrick1983sa].
+
+For rugged landscapes, simple annealing is rarely sufficient. Parallel tempering, simulated tempering, and related replica-exchange methods introduce several temperatures and allow configurations to move between them, improving exploration when low-temperature dynamics is trapped [@marinari1992simulatedtempering; @hukushima1996exchange]. Population annealing instead evolves a population of replicas under a cooling schedule, with resampling steps that favour low-energy configurations while preserving ensemble information [@hukushima2003population; @machta2010population]. These methods are important because they are not merely historical baselines: carefully implemented tempering and population methods are still difficult to beat on many frustrated systems.
+
+Greedy and quasi-greedy strategies form another essential baseline family. They are especially relevant for XORSAT-like planted instances, where local improvement, restarts, and variable/constraint heuristics can exploit structure very efficiently. At the same time, greedy dynamics is also useful as a diagnostic: failures of greedy search can reveal entropic barriers, metastable regions, or a strong mismatch between local improvement and global structure [@bellitti2021; @bernaschi2021xorsat]. For this reason, the benchmark should not treat greedy methods as weak baselines; on some problem families they represent a serious competitor.
+
+## Specialist algorithms for spin glasses
+
+Spin-glass optimisation also includes methods that exploit the specific structure of a problem family. The clearest example is the two-dimensional Edwards--Anderson model without field, where planar structure allows exact ground states to be computed in polynomial time through mappings to matching problems. This makes 2D EA useful as a controlled benchmark: it can produce non-trivial disorder and frustration while still allowing exact certification in selected cases [@barahona1982].
+
+The situation changes in three dimensions and in more general non-planar settings. There the ground-state problem becomes much harder, and the benchmark role is different: 3D EA is a finite-dimensional hard optimisation problem rather than merely a source of certifiable test cases [@barahona1982]. For these systems, specialised implementations, large-scale simulations, tensor-network contractions, and exact or approximate ground-state solvers become relevant comparison points. Recent work on quantum Ising spin-glass simulation, high-performance codes, tensor-network approaches, and tropical tensor networks is useful here because it clarifies what can be achieved by highly optimised classical or classical-simulation methods before invoking new AI or quantum approaches [@bernaschi2024qisg; @pan2020catn; @liu2021tropical; @smierzchalski2025spinglasspeps; @tindall2026; @mauron2025].
+
+For dense mean-field models such as the Sherrington--Kirkpatrick model, specialist knowledge comes from spin-glass theory rather than geometry. The Parisi solution and its rigorous formulation give reference values and a conceptual description of the low-temperature phase [@parisi1979; @parisi1980; @talagrand2006]. In benchmark terms, this is important because the SK model is not just a random dense QUBO: it is a theoretically controlled ensemble with a known asymptotic structure, making it valuable for comparing typical-case algorithmic behaviour.
+
+## AI and machine-learning-based approaches
+
+AI and machine-learning methods enter this literature in several related but distinct ways. The first major line is based on explicit generative models, especially autoregressive neural networks. Variational autoregressive networks introduced by Pan Zhang and collaborators showed how an exactly normalised neural sampler can be trained variationally on statistical-mechanics systems, including Ising, Hopfield, Sherrington--Kirkpatrick, and inverse Ising models [@wu2019van]. Feedback-set and message-passing variants extend this idea toward sparse or structured graphical models, making the connection to spin-glass benchmarks more direct [@pan2021fvs; @ma2024mpvan].
+
+A second line combines neural samplers with Monte Carlo rather than replacing Monte Carlo. McNaughton, Milošević, Perali, and Pilati used neural autoregressive density estimation as a proposal mechanism for unbiased Monte Carlo simulations of the two-dimensional Edwards--Anderson spin glass [@mcnaughton2020nade]. Related work by Wu, Rossi, and Carleo used autoregressive neural networks to construct unbiased cluster updates for classical spin systems [@wu2021cluster]. This hybrid philosophy is important for benchmarking: neural models should not only be tested as standalone optimisers, but also as ways to generate non-local proposals or accelerate existing sampling schemes.
+
+The Carleo/Biazzo line is especially relevant to this repository because it focuses on autoregressive representations of Boltzmann distributions for pairwise interacting spin systems. The single-author ARNN construction for pairwise spin systems and the later sparse autoregressive architecture make direct contact with SK, EA, and sparse graph benchmarks [@biazzo2023autoregressive; @biazzo2024]. These works are useful both as methodological references and as a bridge between statistical-physics formulations and scalable neural samplers.
+
+A related stream by Białas, Korcyl, Stebel, and collaborators develops hierarchical and structured autoregressive samplers for statistical systems. The main contribution for this benchmark context is not a single optimisation algorithm, but a set of architectural ideas for scaling neural samplers, reducing autocorrelation, and handling higher-dimensional lattice systems [@bialas2022han; @bialas2023autocorr; @bialas2023firstorder; @bialas2023mutual; @bialas2026hierarchical3d; @bialas2026transformers; @bialas2026priors]. These works are useful when thinking about the gap between small pedagogical spin models and the larger lattices or disordered systems needed for meaningful benchmarks.
+
+The Zamponi/Ricci-Tersenghi line adds a complementary lesson. Machine-learning-assisted Monte Carlo can fail on computationally hard problems if the learned proposal does not overcome the relevant barriers, but carefully designed methods can also produce real advantages on selected combinatorial-optimisation tasks [@ciarella2023; @delbono2025; @delbono2026; @delbono2025nearest]. This is exactly the kind of nuance the benchmark should preserve: AI methods are promising, but easy instances or weak baselines can give a misleading impression of progress.
+
+Beyond autoregressive models, the literature now includes diffusion methods, normalising-flow-like approaches, graph neural networks, reinforcement learning, variational neural annealing, and transformer samplers. These approaches differ in whether they learn a distribution, guide a search, amortise proposals, or directly optimise an energy [@hibatallah2021vna; @khandoker2023vca; @ghio2024spinflows; @sanokowski2024diffuco; @sanokowski2025sdds; @schuetz2022gnn; @fan2023; @boettcher2023; @bunaiyan2025isingformer; @andriushchenko2022deeplook]. For BENQODHI, the point is not to privilege one neural architecture, but to include benchmark families that are hard enough to distinguish genuine algorithmic progress from overfitting to a narrow distribution of easy instances.
+
+## Quantum-inspired algorithms
+
+Quantum-inspired algorithms use ideas from quantum mechanics, spin systems, or physical dynamics, but run on classical hardware. They should therefore be treated as classical competitors in any fair comparison with quantum devices. Simulated quantum annealing and path-integral Monte Carlo are the closest examples: they imitate aspects of transverse-field quantum annealing and are frequently used to evaluate or challenge quantum-speedup claims [@santoro2002; @bapst2013; @ronnow2014].
+
+Tensor-network and contraction-based methods are another important quantum-inspired or physics-inspired family. They can provide strong baselines for partition functions, free energies, or ground states, especially when the graph or geometry has exploitable structure [@pan2020catn; @liu2021tropical; @chen2025batchtnmc; @smierzchalski2025spinglasspeps]. Similarly, simulated bifurcation machines, probabilistic computers, and other Ising-machine-inspired approaches define a broad class of special-purpose classical optimisers for Ising/QUBO problems [@goto2019sbm; @goto2021sbm; @mohseni2022; @chowdhury2025; @zeng2024qaia].
+
+The practical consequence is that the benchmark should avoid a simplistic split between "classical" and "quantum". Many of the strongest competitors to quantum hardware are classical algorithms inspired by the same physics. They must be part of the comparison if the goal is to assess whether a quantum or AI-based method offers a real advantage.
+
+## Quantum-computing-based algorithms
+
+Quantum-computing approaches include quantum annealing, adiabatic optimisation, QAOA, and hardware-specific implementations on superconducting annealers, gate-based processors, or neutral-atom devices. Quantum annealing and adiabatic computation are naturally formulated for Ising-like Hamiltonians, which explains the long-standing connection between spin glasses and quantum optimisation [@kadowaki1998; @farhi2000adiabatic; @albash2018; @hauke2020; @venturelli2015]. At the same time, the literature on quantum speedup shows that benchmarking must be done carefully: weak classical baselines, hardware-specific embeddings, or poorly chosen instance families can lead to misleading conclusions [@ronnow2014; @katzgraber2014; @katzgraber2015].
+
+Recent programmable quantum-annealing experiments on spin-glass-like systems have pushed the scale of analogue simulations and have stimulated renewed debate about classical simulability and beyond-classical claims [@king2021scaling; @king2022coherent; @king2023; @king2025beyond; @zhang2024cyclic; @munozbauza2025]. These works are relevant to BENQODHI not because they settle the question of advantage, but because they show how strongly benchmark conclusions depend on the selected instance ensembles, performance metrics, and classical comparison set.
+
+Gate-based variational optimisation is represented mainly by QAOA and related protocols. The SK model, random regular graphs, MaxCut-like problems, and higher-order Ising models have all been used to analyse QAOA performance, limitations, and scaling behaviour [@farhi2014qaoa; @farhi2022sk; @basso2022; @basso2022highdepth; @boulebnane2025; @pelofske2024; @pelofske2024short; @wybo2024; @fioroni2025]. For XORSAT, planted instances and higher-order formulations are especially important because they connect quantum annealing, QAOA, QUBO reductions, and classical heuristic comparisons in a controlled setting [@hen2019; @kowalsky2022; @bellitti2021; @jorg2010firstorder; @jorg2010gaps; @farhi2012hypergraphs].
+
+Neutral-atom arrays and Rydberg devices provide another hardware-native route, often through maximum independent set on unit-disk or related graphs rather than through the exact spin-glass families used here [@pichler2018; @ebadi2022; @nguyen2023; @andrist2023]. They are nevertheless useful references because they illustrate how the choice of problem family can be shaped by hardware connectivity and native interactions.
+
+# Benchmark libraries and evaluation practice
+
+## Libraries of instances
+
+A benchmark is more than a set of hard examples. It is scientific infrastructure: instances must be reproducible, diverse, documented, and associated with clear performance measures. Classical optimisation has a long tradition of benchmark libraries, including OR-Library, MIPLIB, QPLIB, and MQLib [@beasley1990orlibrary; @gleixner2021miplib2017; @furini2019qplib; @dunning2018mqlib]. These resources are useful models because they show how to curate instances, maintain metadata, and support comparisons across algorithms over time.
+
+Quantum computing has developed its own benchmark libraries and suites, with a stronger emphasis on circuits, Hamiltonians, hardware constraints, and application-oriented workloads [@koch2025qoblib; @sawaya2024hamlib; @tomesh2022supermarq; @quetschlich2023mqtbench; @lubinski2023application; @lubinski2024optimization]. For BENQODHI, these references are useful because they clarify the distinction between hardware benchmarking and optimisation benchmarking. A quantum device may perform well on a hardware-native circuit benchmark while still failing to solve a hard optimisation instance competitively, and conversely a good optimisation benchmark may require substantial embedding or compilation before it reaches hardware.
+
+## What to measure
+
+The benchmark should report both solution quality and computational effort. Natural quality metrics include best energy found, residual energy, optimality gap, approximation ratio, success probability, and ground-state hit rate when the optimum is known. For XORSAT, the number of violated clauses is also a direct and interpretable cost. For planted or exactly solvable instances, the benchmark can report distance to the known optimum; for harder ensembles, it may need to report comparison to the best-known solution.
+
+Runtime should not be reduced to wall-clock time alone. Different algorithms consume different resources: sweeps, samples, neural-network evaluations, energy evaluations, annealing time, quantum shots, embedding overhead, classical optimiser calls, and hardware queue time. Time-to-solution and time-to-target are therefore more meaningful than a single raw runtime, especially when comparing stochastic algorithms or hardware platforms [@ronnow2014; @lubinski2024optimization].
+
+The benchmark should also report scaling and variability. Average performance can hide heavy-tailed instance distributions, rare hard cases, or algorithms that work only on selected ensembles. Instance-by-instance plots, confidence intervals, performance profiles, and data profiles are useful tools for comparing heterogeneous optimisation methods [@dolan2002performance; @hansen2021coco]. The goal is not only to identify the fastest solver on a fixed set of small instances, but to understand which algorithmic families remain robust as size, density, topology, disorder, and constraint structure change.
+
+# Mapping optimisation problems to Ising, QUBO, and XORSAT
+
+## General mapping principles
+
+Ising and QUBO formulations are attractive because many discrete optimisation problems can be expressed using binary variables and polynomial penalties [@lucas2014; @glover2019qubo]. Boolean variables can be mapped to Ising spins, pairwise costs become quadratic terms, and constraints can be enforced through penalty functions. XORSAT starts from parity constraints rather than pairwise interactions, but planted XORSAT instances can be represented as higher-order spin Hamiltonians or reduced to QUBO form by introducing auxiliary variables [@hen2019; @kowalsky2022].
+
+These mappings are not neutral. The reduction from a clean logical formulation to an Ising or QUBO instance can introduce auxiliary variables, energy scales, degeneracies, and constraint penalties that change the practical difficulty seen by an optimiser. This is one reason why the benchmark should store both the native problem definition and the encoded form used by a given solver.
+
+## Engineering and infrastructure
+
+Engineering applications provide many natural QUBO/Ising mappings: scheduling, routing, graph partitioning, maximum independent set, allocation, network design, and layout problems [@lucas2014; @glover2019qubo; @dunning2018mqlib]. These examples motivate the use of abstract graph and spin-glass instances: they isolate core algorithmic difficulties such as frustration, discreteness, and constraint competition without committing the benchmark to a single application domain.
+
+## Economics and finance
+
+Economics and finance introduce constrained allocation problems, portfolio selection, transaction costs, and risk-return trade-offs. These can often be written as mixed-integer or QUBO-like optimisation problems after discretisation or penalisation. Recent work on large-scale portfolio optimisation with variational neural annealing is a useful example because it connects an application-motivated constrained optimisation problem to an Ising-like Hamiltonian and an autoregressive neural optimiser [@ranabhat2025portfolio].
+
+## Biology, health, and genomics
+
+Biology and health should be treated as a collection of precise hard optimisation problems, not as a single application label. Several biomedical tasks are NP-complete or NP-hard before any quantum encoding; the Ising or QUBO step mainly exposes their binary variables, constraints, and penalty structure to generic spin-glass optimisers.
+
+**Lattice protein folding and protein design.** In lattice HP or Miyazawa--Jernigan models, binary variables can encode chain turns or residue positions on a lattice, while penalties enforce self-avoidance, chain connectivity, and one-hot occupation. Contact energies then define the objective. The HP lattice protein folding problem is NP-complete, and lattice heteropolymer encodings have been translated to pseudo-Boolean and Ising-like Hamiltonians and demonstrated on quantum annealing hardware [@berger1998hp; @perdomoortiz2012protein; @babbush2012heteropolymer]. A related design formulation is side-chain or rotamer selection on a fixed backbone: variables choose one rotamer per residue, unary and pairwise rotamer energies define the cost, and exactly-one constraints become QUBO penalties. Protein design and side-chain placement are NP-hard in this pairwise-energy setting [@pierce2002protein_design; @canzar2011sidechain].
+
+**RNA secondary structure with pseudoknots.** A natural binary formulation uses variables $x_{ij}$ indicating whether nucleotides $i$ and $j$ form a base pair. Matching constraints, sequence-compatibility constraints, and stacking or loop energies then produce a constrained binary optimisation problem. Without pseudoknots, restricted dynamic-programming models can be tractable; with general pseudoknots, energy-based prediction is NP-complete. This makes pseudoknotted RNA folding a better hard benchmark target than ordinary nested secondary-structure prediction, and recent work gives explicit QUBO or quadratic-Hamiltonian formulations for annealing and gate-based solvers [@lyngso2000rna; @zaborniak2022rnaqubo; @jiang2023rnaqc].
+
+**Genome assembly and de novo sequence reconstruction.** In overlap-layout formulations, binary variables can choose read adjacencies or the position of each read in an ordering. This connects de novo assembly to Hamiltonian-path, TSP, and shortest-common-superstring formulations, which are NP-hard in worst case. QuASeR is a direct example: it casts reference-free DNA sequence reconstruction through TSP, QUBO, Hamiltonian, and QAOA layers. Statistical-physics work on shortest common superstrings is also useful because it distinguishes worst-case NP-hardness from typical easy and hard phases of assembly-like instances [@sarkar2020quaser; @fernandez2022scs].
+
+**Multiple sequence alignment.** Optimal multiple sequence alignment under sum-of-pairs-style objectives is NP-complete. Binary encodings can represent residue-column placements, gap choices, or progressive pairwise alignment decisions; gap and substitution scores become weighted binary terms, while column consistency becomes a constraint-penalty system. Recent quantum-annealing work is still early, but it is relevant because it attempts to reduce the spin cost of a direct MSA encoding by using progressive-alignment structure [@wang1994msa; @lee2024maq].
+
+**Haplotype assembly and phasing.** Read-based haplotyping can be expressed with binary variables assigning reads or SNP alleles to one of two haplotypes. Minimum error correction objectives count allele corrections needed to make the partition consistent, while graph formulations can turn the problem into a MaxCut-like Ising objective. MEC variants are NP-hard or APX-hard under common restrictions, and recent quantum-inspired phasing work explicitly maps haplotype phasing to MaxCut and simulated-bifurcation-style Ising optimisation [@cilibrasi2005haplotyping; @zhang2026qhap].
+
+**Molecular similarity, docking, and virtual screening.** Cheminformatics and drug-discovery tasks often start from labelled molecular graphs. Variables can choose compatible atom, fragment, or ligand-grid matches; injectivity and compatibility are constraints; and the objective maximises a common subgraph, clique weight, or docking score. These formulations inherit hardness from maximum common subgraph, subgraph isomorphism, maximum clique, and related graph-matching problems. Quantum-annealing studies of molecular similarity and molecular docking give concrete QUBO/annealer encodings for this class [@hernandez2017molecular; @triuzzi2024docking].
+
+**Clinical operations and treatment planning.** Some health applications are not molecular biology, but they are direct health-sector optimisation problems with clean Ising/QUBO structure. Nurse rostering uses binary nurse-shift assignments with coverage, rest, and preference penalties; it has been reduced to an Ising-type Hamiltonian and tested on D-Wave hardware [@ikeda2019nurse; @lin2023nursequbo]. Radiotherapy beam-angle optimisation is an NP-hard mixed-integer planning problem in which beam-selection variables can be handled by hybrid quantum-classical schemes [@shinde2025bao].
+
+**Biomedical feature selection.** Gene-expression and single-cell analyses give a lower-priority but useful benchmark bridge. Variables select features such as genes; relevance and redundancy terms form a QUBO; and the hardness is the generic subset-selection difficulty rather than a uniquely biological constraint. This distinction matters because such instances may test QUBO modelling and scaling, but they are less diagnostic of domain-specific biological structure than folding, assembly, phasing, or molecular graph problems [@mucke2022feature; @romero2024scqubo].
+
+For BENQODHI, the practical curation rule is to store both the native biomedical problem and its encoded Ising/QUBO form. The metadata should record the decision variables, constraints, penalty scales, auxiliary variables, and the reason the native problem is hard: an NP-completeness proof, a reduction to MaxCut/clique/TSP, a known phase-transition regime, or empirical evidence of hard instances. The Genome in a Bottle and Platinum Pedigree references remain relevant in a different role: they are examples of trustworthy biomedical benchmark design, not direct spin-glass or XORSAT optimisation mappings [@zook2016giab; @wagner2022giabchallenging; @kronenberg2025platinum].
+
+## Other domains
+
+Other application domains include logistics, cybersecurity, energy systems, public-sector planning, and scientific computing. The benchmark does not need to reproduce all of these applications explicitly. Its role is to provide controlled, well-documented hard instances whose structure is rich enough to test algorithms that may later be applied in those domains.
+
+# Takeaway for BENQODHI
+
+The literature suggests three practical principles for the repository. First, every AI or quantum method should be compared against strong classical and quantum-inspired baselines, not only against naive simulated annealing. Second, benchmark instances should span controlled, certifiable cases and genuinely hard typical-case ensembles. Third, the benchmark should report enough metadata and performance information to make comparisons reproducible, hardware-aware, and robust across algorithms.
