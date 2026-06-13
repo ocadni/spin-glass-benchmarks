@@ -1,15 +1,15 @@
 ---
-title: "Spin Glass Benchmarks"
-subtitle: "Reproducible instance families, file formats, and solver contracts for spin-glass optimization."
+title: "Spin-Glass and XORSAT Benchmarks"
+subtitle: "Reproducible instance families, file formats, and solver contracts for spin-glass and XORSAT optimization."
 page-layout: full
 toc: false
 ---
 
 :::: {.hero}
 ::: {.hero-copy}
-# Spin Glass Benchmarks
+# Spin-Glass and XORSAT Benchmarks
 
-A repository for benchmark instances and solver conventions across dense, sparse, and lattice spin-glass models. The documentation collects the scientific rationale, the benchmark family design, the instance file format, and the implementation contract used by contributors.
+A repository for benchmark instances and solver conventions across dense, sparse, and lattice spin-glass models, plus XORSAT-oriented higher-order families. The documentation collects the scientific rationale, benchmark family design, instance file formats, and implementation contract used by contributors.
 
 [Problem families](benchmark_problem_families.qmd){.btn .btn-primary .btn-lg}
 [File format](file_format.qmd){.btn .btn-outline-primary .btn-lg}
@@ -35,7 +35,7 @@ Design philosophy, core instance families, hardware-native extensions, metadata,
 ::: {.g-col-12 .g-col-md-6 .g-col-xl-3}
 ### Quantum Benchmark Rationale
 
-Scientific motivation for spin-glass benchmarks in quantum optimization and quantum-inspired solvers.
+Scientific motivation for spin-glass and XORSAT benchmarks in quantum optimization and quantum-inspired solvers.
 
 [Read the rationale](quantum_benchmark_rationale.qmd)
 :::
@@ -63,7 +63,7 @@ Minimal interface and reproducibility expectations for generators, solvers, and 
 
 | Area | Repository convention |
 |---|---|
-| Instance families | SK, EA 2D/3D, random regular graph, and XORSAT-oriented extensions |
+| Instance families | SK, EA 2D/3D, random regular graph, and 3-XORSAT |
 | Instance storage | Text-readable coupling files under `benchmarks/<model>/N<size>/` |
 | Generator contract | Deterministic generation from explicit parameters and seed |
 | Solver contract | Standardized status, objective, assignment, and metrics |

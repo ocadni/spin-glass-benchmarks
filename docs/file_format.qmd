@@ -1,14 +1,14 @@
 ---
-title: "Instance File Format"
-subtitle: "Text format for spin-glass benchmark instances"
+title: "Instance File Formats"
+subtitle: "Text formats for spin-glass and XORSAT benchmark instances"
 date: last-modified
 ---
 
-# Instance File Format
+# Instance File Formats
 
-This document describes the simple text-based format used for storing spin glass instances in this repository.
+This document describes the simple text-based formats used for storing spin-glass and XORSAT instances in this repository. The current V0 schema below specifies the pairwise spin-glass format; XORSAT instances follow the same metadata-first convention as their row schema is finalized.
 
-## Format Specification
+## Spin-Glass Format Specification
 
 An instance file is a plain text file with the following structure:
 

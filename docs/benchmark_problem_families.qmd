@@ -1,5 +1,5 @@
 ---
-title: "Benchmark Problem Families for BENQODHI"
+title: "Spin-Glass and XORSAT Benchmark Families"
 subtitle: "Design philosophy, core instance families, hardware-native extensions, and protocol"
 author:
   - name: "BENQODHI Working Group"

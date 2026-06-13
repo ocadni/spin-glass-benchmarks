@@ -68,7 +68,7 @@ Rules:
 ## Storage (V0)
 
 - Keep storage simple and text-readable.
-- Use existing instance file format for spin-glass while adding sidecar metadata where needed.
+- Use text-readable instance formats for spin-glass and XORSAT while adding sidecar metadata where needed.
 - Keep a small index file for generated instances and benchmark runs.
 
 ## Human Checkpoints

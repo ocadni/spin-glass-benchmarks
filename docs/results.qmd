@@ -1,0 +1,31 @@
+---
+title: "Results"
+subtitle: "Benchmark instances, solver runs, and reported metrics"
+date: last-modified
+---
+
+# Results
+
+This page is a scaffold for benchmark results.
+
+## Result Summary
+
+TODO: Add high-level result tables and plots.
+
+## Instance Sets
+
+TODO: Document which benchmark instances were used for each result.
+
+## Solver Configurations
+
+TODO: Document solver versions, parameters, seeds, hardware, and runtime limits.
+
+## Metrics
+
+TODO: Define and report objective quality, success rate, time to solution,
+scaling behavior, and reproducibility checks.
+
+## Raw Data
+
+TODO: Link to generated result files and scripts used to reproduce figures.
+

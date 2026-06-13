@@ -1,0 +1,367 @@
+---
+title: "Problem Definition"
+subtitle: "Spin glasses and XORSAT as benchmark optimization problems"
+author:
+  - name: "BENQODHI Working Group"
+    affiliation: "Joint Research Centre (European Commission) · Sapienza University of Rome"
+date: last-modified
+abstract: |
+  This page defines the core optimization problems used in the benchmark suite.
+  The emphasis is on why spin glasses and XORSAT form useful controlled families
+  of hard discrete optimization problems, and on the precise mathematical
+  definitions of the instance classes included in the repository.
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    theme: cosmo
+bibliography: references.bib
+link-citations: true
+reference-section-title: "References"
+---
+
+# Introduction {#sec-introduction}
+
+The benchmark focuses on disordered binary optimization problems whose objective
+function can be interpreted as an energy landscape. The basic task is simple to
+state: given a set of binary variables and a set of random interactions or
+constraints, find an assignment that minimizes the total energy. The difficulty
+comes from the structure of the landscape. In frustrated systems, local
+preferences cannot all be satisfied at the same time. As the system size grows,
+this produces many competing low-energy configurations, metastable minima, and
+barriers separating different regions of configuration space. This is the
+physical mechanism behind the use of spin glasses as paradigmatic hard
+optimization problems [@sherrington1975; @edwards1975; @mezard1987].
+
+Spin-glass and XORSAT instances are useful benchmarks because they combine
+hardness with theoretical control. Some variants are NP-hard in the worst case,
+while others admit exact algorithms or exact asymptotic results in selected
+limits [@barahona1982; @lucas2014; @talagrand2006]. This makes the family richer
+than a generic collection of hard instances: one can compare worst-case and
+typical-case behaviour, use small or exactly solvable instances for validation,
+and then increase the size or change the topology to enter regimes where generic
+heuristics struggle. A small instance may be solved by enumeration, exact solvers,
+or simple local search; the same ensemble at larger sizes can display much more
+severe glassy behaviour.
+
+The theoretical motivation is rooted in the Parisi solution of the
+Sherrington--Kirkpatrick model and in the broader statistical-physics description
+of random optimization and constraint-satisfaction problems. In this view,
+hardness is not only a matter of the best possible algorithm, but also of the
+organization of states: clustering of solutions, overlap structure, replica
+symmetry breaking, and energetic or entropic barriers [@parisi1979; @parisi1980;
+@mezard1987; @mezard2009; @krzakala2007]. These concepts are useful when building
+benchmarks because they provide language for explaining *why* an instance is
+hard, not only whether a solver succeeds or fails.
+
+For this reason, spin glasses and XORSAT have been used across several domains as
+test beds for optimization algorithms. They appear in classical simulated
+annealing and related Monte Carlo methods, quantum annealing and adiabatic
+optimization, QAOA and gate-based variational algorithms, quantum-inspired
+methods, and recent AI/ML-assisted solvers [@kirkpatrick1983sa; @kadowaki1998;
+@santoro2002; @albash2018; @bapst2013; @farhi2014qaoa; @boettcher2023;
+@schuetz2022gnn; @biazzo2024; @biazzo2023autoregressive; @delbono2025; @delbono2026]. The benchmark therefore uses these
+problems not as an abstract physics exercise, but as a common controlled ground
+on which classical, AI-based, quantum-inspired, and quantum optimization
+approaches can be compared.
+
+The current scope contains two main classes of problems:
+
+1. **pairwise Ising spin glasses**, where the variables are spins
+   $s_i \in \{-1,+1\}$ and the objective is a quadratic energy;
+2. **XORSAT-type constraint-satisfaction problems**, which are naturally
+   higher-order parity problems but can also be reduced to pairwise Ising or QUBO
+   form when required by a solver.
+
+The following sections define these problems and explain the role played by each
+family in the benchmark.
+
+# Spin-glass optimization problems {#sec-spin-glass}
+
+## General Ising spin-glass formulation {#sec-ising-general}
+
+Let $G=(V,E)$ be a graph with $N=|V|$ vertices. Each vertex carries an Ising spin
+$s_i \in \{-1,+1\}$. Given pairwise couplings $J_{ij}$ on the edges and,
+optionally, local fields $h_i$, the general Ising optimization problem is
+
+$$
+H(\mathbf{s})
+= - \sum_{(i,j)\in E} J_{ij} s_i s_j
+  - \sum_{i\in V} h_i s_i .
+$$
+
+The optimization task is to find
+
+$$
+\mathbf{s}^{\star} \in \arg\min_{\mathbf{s}\in\{-1,+1\}^{N}} H(\mathbf{s}) .
+$$
+
+Positive couplings favour aligned spins, while negative couplings favour
+anti-aligned spins. On graphs with loops, these local preferences can be mutually
+inconsistent. The resulting frustration is what produces a rugged energy
+landscape with many local minima.
+
+This formulation is closely related to Quadratic Unconstrained Binary
+Optimization (QUBO). By changing variables between spins $s_i \in \{-1,+1\}$ and
+bits $x_i \in \{0,1\}$, for example through $s_i = 2x_i-1$, a pairwise Ising
+energy can be written as a quadratic polynomial in binary variables
+[@glover2019qubo; @lucas2014]. This connection is important because different
+classical and quantum solvers use different native representations: some expect
+Ising couplings, while others expect QUBO coefficients.
+
+In the repository, the main distinction among spin-glass families is the graph
+$G$: complete graph for the Sherrington--Kirkpatrick model, finite-dimensional
+lattices for the Edwards--Anderson model, and sparse random graphs for random
+regular graph spin glasses.
+
+## Sherrington--Kirkpatrick model {#sec-sk}
+
+### Definition
+
+The Sherrington--Kirkpatrick (SK) model is the fully connected mean-field Ising
+spin glass. Every spin interacts with every other spin. A standard zero-field
+form is
+
+$$
+H_{\mathrm{SK}}(\mathbf{s})
+= - \frac{1}{\sqrt{N}}
+  \sum_{1\le i<j\le N} J_{ij} s_i s_j,
+$$
+
+where the couplings $J_{ij}$ are independent random variables, commonly Gaussian
+with zero mean and unit variance or bimodal $J_{ij}\in\{-1,+1\}$. The factor
+$1/\sqrt{N}$ gives an extensive thermodynamic normalization [@sherrington1975].
+
+### Why it is included
+
+SK is the canonical dense spin-glass benchmark. It is mathematically central
+because the thermodynamic solution is described by Parisi's replica-symmetry
+breaking construction [@parisi1979; @parisi1980; @mezard1987], and the limiting
+free energy is rigorously characterized by the Parisi formula [@talagrand2006].
+This gives the model an unusually strong theoretical status: it is hard, but not
+unstructured.
+
+From a benchmarking point of view, SK tests how a solver deals with dense,
+long-range interactions. 
+
+### What it tests
+
+SK is useful for testing:
+
+- dense all-to-all connectivity;
+- behaviour on mean-field glassy landscapes;
+- finite-size convergence toward known asymptotic quantities;
+- algorithms designed for dense QUBO or dense Ising problems;
+- embedding and routing overhead on hardware with sparse native connectivity.
+
+Its main limitation is also its strength: because the graph is complete, it is
+not native to most near-term quantum hardware. Therefore, when SK is used on
+sparse hardware, one must distinguish algorithmic difficulty from the overhead of
+embedding a dense graph into a sparse device topology.
+
+## Edwards--Anderson model {#sec-ea}
+
+### Definition
+
+The Edwards--Anderson (EA) model is a finite-dimensional spin glass. Spins live
+on the sites of a $d$-dimensional lattice and interact only with nearest
+neighbours:
+
+$$
+H_{\mathrm{EA}}(\mathbf{s})
+= - \sum_{\langle i,j\rangle} J_{ij} s_i s_j .
+$$
+
+Here $\langle i,j\rangle$ denotes nearest-neighbour lattice edges, and the
+couplings are usually drawn from either a Gaussian or bimodal distribution
+[@edwards1975]. The lattice may have open or periodic boundary conditions,
+depending on the intended benchmark use.
+
+### Two-dimensional EA
+
+The two-dimensional zero-field EA model plays a special role. For planar
+instances without magnetic fields, exact ground states can be found in polynomial
+time using mappings to matching problems [@barahona1982]. This means that 2D EA
+can be used as a controlled validation family: heuristic solvers can be tested
+against certified optima at sizes much larger than those accessible by brute
+force.
+
+This does not make 2D EA useless as a benchmark. Rather, it gives it a precise
+role. It is especially useful for calibration, finite-size studies, and tests in
+which one wants a local spin-glass landscape but also wants access to exact
+answers.
+
+### Three-dimensional EA
+
+The three-dimensional EA model is much harder. Moving from two to three spatial
+dimensions removes the planar structure that makes the zero-field 2D case
+tractable, and the ground-state problem becomes NP-hard [@barahona1982]. The 3D
+model is therefore a natural finite-dimensional hard benchmark: it preserves
+local interactions and geometric structure, but it is no longer an exactly
+solvable validation case.
+
+### Why it is included
+
+EA models are included because they provide the finite-dimensional and local
+counterpart to SK. They allow the benchmark to separate dense mean-field hardness
+from local geometric hardness. In particular:
+
+- 2D EA provides local spin-glass instances with exact ground truth in selected
+  settings;
+- 3D EA provides a genuinely hard finite-dimensional spin-glass benchmark;
+- both variants are closer to physical hardware connectivity than SK;
+- comparing 2D and 3D EA makes it possible to study how dimensionality changes
+  algorithmic behaviour.
+
+## Spin glasses on sparse random graphs {#sec-rrg}
+
+### Definition
+
+Sparse random-graph spin glasses place pairwise Ising interactions on random
+sparse graphs rather than on a lattice or on the complete graph. Given a graph
+$G=(V,E)$, the Hamiltonian is
+
+$$
+H_G(\mathbf{s})
+= - \sum_{(i,j)\in E} J_{ij} s_i s_j .
+$$
+
+The main sparse graph ensemble used in the benchmark is the random regular graph
+(RRG). In a $c$-regular graph, every vertex has exactly $c$ neighbours. Couplings
+may again be Gaussian or bimodal. Erdős--Rényi graphs with fixed average degree
+can also be considered, but RRG instances are often cleaner because the degree is
+controlled exactly.
+
+### Why random regular graphs are useful
+
+Random regular graphs sit between SK and EA. Like SK, they are random and have a
+mean-field character. Like EA, they have finite degree and therefore sparse
+connectivity. Locally, large random regular graphs are tree-like, which connects
+them to the cavity method and to the statistical physics of random
+constraint-satisfaction problems [@mezard2009].
+
+This makes RRG spin glasses useful for studying typical-case hardness. They are
+less geometrically structured than lattices, but they do not have the dense
+all-to-all structure of SK. The connectivity $c$ is also a natural control
+parameter: by changing $c$, one changes the local degree, the density of
+constraints, and the cost of embedding the problem on sparse hardware.
+
+### What they test
+
+Sparse random-graph spin glasses are useful for testing:
+
+- finite-connectivity mean-field behaviour;
+- typical-case hardness on random sparse structures;
+- message-passing, graph-based, and local algorithms;
+- QAOA and other algorithms whose performance depends strongly on graph locality;
+- the transition between lattice-like sparse problems and dense mean-field
+  problems.
+
+For the benchmark, these instances are particularly important because they are
+scalable and tunable while remaining conceptually close to spin-glass theory.
+
+# XORSAT optimization problems {#sec-xorsat}
+
+## General XORSAT formulation {#sec-xorsat-general}
+
+An XORSAT instance is a system of parity constraints over binary variables
+$x_i\in\{0,1\}$. In 3-XORSAT, each constraint involves three variables:
+
+$$
+x_{i_a} \oplus x_{j_a} \oplus x_{k_a} = b_a,
+\qquad a=1,\ldots,M,
+$$
+
+where $b_a\in\{0,1\}$ and $\oplus$ denotes addition modulo two. The native problem
+is linear over $\mathrm{GF}(2)$, and therefore satisfiable instances can be
+solved algebraically by Gaussian elimination. This algebraic solvability is one
+reason XORSAT is useful as a benchmark: it allows one to know or plant solutions
+while still creating instances that are difficult for generic optimization
+heuristics [@hen2019; @kowalsky2022].
+
+## Spin formulation of 3-XORSAT {#sec-xorsat-spin}
+
+Using spin variables
+
+$$
+s_i = (-1)^{x_i},
+\qquad
+J_a = (-1)^{b_a},
+$$
+
+a parity constraint is satisfied when
+
+$$
+J_a s_{i_a}s_{j_a}s_{k_a} = 1 .
+$$
+
+A natural cost function is therefore
+
+$$
+H_{\mathrm{3X}}(\mathbf{s})
+= \sum_{a=1}^{M}
+  \frac{1 - J_a s_{i_a}s_{j_a}s_{k_a}}{2} .
+$$
+
+This energy counts the number of violated clauses. The global minimum is zero
+for satisfiable instances and positive for unsatisfiable instances.
+
+The important difference from the pairwise spin glasses above is that this is a
+three-body Hamiltonian. Each term couples three spins, not two. This makes XORSAT
+a natural benchmark for higher-order optimization, while also raising an encoding
+question for solvers that only accept pairwise Ising or QUBO inputs.
+
+## Planted and regular XORSAT instances {#sec-xorsat-planted}
+
+The benchmark should include planted or regular variants of XORSAT. In a planted
+instance, a solution is chosen first and the clauses are generated so that this
+solution satisfies them. In a regular instance, each variable appears in a fixed
+number of clauses. These choices make the ensemble controlled and reproducible,
+and they allow the optimum to be known by construction [@hen2019; @kowalsky2022].
+
+XORSAT is especially useful because it separates algebraic solvability from
+heuristic optimization difficulty. A solver that recognizes the linear structure
+can solve the instance efficiently, but a generic local-search, annealing, or
+black-box optimization method may experience a difficult landscape. In regular
+and planted ensembles, the hard regime is often associated with isolated clusters
+of solutions and entropic barriers: the challenge is not simply to cross a high
+energy wall, but to find a small target region in a very large configuration
+space [@mezard2002; @krzakala2007; @bellitti2021; @bernaschi2021xorsat].
+
+## Pairwise Ising and QUBO reductions {#sec-xorsat-qubo}
+
+Many optimization solvers, especially hardware solvers, accept only pairwise
+Ising or QUBO formulations. For this reason, the benchmark should document two
+representations of XORSAT instances:
+
+1. the **native clause representation**, which preserves the original parity
+   constraints;
+2. the **encoded pairwise representation**, where auxiliary variables and penalty
+   terms reduce the three-body interactions to quadratic form.
+
+The native representation is the cleanest mathematical definition. The encoded
+representation is the one needed for pairwise Ising/QUBO solvers. Both are useful,
+but they should not be confused: the encoding introduces additional variables,
+penalty scales, and possible changes in the effective landscape. These overheads
+are part of what the benchmark should make explicit.
+
+# Summary of benchmark roles {#sec-summary}
+
+| Family | Topology | Native interaction | Main benchmark role |
+|---|---|---|---|
+| SK | Complete graph | Pairwise Ising | Dense mean-field spin glass with strong theoretical control |
+| EA 2D | Two-dimensional lattice | Pairwise Ising | Local spin glass with exact ground truth in selected zero-field planar cases |
+| EA 3D | Three-dimensional lattice | Pairwise Ising | Hard finite-dimensional local spin-glass benchmark |
+| RRG spin glass | Sparse random regular graph | Pairwise Ising | Finite-connectivity mean-field benchmark with tunable degree |
+| 3-XORSAT | Random or planted hypergraph | Three-body parity constraints | Constraint-satisfaction benchmark with known/planted solutions and entropic hardness |
+
+The benchmark is therefore not based on a single notion of hardness. SK tests
+dense mean-field glassiness; EA tests finite-dimensional locality; RRG spin
+glasses test sparse random typical-case behaviour; and XORSAT tests structured
+constraint satisfaction, higher-order interactions, and planted hardness. Taken
+together, these families provide a compact but expressive set of problems for
+comparing classical, AI/ML-based, quantum-inspired, and quantum optimization
+methods.
+
+# References {.unnumbered}

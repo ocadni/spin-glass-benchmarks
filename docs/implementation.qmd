@@ -1,0 +1,33 @@
+---
+title: "Implementation Plan"
+subtitle: "Repository status, roadmap, missing pieces, and contributor contract"
+date: last-modified
+---
+
+# Implementation Plan
+
+This page is a scaffold for the implementation status of the benchmark
+repository.
+
+## Repository Plan
+
+TODO: Describe the intended package structure, documentation structure,
+benchmark generation flow, solver execution flow, and result publication flow.
+
+## Implemented
+
+TODO: List what is currently implemented.
+
+## Missing
+
+TODO: List the missing repository pieces and known technical debt.
+
+## Next Steps
+
+TODO: Define the next implementation milestones.
+
+## Related Implementation Documents
+
+- [File Format](file_format.qmd)
+- [Project Contract](project_contract.qmd)
+
