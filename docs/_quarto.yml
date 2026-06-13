@@ -24,8 +24,6 @@ website:
         menu:
           - text: "Problem Definition"
             href: problem_definition.qmd
-          - text: "File Format"
-            href: file_format.qmd
       - text: "Literature References"
         href: literature_references.qmd
       - text: "Results"
