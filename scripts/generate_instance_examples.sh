@@ -12,7 +12,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-GENERATOR="$REPO_ROOT/scripts/generate_pairwise_instance.py"
+GENERATOR="$REPO_ROOT/generators/generate_pairwise_instance.py"
 OUTDIR="${OUTDIR:-$REPO_ROOT/instances/examples}"
 mkdir -p "$OUTDIR"
 

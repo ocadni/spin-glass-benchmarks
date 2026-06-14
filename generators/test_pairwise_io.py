@@ -4,9 +4,9 @@ from pathlib import Path
 import sys
 
 
-SCRIPTS = Path(__file__).resolve().parent
-if str(SCRIPTS) not in sys.path:
-    sys.path.insert(0, str(SCRIPTS))
+HERE = Path(__file__).resolve().parent
+if str(HERE) not in sys.path:
+    sys.path.insert(0, str(HERE))
 
 from pairwise_instance import PairwiseInstance
 from pairwise_io import format_instance_number, load_pairwise_instance, write_pairwise_instance
