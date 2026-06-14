@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "algorithm": "population_annealing",
+  "seeds": [
+    1729,
+    2718,
+    3141,
+    4242,
+    5555
+  ],
+  "output_diagnostics": false,
+  "solver_parameters": {
+    "L": 10,
+    "pop_size": 1024,
+    "MCsteps": 10,
+    "Tstart": 1.92,
+    "Tend": 0.1,
+    "num_temps": 20,
+    "schedule": "logT",
+    "high_temp_thermalization_steps": 200
+  },
+  "parameter_sweep": null
+}

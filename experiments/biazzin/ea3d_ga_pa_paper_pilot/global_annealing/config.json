@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "algorithm": "global_annealing",
+  "seeds": [
+    1729,
+    2718,
+    3141,
+    4242,
+    5555
+  ],
+  "output_diagnostics": false,
+  "solver_parameters": {
+    "L": 10,
+    "pop_size": 1024,
+    "MLMCsteps": 5,
+    "swap_step": 15,
+    "Tstart": 1.92,
+    "Tend": 0.1,
+    "num_temps": 20,
+    "schedule": "logT",
+    "high_temp_thermalization_steps": 200,
+    "num_epochs_start": 40,
+    "num_epochs_retrain": 1,
+    "batch_size": 256
+  },
+  "parameter_sweep": null
+}
