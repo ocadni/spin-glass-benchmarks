@@ -1,0 +1,7 @@
+# Ignore all run results
+**/runs/
+
+# Keep example experiment structure but not results
+!biazzin/sk_ga_initial/
+!biazzin/sk_ga_initial/**/*.json
+biazzin/sk_ga_initial/**/runs/
