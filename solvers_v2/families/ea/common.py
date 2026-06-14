@@ -19,6 +19,7 @@ def run_baseline_case(
     parameters: dict,
     seed: int,
     dimension: str,
+    progress_callback=None,
 ) -> SolverResult:
     set_reproducible_seed(seed)
     couplings = load_pairwise_couplings(fixture, symmetric=True)
@@ -44,6 +45,7 @@ def run_baseline_case(
             update=update,
             high_temp_thermalization_steps=parameters["high_temp_thermalization_steps"],
             record_final_duplicate=False,
+            progress_callback=progress_callback,
         )
     if algorithm == "population_annealing":
         return common.population_annealing(
@@ -56,5 +58,23 @@ def run_baseline_case(
             schedule=parameters["schedule"],
             update=update,
             high_temp_thermalization_steps=parameters["high_temp_thermalization_steps"],
+            progress_callback=progress_callback,
+        )
+    if algorithm == "global_annealing":
+        return common.global_annealing(
+            couplings,
+            pop_size=parameters["pop_size"],
+            num_steps_mc=parameters["MLMCsteps"],
+            swap_step=parameters["swap_step"],
+            t_start=parameters["Tstart"],
+            t_end=parameters["Tend"],
+            num_temps=parameters["num_temps"],
+            schedule=parameters["schedule"],
+            update=update,
+            high_temp_thermalization_steps=parameters["high_temp_thermalization_steps"],
+            num_epochs_start=parameters.get("num_epochs_start", 40),
+            num_epochs_retrain=parameters.get("num_epochs_retrain", 1),
+            batch_size=parameters.get("batch_size", 256),
+            progress_callback=progress_callback,
         )
     raise ValueError(f"unsupported EA algorithm: {algorithm}")
