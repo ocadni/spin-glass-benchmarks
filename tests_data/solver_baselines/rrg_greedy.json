@@ -1,0 +1,38 @@
+{
+  "algorithm": "greedy",
+  "baseline_id": "rrg_greedy",
+  "environment": {
+    "numpy": "2.2.3",
+    "platform": "Linux-5.14.0-687.12.1.el9_8.x86_64-x86_64-with-glibc2.34",
+    "python": "3.12.2",
+    "torch": "2.7.0"
+  },
+  "family": "rrg",
+  "fixture": "tests_data/instances/rrg/N50/rrg_couplings_N50_J0_seed4051730.txt",
+  "fixture_sha256": "d2fa153b8b6a2747c7cf2b84cba6671808303bb95bd0cf12e0ed283f7b6017aa",
+  "matrix_mode": "symmetric",
+  "metrics": {
+    "min_energy": [
+      -0.17762060463428497,
+      -0.4351675510406494
+    ],
+    "mean_energy": [
+      -0.048285551369190216,
+      -0.2210271656513214
+    ],
+    "final_min_energy": -0.4351675510406494,
+    "final_mean_energy": -0.2210271656513214,
+    "best_min_energy": -0.4351675510406494
+  },
+  "parameters": {
+    "pop_size": 8
+  },
+  "schedule_length": null,
+  "schema_version": 1,
+  "seed_values": {
+    "numpy": 1729,
+    "python_random": 1729,
+    "torch": 1729
+  },
+  "solver_file": "solvers_v2/families/rrg/__init__.py"
+}

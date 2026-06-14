@@ -1,0 +1,46 @@
+{
+  "algorithm": "parallel_tempering",
+  "baseline_id": "sk_parallel_tempering",
+  "environment": {
+    "numpy": "2.2.3",
+    "platform": "Linux-5.14.0-687.12.1.el9_8.x86_64-x86_64-with-glibc2.34",
+    "python": "3.12.2",
+    "torch": "2.7.0"
+  },
+  "family": "sk",
+  "fixture": "tests_data/instances/sk/N50/sk_couplings_N50_J0_seed1051730.txt",
+  "fixture_sha256": "7f9f3eedc6e7f926bd2ffe904ce2e908be3346dfc5e5f012c70a276e0b05da92",
+  "matrix_mode": "sk_legacy_upper",
+  "metrics": {
+    "best_min_energy": -0.022868700325489044,
+    "final_mean_energy": 0.11833252757787704,
+    "final_min_energy": 0.11833252757787704,
+    "mean_energy": [
+      -0.022868700325489044,
+      0.03862209618091583,
+      0.11833252757787704
+    ],
+    "min_energy": [
+      -0.022868700325489044,
+      0.03862209618091583,
+      0.11833252757787704
+    ]
+  },
+  "parameters": {
+    "MCsteps": 2,
+    "Tend": 0.1,
+    "Tstart": 1.92,
+    "high_temp_thermalization_steps": 1,
+    "num_temps": 4,
+    "schedule": "linearT",
+    "swap_interval": 1
+  },
+  "schedule_length": 4,
+  "schema_version": 1,
+  "seed_values": {
+    "numpy": 1729,
+    "python_random": 1729,
+    "torch": 1729
+  },
+  "solver_file": "solvers/System specific solvers/SK/Modern/optimization/PT_SK.py"
+}

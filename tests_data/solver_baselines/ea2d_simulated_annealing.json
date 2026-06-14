@@ -1,0 +1,50 @@
+{
+  "algorithm": "simulated_annealing",
+  "baseline_id": "ea2d_simulated_annealing",
+  "environment": {
+    "numpy": "2.2.3",
+    "platform": "Linux-5.14.0-687.12.1.el9_8.x86_64-x86_64-with-glibc2.34",
+    "python": "3.12.2",
+    "torch": "2.7.0"
+  },
+  "family": "ea2d",
+  "fixture": "tests_data/instances/ea2d/N100/ea2d_couplings_N100_J0_seed2011730.txt",
+  "fixture_sha256": "8b044034e4691738912962fd245c1fb526ae1b69237b07f6d2b371f2f50e2c73",
+  "matrix_mode": "symmetric",
+  "metrics": {
+    "best_min_energy": -1.1017179489135742,
+    "final_mean_energy": -1.072959303855896,
+    "final_min_energy": -1.1017179489135742,
+    "mean_energy": [
+      -0.6893733143806458,
+      -0.8218581676483154,
+      -0.9946057796478271,
+      -1.072959303855896
+    ],
+    "min_energy": [
+      -0.7675732374191284,
+      -0.922566294670105,
+      -1.017238974571228,
+      -1.1017179489135742
+    ]
+  },
+  "parameters": {
+    "L": 10,
+    "MCsteps": 2,
+    "Tend": 0.1,
+    "Tstart": 1.92,
+    "dimension": "2d",
+    "high_temp_thermalization_steps": 1,
+    "num_temps": 4,
+    "pop_size": 8,
+    "schedule": "linearT"
+  },
+  "schedule_length": 4,
+  "schema_version": 1,
+  "seed_values": {
+    "numpy": 1729,
+    "python_random": 1729,
+    "torch": 1729
+  },
+  "solver_file": "solvers/System specific solvers/EA3D/Modern/optimization/simulated_annealing.py"
+}

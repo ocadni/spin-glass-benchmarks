@@ -1,0 +1,50 @@
+{
+  "algorithm": "population_annealing",
+  "baseline_id": "ea3d_population_annealing",
+  "environment": {
+    "numpy": "2.2.3",
+    "platform": "Linux-5.14.0-687.12.1.el9_8.x86_64-x86_64-with-glibc2.34",
+    "python": "3.12.2",
+    "torch": "2.7.0"
+  },
+  "family": "ea3d",
+  "fixture": "tests_data/instances/ea3d/N512/ea3d_couplings_N512_J0_seed3009730.txt",
+  "fixture_sha256": "8efb7bf3af2145763346af79de27ca14915a1075495895485447f20c50115d02",
+  "matrix_mode": "symmetric",
+  "metrics": {
+    "best_min_energy": -1.5818064212799072,
+    "final_mean_energy": -1.5809193849563599,
+    "final_min_energy": -1.5818064212799072,
+    "mean_energy": [
+      -1.0575323104858398,
+      -1.3781687021255493,
+      -1.5301655530929565,
+      -1.5809193849563599
+    ],
+    "min_energy": [
+      -1.102583408355713,
+      -1.4541146755218506,
+      -1.5576049089431763,
+      -1.5818064212799072
+    ]
+  },
+  "parameters": {
+    "L": 8,
+    "MCsteps": 2,
+    "Tend": 0.1,
+    "Tstart": 1.92,
+    "dimension": "3d",
+    "high_temp_thermalization_steps": 1,
+    "num_temps": 4,
+    "pop_size": 8,
+    "schedule": "linearT"
+  },
+  "schedule_length": 4,
+  "schema_version": 1,
+  "seed_values": {
+    "numpy": 1729,
+    "python_random": 1729,
+    "torch": 1729
+  },
+  "solver_file": "solvers/System specific solvers/EA3D/Modern/optimization/population_annealing.py"
+}

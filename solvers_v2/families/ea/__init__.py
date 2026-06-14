@@ -1,0 +1,2 @@
+"""Edwards-Anderson solver adapters."""
+

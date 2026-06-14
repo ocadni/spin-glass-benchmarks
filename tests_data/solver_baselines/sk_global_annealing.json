@@ -1,0 +1,52 @@
+{
+  "algorithm": "global_annealing",
+  "baseline_id": "sk_global_annealing",
+  "environment": {
+    "numpy": "2.2.3",
+    "platform": "Linux-5.14.0-687.12.1.el9_8.x86_64-x86_64-with-glibc2.34",
+    "python": "3.12.2",
+    "torch": "2.7.0"
+  },
+  "family": "sk",
+  "fixture": "tests_data/instances/sk/N50/sk_couplings_N50_J0_seed1051730.txt",
+  "fixture_sha256": "7f9f3eedc6e7f926bd2ffe904ce2e908be3346dfc5e5f012c70a276e0b05da92",
+  "matrix_mode": "sk_legacy_upper",
+  "metrics": {
+    "min_energy": [
+      -0.04151070490479469,
+      0.04845450446009636,
+      -0.017930893227458,
+      -0.04475609213113785
+    ],
+    "mean_energy": [
+      0.1104108989238739,
+      0.17072954773902893,
+      0.15931862592697144,
+      0.11587424576282501
+    ],
+    "final_min_energy": -0.04475609213113785,
+    "final_mean_energy": 0.11587424576282501,
+    "best_min_energy": -0.04475609213113785
+  },
+  "parameters": {
+    "pop_size": 100,
+    "MLMCsteps": 2,
+    "swap_step": 2,
+    "Tstart": 1.92,
+    "Tend": 0.1,
+    "num_temps": 4,
+    "schedule": "linearT",
+    "high_temp_thermalization_steps": 1,
+    "num_epochs_start": 5,
+    "num_epochs_retrain": 1,
+    "batch_size": 50
+  },
+  "schedule_length": 4,
+  "schema_version": 1,
+  "seed_values": {
+    "numpy": 1729,
+    "python_random": 1729,
+    "torch": 1729
+  },
+  "solver_file": "solvers_v2/common/global_annealing/__init__.py"
+}

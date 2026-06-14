@@ -1,0 +1,38 @@
+{
+  "algorithm": "greedy",
+  "baseline_id": "sk_greedy",
+  "environment": {
+    "numpy": "2.2.3",
+    "platform": "Linux-5.14.0-687.12.1.el9_8.x86_64-x86_64-with-glibc2.34",
+    "python": "3.12.2",
+    "torch": "2.7.0"
+  },
+  "family": "sk",
+  "fixture": "tests_data/instances/sk/N50/sk_couplings_N50_J0_seed1051730.txt",
+  "fixture_sha256": "7f9f3eedc6e7f926bd2ffe904ce2e908be3346dfc5e5f012c70a276e0b05da92",
+  "matrix_mode": "sk_legacy_upper",
+  "metrics": {
+    "best_min_energy": -0.14894971251487732,
+    "final_mean_energy": -0.04411096125841141,
+    "final_min_energy": -0.14894971251487732,
+    "mean_energy": [
+      0.0013725727330893278,
+      -0.04411096125841141
+    ],
+    "min_energy": [
+      -0.03632170706987381,
+      -0.14894971251487732
+    ]
+  },
+  "parameters": {
+    "pop_size": 8
+  },
+  "schedule_length": null,
+  "schema_version": 1,
+  "seed_values": {
+    "numpy": 1729,
+    "python_random": 1729,
+    "torch": 1729
+  },
+  "solver_file": "solvers/System specific solvers/SK/Modern/optimization/greedy_SK.py"
+}

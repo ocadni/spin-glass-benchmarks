@@ -1,0 +1,48 @@
+{
+  "algorithm": "population_annealing",
+  "baseline_id": "rrg_population_annealing",
+  "environment": {
+    "numpy": "2.2.3",
+    "platform": "Linux-5.14.0-687.12.1.el9_8.x86_64-x86_64-with-glibc2.34",
+    "python": "3.12.2",
+    "torch": "2.7.0"
+  },
+  "family": "rrg",
+  "fixture": "tests_data/instances/rrg/N50/rrg_couplings_N50_J0_seed4051730.txt",
+  "fixture_sha256": "d2fa153b8b6a2747c7cf2b84cba6671808303bb95bd0cf12e0ed283f7b6017aa",
+  "matrix_mode": "symmetric",
+  "metrics": {
+    "min_energy": [
+      -0.8426454067230225,
+      -1.0775874853134155,
+      -1.0929759740829468,
+      -1.0929759740829468
+    ],
+    "mean_energy": [
+      -0.6032474040985107,
+      -0.8939718008041382,
+      -1.0511454343795776,
+      -1.0929759740829468
+    ],
+    "final_min_energy": -1.0929759740829468,
+    "final_mean_energy": -1.0929759740829468,
+    "best_min_energy": -1.0929759740829468
+  },
+  "parameters": {
+    "pop_size": 8,
+    "MCsteps": 2,
+    "Tstart": 1.92,
+    "Tend": 0.1,
+    "num_temps": 4,
+    "schedule": "linearT",
+    "high_temp_thermalization_steps": 1
+  },
+  "schedule_length": 4,
+  "schema_version": 1,
+  "seed_values": {
+    "numpy": 1729,
+    "python_random": 1729,
+    "torch": 1729
+  },
+  "solver_file": "solvers_v2/families/rrg/__init__.py"
+}
