@@ -10,6 +10,7 @@ from solvers_v2.src.schedules import schedule_temperatures
 
 
 UpdateFn = Callable[[torch.Tensor, torch.Tensor, float], torch.Tensor]
+ProgressFn = Callable[[int, int, str], None]
 
 
 def simulated_annealing(
@@ -24,6 +25,7 @@ def simulated_annealing(
     high_temp_thermalization_steps: int,
     record_final_duplicate: bool,
     device: torch.device | None = None,
+    progress_callback: ProgressFn | None = None,
 ) -> SolverResult:
     if device is None:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -34,11 +36,15 @@ def simulated_annealing(
     population = (torch.randint(0, 2, (pop_size, num_spins), device=device).float() * 2.0 - 1.0)
     observables = Observables(couplings, num_spins)
 
+    if progress_callback:
+        progress_callback(0, num_temps, "thermalization")
     for _ in range(high_temp_thermalization_steps):
         population = update(population, couplings, 1.0 / temperatures[0])
     observables.update(population)
 
-    for temperature in temperatures[1:]:
+    for temp_idx, temperature in enumerate(temperatures[1:], start=1):
+        if progress_callback:
+            progress_callback(temp_idx, num_temps, f"T={temperature:.3f}")
         beta = 1.0 / temperature
         for _ in range(num_steps_mc):
             population = update(population, couplings, beta)

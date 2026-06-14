@@ -10,7 +10,7 @@ from solvers_v2.src.result import SolverResult
 from solvers_v2.src.updates import sequential_metropolis_update
 
 
-def run_baseline_case(algorithm: str, fixture: str | Path, parameters: dict, seed: int) -> SolverResult:
+def run_baseline_case(algorithm: str, fixture: str | Path, parameters: dict, seed: int, progress_callback=None) -> SolverResult:
     set_reproducible_seed(seed)
     couplings = load_pairwise_couplings(fixture, symmetric=False)
 
@@ -26,6 +26,7 @@ def run_baseline_case(algorithm: str, fixture: str | Path, parameters: dict, see
             update=sequential_metropolis_update,
             high_temp_thermalization_steps=parameters["high_temp_thermalization_steps"],
             record_final_duplicate=True,
+            progress_callback=progress_callback,
         )
     if algorithm == "population_annealing":
         return common.population_annealing(
@@ -38,6 +39,7 @@ def run_baseline_case(algorithm: str, fixture: str | Path, parameters: dict, see
             schedule=parameters["schedule"],
             update=sequential_metropolis_update,
             high_temp_thermalization_steps=parameters["high_temp_thermalization_steps"],
+            progress_callback=progress_callback,
         )
     if algorithm == "parallel_tempering":
         return common.parallel_tempering(
@@ -71,6 +73,7 @@ def run_baseline_case(algorithm: str, fixture: str | Path, parameters: dict, see
             num_epochs_start=parameters.get("num_epochs_start", 40),
             num_epochs_retrain=parameters.get("num_epochs_retrain", 1),
             batch_size=parameters.get("batch_size", 256),
+            progress_callback=progress_callback,
         )
     raise ValueError(f"unsupported SK algorithm: {algorithm}")
 

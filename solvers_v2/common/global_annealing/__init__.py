@@ -14,6 +14,7 @@ from solvers_v2.src.schedules import schedule_temperatures
 
 
 UpdateFn = Callable[[torch.Tensor, torch.Tensor, float], torch.Tensor]
+ProgressFn = Callable[[int, int, str], None]
 
 
 def ml_metropolis_update(
@@ -67,6 +68,7 @@ def global_annealing(
     num_epochs_retrain: int = 1,
     batch_size: int = 256,
     device: torch.device | None = None,
+    progress_callback: ProgressFn | None = None,
 ) -> SolverResult:
     """Global annealing with ML-enhanced sampling.
 
@@ -98,13 +100,17 @@ def global_annealing(
     observables = Observables(couplings, num_spins)
 
     old_temperature = temperatures[0]
+    if progress_callback:
+        progress_callback(0, num_temps, "thermalization+training")
     for _ in range(high_temp_thermalization_steps):
         population = update(population, couplings, 1.0 / old_temperature)
     observables.update(population)
 
     model = train_made(population, num_spins, device, epochs=num_epochs_start, batch_size=batch_size)
 
-    for temperature in temperatures[1:-1]:
+    for temp_idx, temperature in enumerate(temperatures[1:-1], start=1):
+        if progress_callback:
+            progress_callback(temp_idx, num_temps, f"T={temperature:.3f}")
         beta = 1.0 / temperature
         for _ in range(num_steps_mc):
             population = ml_metropolis_update(model, population, couplings, beta, device, num_steps=1)
@@ -115,6 +121,8 @@ def global_annealing(
         observables.update(population)
 
     temperature = temperatures[-1]
+    if progress_callback:
+        progress_callback(num_temps - 1, num_temps, f"T={temperature:.3f} (final)")
     beta = 1.0 / temperature
     for _ in range(num_steps_mc):
         population = ml_metropolis_update(model, population, couplings, beta, device, num_steps=1)
