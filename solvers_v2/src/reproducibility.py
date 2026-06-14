@@ -12,7 +12,7 @@ def set_reproducible_seed(seed: int) -> None:
     torch.manual_seed(seed)
     torch.set_num_threads(1)
     try:
-        torch.use_deterministic_algorithms(True)
+        torch.use_deterministic_algorithms(True, warn_only=True)
     except Exception:
         pass
 
