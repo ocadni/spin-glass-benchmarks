@@ -1,0 +1,8 @@
+name: sgbench-generators
+channels:
+  - conda-forge
+dependencies:
+  # Pin Python and NumPy because generated instance values depend on RNG implementations.
+  - python=3.12.2
+  - numpy=2.2.3
+  - pytest
