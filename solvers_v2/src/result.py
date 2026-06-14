@@ -10,6 +10,7 @@ from solvers_v2.src.observables import Observables
 class SolverResult:
     schedule: Any
     observables: Observables
+    diagnostics: dict | None = None  # Optional algorithm-specific diagnostics
 
     @property
     def metrics(self) -> dict[str, float | list[float]]:
