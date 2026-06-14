@@ -34,7 +34,7 @@ def test_ea_adapters_match_existing_generator():
         instance = generate_pairwise_instance(family, {"N": 3**dim}, seed=11)
 
         assert instance.fields == tuple(value for _, value in fields)
-        assert [(x.i, x.j, x.coupling) for x in instance.interactions] == couplings
+        assert [(x.i, x.j, x.coupling) for x in instance.interactions] == sorted(couplings)
 
 
 def test_rrg_adapter_matches_existing_generator():

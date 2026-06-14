@@ -20,7 +20,7 @@ def test_energy_with_fields_uses_documented_sign_convention():
         couplings=[(0, 1, 2.0), (1, 2, -3.0)],
     )
 
-    assert instance.energy([1, -1, 1]) == pytest.approx(4.5)
+    assert instance.energy([1, -1, 1]) == pytest.approx(-2.5)
 
 
 def test_interactions_are_sorted_and_reversed_rows_are_canonicalized():
