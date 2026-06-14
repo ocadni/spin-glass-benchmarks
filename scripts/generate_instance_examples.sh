@@ -8,15 +8,18 @@ set -euo pipefail
 # or, if executable:
 #   ./scripts/generate_instance_examples.sh
 #
-# Generated files are written to benchmarks/examples by default.
+# Generated files are written to instances/examples by default.
 
-OUTDIR="benchmarks/examples"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+GENERATOR="$REPO_ROOT/scripts/generate_pairwise_instance.py"
+OUTDIR="${OUTDIR:-$REPO_ROOT/instances/examples}"
 mkdir -p "$OUTDIR"
 
-python generators/generator.py sk 100 --seed 1 --outdir "$OUTDIR" --meanJ 0 --distribution gaussian --field 0
+python "$GENERATOR" sk 100 --seed 1 --outdir "$OUTDIR" --meanJ 0 --distribution gaussian --field 0
 
-python generators/generator.py ea --L 8 --dim 2 --seed 2 --outdir "$OUTDIR" --meanJ 0 --distribution gaussian --field 0
+python "$GENERATOR" ea2d --L 8 --seed 2 --outdir "$OUTDIR" --meanJ 0 --distribution gaussian --field 0
 
-python generators/generator.py ea --L 5 --dim 3 --seed 3 --outdir "$OUTDIR" --meanJ 0 --distribution gaussian --field 0
+python "$GENERATOR" ea3d --L 5 --seed 3 --outdir "$OUTDIR" --meanJ 0 --distribution gaussian --field 0
 
-python generators/generator.py rrg 100 --degree 3 --seed 4 --outdir "$OUTDIR" --meanJ 0 --distribution gaussian --field 0
+python "$GENERATOR" rrg 100 --degree 3 --seed 4 --outdir "$OUTDIR" --meanJ 0 --distribution gaussian --field 0
