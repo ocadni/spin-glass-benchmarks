@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "researcher": "biazzin",
+  "experiment_name": "sk_ga_initial",
+  "description": "Initial validation of global annealing on SK instances",
+  "created_at": "2026-06-14T16:00:00Z",
+  "family": "sk",
+  "instances": [
+    "instances/sk/N50/sk_couplings_N50_J0_seed1051730.txt",
+    "instances/sk/N50/sk_couplings_N50_J0_seed1051731.txt"
+  ],
+  "algorithms": [
+    "global_annealing",
+    "simulated_annealing"
+  ],
+  "tags": [
+    "validation",
+    "sk",
+    "ml-methods"
+  ],
+  "notes": "Compare GA vs SA baseline on small instances"
+}

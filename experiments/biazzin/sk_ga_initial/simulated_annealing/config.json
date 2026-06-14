@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "algorithm": "simulated_annealing",
+  "seeds": [
+    1729,
+    4242
+  ],
+  "output_diagnostics": false,
+  "solver_parameters": {
+    "pop_size": 100,
+    "MCsteps": 10,
+    "Tstart": 1.92,
+    "Tend": 0.1,
+    "num_temps": 20,
+    "schedule": "linearT",
+    "high_temp_thermalization_steps": 100
+  },
+  "parameter_sweep": null
+}
