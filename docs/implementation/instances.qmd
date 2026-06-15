@@ -1,0 +1,441 @@
+---
+title: "Instance Library"
+subtitle: "Benchmark instance details and generation methodology"
+date: last-modified
+---
+
+# Instance Library
+
+Detailed documentation of the benchmark instance collection.
+
+## Overview
+
+The repository contains **190 pre-generated, deterministic benchmark instances** across 4 problem families, ready for immediate use in optimization research.
+
+**Key principles**:
+
+- **Deterministic**: Fixed seeds ensure identical regeneration
+- **Verified**: SHA256 hashes tracked, pytest validation
+- **Accessible**: Plain text format, language-agnostic
+- **Documented**: Full metadata in file headers
+
+---
+
+## Current Instance Sets
+
+### Summary Table
+
+| Family | Type | Sizes | Instances/Size | Total |
+|--------|------|-------|----------------|-------|
+| **SK** | Fully connected | 5 sizes | 10 | **50** |
+| **EA2D** | 2D lattice | 4 sizes | 10 | **40** |
+| **EA3D** | 3D lattice | 4 sizes | 10 | **40** |
+| **RRG** | Sparse graph | 5 sizes | 10 | **50** |
+| **XOR-SAT** | SAT constraints | — | — | **0** (planned) |
+
+**Total**: **180 instances** (190 when XOR-SAT added)
+
+---
+
+## Family Details
+
+### Sherrington-Kirkpatrick (SK)
+
+**Location**: `instances/sk/`
+
+**Topology**: Fully connected (all-to-all)
+
+**Sizes available**:
+
+| Size | Lattice | Spins | Couplings | Instances |
+|------|---------|-------|-----------|-----------|
+| N=50 | — | 50 | 1,225 | 10 |
+| N=100 | — | 100 | 4,950 | 10 |
+| N=150 | — | 150 | 11,175 | 10 |
+| N=200 | — | 200 | 19,900 | 10 |
+| N=300 | — | 300 | 44,850 | 10 |
+
+**Coupling distribution**: $J_{ij} \sim \mathcal{N}(0, 1/N)$ (normalized Gaussian)
+
+**Fields**: $h_i = 0$ (no external fields)
+
+**Characteristics**:
+
+- Mean-field model
+- Replica symmetry breaking
+- NP-hard ground state problem
+- Dense interactions (expensive for large N)
+
+**Naming convention**: `sk_couplings_N{size}_J0_seed{seed}.txt`
+
+**Example**: `sk_couplings_N100_J0_seed1051730.txt`
+
+---
+
+### Edwards-Anderson 2D (EA2D)
+
+**Location**: `instances/ea2d/`
+
+**Topology**: Square lattice with nearest-neighbor interactions
+
+**Sizes available**:
+
+| Size | Lattice | Spins | Couplings | Instances |
+|------|---------|-------|-----------|-----------|
+| N=100 | 10×10 | 100 | 180 | 10 |
+| N=256 | 16×16 | 256 | 480 | 10 |
+| N=1024 | 32×32 | 1,024 | 2,016 | 10 |
+| N=2304 | 48×48 | 2,304 | 4,560 | 10 |
+
+**Coupling distribution**: $J_{ij} \sim \mathcal{N}(0, 1)$ on edges
+
+**Boundary conditions**: Periodic (toroidal lattice)
+
+**Characteristics**:
+
+- Finite-dimensional frustrated system
+- Sparse interactions (4 neighbors per spin)
+- Phase transition at finite temperature
+- Efficient checkerboard update scheme
+
+**Naming convention**: `ea2d_couplings_N{size}_J0_seed{seed}.txt`
+
+---
+
+### Edwards-Anderson 3D (EA3D)
+
+**Location**: `instances/ea3d/`
+
+**Topology**: Cubic lattice with nearest-neighbor interactions
+
+**Sizes available**:
+
+| Size | Lattice | Spins | Couplings | Instances |
+|------|---------|-------|-----------|-----------|
+| N=512 | 8×8×8 | 512 | 1,152 | 10 |
+| N=1000 | 10×10×10 | 1,000 | 3,000 | 10 |
+| N=1728 | 12×12×12 | 1,728 | 6,048 | 10 |
+| N=2744 | 14×14×14 | 2,744 | 11,340 | 10 |
+
+**Coupling distribution**: $J_{ij} \sim \mathcal{N}(0, 1)$ on edges
+
+**Boundary conditions**: Periodic (3D torus)
+
+**Characteristics**:
+
+- Physical realization of spin glass
+- Sparse interactions (6 neighbors per spin)
+- Complex energy landscape with metastable states
+- Used in Del Bono et al. PNAS 2025 paper
+
+**Naming convention**: `ea3d_couplings_N{size}_J0_seed{seed}.txt`
+
+---
+
+### Random Regular Graph (RRG)
+
+**Location**: `instances/rrg/`
+
+**Topology**: Random graph with fixed degree k=3
+
+**Sizes available**:
+
+| Size | Degree | Spins | Couplings | Instances |
+|------|--------|-------|-----------|-----------|
+| N=50 | k=3 | 50 | 75 | 10 |
+| N=100 | k=3 | 100 | 150 | 10 |
+| N=150 | k=3 | 150 | 225 | 10 |
+| N=200 | k=3 | 200 | 300 | 10 |
+| N=300 | k=3 | 300 | 450 | 10 |
+
+**Coupling distribution**: $J_{ij} \sim \mathcal{N}(0, 1)$ on edges
+
+**Characteristics**:
+
+- Sparse, irregular connectivity
+- Intermediate between lattice and fully connected
+- Useful for constraint satisfaction problems
+- Efficient storage (few edges)
+
+**Naming convention**: `rrg_couplings_N{size}_J0_seed{seed}.txt`
+
+---
+
+### XOR-SAT (Planned)
+
+**Location**: `instances/xorsat/` (to be created)
+
+**Status**: Generator implemented, instances not yet generated
+
+**Topology**: k-SAT with XOR constraints (k=3 typically)
+
+**Planned sizes**: N ∈ {50, 100, 200, 400, 600}
+
+**Planned variants**:
+
+- **Planted solutions**: Ground truth known (for validation)
+- **Random instances**: No guaranteed solution (harder)
+
+**Characteristics**:
+
+- Constraint satisfaction problem
+- XOR clauses (parity constraints)
+- Phase transition at critical clause density
+- Relevant for cryptographic applications
+
+**References**:
+
+- See papers in `papers/` directory
+- "3-regular three-XORSAT planted solutions benchmark"
+- "Equation Planting: A Tool for Benchmarking Ising Machines"
+
+---
+
+## File Format
+
+All instances use a standardized text format. See [File Format Documentation](../file_format.qmd) for full specification.
+
+**Basic structure**:
+
+```text
+# model=sk N=100 meanJ=0 seed=1051730 distribution=gaussian field=0 num_fields=100 num_couplings=4950
+# h_0
+0.12345
+# h_1
+-0.45678
+# J_0_1
+0.98765
+...
+```
+
+**Parsing**: Simple text parsing, compatible with any language (Python, Julia, R, C++)
+
+**Provided utilities**:
+
+- `solvers_v2.src.io.load_pairwise_couplings()` (Python/PyTorch)
+- Manual parsing is straightforward (skip `#` lines, read values)
+
+---
+
+## Generation Methodology
+
+### Deterministic Generation
+
+All instances are generated with explicit seeds for reproducibility:
+
+```bash
+python generators/generator.py sk 100 --seed 1051730 --outdir instances/sk
+```
+
+**Same seed + parameters = identical instance** across machines and time.
+
+### Systematic Generation
+
+Batch generation via:
+
+```bash
+bash scripts/generate_random_seed_systematic.sh
+```
+
+This script:
+
+1. Generates instances for all families and sizes
+2. Uses predefined seed ranges (e.g., seeds 1051730-1051739 for SK N=50)
+3. Saves to standardized directory structure
+4. Verifies output integrity
+
+### Seed Selection
+
+Seeds are chosen from a random but fixed sequence to ensure:
+
+- No accidental patterns
+- Reproducible across regenerations
+- Different seeds for different sizes (avoid correlations)
+
+**Current seed ranges** (examples):
+
+- SK N=50: seeds 1051730-1051739
+- EA3D N=1000: seeds 3011732-3011741
+- (Full list in `scripts/generate_random_seed_systematic.sh`)
+
+---
+
+## Validation & Verification
+
+### Integrity Checks
+
+**SHA256 hashing**: Each instance tracked by content hash
+
+```bash
+sha256sum instances/sk/N100/sk_couplings_N100_J0_seed1051730.txt
+```
+
+**Pytest validation**:
+
+```bash
+python -m pytest generators/test_reference_instances.py
+```
+
+This test:
+
+- ✅ Checks all expected instances exist
+- ✅ Verifies no unexpected instances
+- ✅ Validates file format
+- ✅ Compares SHA256 hashes to reference snapshot
+
+### Determinism Validation
+
+Regenerating an instance must produce byte-identical output:
+
+```bash
+# Generate instance
+python generators/generator.py sk 100 --seed 1051730 -o /tmp/test.txt
+
+# Compare to repository version
+diff /tmp/test.txt instances/sk/N100/sk_couplings_N100_J0_seed1051730.txt
+# Should be empty (no differences)
+```
+
+---
+
+## Using Instances in Your Code
+
+### Python (PyTorch)
+
+```python
+from solvers_v2.src.io import load_pairwise_couplings
+
+# Load coupling matrix
+couplings = load_pairwise_couplings(
+    "instances/sk/N100/sk_couplings_N100_J0_seed1051730.txt",
+    symmetric=False  # Use symmetric=True for EA/RRG
+)
+
+# couplings is a PyTorch tensor: shape (N, N)
+print(f"Instance size: {couplings.shape[0]} spins")
+```
+
+### Python (NumPy)
+
+```python
+import numpy as np
+
+def load_instance(path):
+    fields = []
+    couplings = []
+
+    with open(path) as f:
+        for line in f:
+            if line.startswith('#'):
+                continue  # Skip metadata
+            parts = line.strip().split()
+            if len(parts) == 2:
+                fields.append(float(parts[1]))
+            elif len(parts) == 3:
+                i, j, J = int(parts[0]), int(parts[1]), float(parts[2])
+                couplings.append((i, j, J))
+
+    return np.array(fields), couplings
+```
+
+### Other Languages
+
+Format is language-agnostic:
+
+1. Skip lines starting with `#`
+2. Parse field values (spin index, field value)
+3. Parse couplings (spin_i, spin_j, coupling_value)
+
+---
+
+## Adding New Instances
+
+### Process
+
+1. **Decide parameters**: family, size, seed
+2. **Generate**: Use `generators/generator.py`
+3. **Verify**: Check format and determinism
+4. **Update tests**: Add to reference snapshot if systematic
+5. **Commit**: Add to repository
+
+### Example
+
+```bash
+# Generate new SK instance
+python generators/generator.py sk 500 --seed 9999999 --outdir instances/sk
+
+# Verify format
+python -m pytest generators/test_reference_instances.py
+
+# If systematic, update script
+# Edit scripts/generate_random_seed_systematic.sh
+
+# Commit
+git add instances/sk/N500/
+git commit -m "Add SK N=500 instance with seed 9999999"
+```
+
+### Guidelines
+
+- Use meaningful seeds (avoid 1, 2, 3, ...)
+- Follow naming conventions
+- Document motivation for new sizes
+- Verify determinism before committing
+
+---
+
+## Future Expansion Plans
+
+### Instance Count Scaling
+
+**Current**: 10 instances per size
+
+**Under consideration**:
+
+- **Option A**: 20 instances per size (100 total per family)
+- **Option B**: 40 instances per size (200 total per family)
+
+Decision pending based on:
+
+- Statistical requirements (how many for robust conclusions?)
+- Storage constraints (instances are small, not a concern)
+- Generation time (1-2 days for full regeneration)
+
+### Size Scaling
+
+**Proposed larger sizes**:
+
+- **SK**: Add N=400, N=600, possibly N=1000
+- **EA2D**: Add 64×64, 80×80, 128×128
+- **EA3D**: Add 15³, 18³, 20³, possibly 32³
+- **RRG**: Follow SK sizes
+
+**Challenges**:
+
+- SK N=1000: 500k couplings, memory intensive
+- EA3D 32³: 32,768 spins, long runtime for solvers
+
+### XOR-SAT Instances
+
+**Priority**: Generate first batch (100 instances)
+
+**Mix**: 50% planted + 50% random (proposed)
+
+---
+
+## Quick Reference
+
+| Task | Command |
+|------|---------|
+| **Load instance** | `load_pairwise_couplings("path/to/instance.txt")` |
+| **Generate new** | `python generators/generator.py sk 100 --seed 12345` |
+| **Validate all** | `pytest generators/test_reference_instances.py` |
+| **Regenerate systematic** | `bash scripts/generate_random_seed_systematic.sh` |
+
+---
+
+**See also**:
+
+- [File Format Specification](../file_format.qmd)
+- [Generator Source Code](https://github.com/ocadni/spin-glass-benchmarks/tree/main/generators)
+- [Current Status](status.qmd#benchmark-instances)

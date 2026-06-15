@@ -1,0 +1,507 @@
+---
+title: "Architecture"
+subtitle: "Design decisions and repository structure"
+date: last-modified
+---
+
+# Architecture
+
+Documentation of key design decisions and the rationale behind them.
+
+## Design Principles
+
+The repository follows these core principles:
+
+1. **Reproducibility first** - Fixed seeds, deterministic generation, full provenance
+2. **Simplicity over abstraction** - Plain text files, JSON results, minimal magic
+3. **Performance where it matters** - GPU acceleration for compute-heavy tasks
+4. **Extensibility** - Modular design, clear interfaces, easy to add new components
+5. **Transparency** - Documented decisions, visible trade-offs, no hidden behavior
+
+---
+
+## Package Structure
+
+```
+spin-glass-benchmarks/
+├── instances/              # Benchmark instances (primary deliverable)
+│   ├── sk/                # Sherrington-Kirkpatrick
+│   ├── ea2d/              # 2D Edwards-Anderson
+│   ├── ea3d/              # 3D Edwards-Anderson
+│   └── rrg/               # Random Regular Graph
+│
+├── generators/             # Instance generation
+│   ├── generator.py       # Unified CLI
+│   ├── generate_sk.py     # Family-specific generators
+│   ├── generate_ea.py
+│   ├── generate_rrg.py
+│   └── generate_xorsat.py
+│
+├── solvers_v2/             # Reference solver implementations
+│   ├── common/            # Algorithm implementations
+│   │   ├── simulated_annealing/
+│   │   ├── population_annealing/
+│   │   ├── parallel_tempering/
+│   │   ├── global_annealing/
+│   │   └── greedy/
+│   ├── families/          # Problem family adapters
+│   │   ├── sk/           # SK-specific wiring
+│   │   ├── ea/           # EA2D/EA3D wiring
+│   │   ├── rrg/          # RRG wiring
+│   │   └── xorsat/       # XOR-SAT wiring (pending)
+│   └── src/              # Shared utilities
+│       ├── io.py         # File loading
+│       ├── result.py     # Result dataclasses
+│       ├── updates.py    # Update schemes
+│       └── reproducibility.py
+│
+├── experiments/            # Experimental framework
+│   ├── src/              # Framework code
+│   │   ├── config.py     # Configuration schemas
+│   │   ├── results.py    # Result schemas
+│   │   ├── runner.py     # Orchestration
+│   │   ├── analysis.py   # Result loading
+│   │   └── cli.py        # Command-line interface
+│   └── <researcher>/     # Individual experiments
+│
+├── docs/                   # Documentation site (Quarto)
+├── environments/           # Conda environment specifications
+├── scripts/                # Batch generation and utilities
+└── tests/                  # Test suites
+```
+
+### Module Independence
+
+Key modules are **independent** and can be used separately:
+
+- **generators/**: Can be used standalone to create instances
+- **solvers_v2/**: Can be imported and used without experiments framework
+- **experiments/**: Optional orchestration layer, not required to use solvers
+
+**Design goal**: Low coupling, high cohesion
+
+---
+
+## Key Design Decisions
+
+### Why PyTorch for Solvers?
+
+**Decision**: Use PyTorch as the computational backend for all solvers
+
+**Rationale**:
+
+✅ **GPU acceleration**: 10-100× speedup on large instances
+
+- Vectorized operations (batch spin flips)
+- Parallel energy computations
+- Efficient memory management
+
+✅ **Automatic differentiation**: Needed for MADE model in Global Annealing
+
+✅ **Familiar to ML researchers**: Lowers barrier to entry for ML community
+
+✅ **CPU fallback**: Same code runs on CPU (slower but works)
+
+✅ **Easy batching**: Population-based algorithms benefit from batch operations
+
+**Trade-offs**:
+
+❌ **Dependency weight**: PyTorch is a large dependency (~2GB)
+
+❌ **Learning curve**: Tensor operations less familiar than NumPy
+
+❌ **CPU performance**: Slower than optimized C++ on CPU-only systems
+
+**Alternatives considered**:
+
+- **NumPy**: Simpler, but no GPU support
+- **JAX**: Good alternative, but less widespread in ML community
+- **CuPy**: GPU-only, no CPU fallback
+- **Custom CUDA**: Maximum performance, but high development cost
+
+**Conclusion**: PyTorch strikes best balance for GPU acceleration + accessibility
+
+---
+
+### Why JSON for Results?
+
+**Decision**: Store all results in JSON format
+
+**Rationale**:
+
+✅ **Human-readable**: Can inspect results with any text editor
+
+✅ **Language-agnostic**: Parse from Python, Julia, R, JavaScript, etc.
+
+✅ **Git-friendly**: Text diffs are meaningful (unlike pickle/HDF5)
+
+✅ **Schema validation**: Easy to validate structure with jsonschema
+
+✅ **No version issues**: JSON format is stable across Python versions
+
+**Trade-offs**:
+
+❌ **File size**: Larger than binary formats (acceptable for result metadata)
+
+❌ **Precision**: Floating-point numbers stored as strings (sufficient precision for our needs)
+
+❌ **No streaming**: Must load entire file (files are small, not an issue)
+
+**Alternatives considered**:
+
+- **Pickle**: Python-specific, version fragile, opaque binary
+- **HDF5**: Great for large arrays, but overkill for metadata
+- **CSV**: Good for tabular, awkward for nested structures
+- **Parquet**: Efficient, but less human-readable
+
+**Conclusion**: JSON is simplest format meeting all requirements
+
+---
+
+### Why solvers_v2/ vs solvers/?
+
+**Decision**: Create new `solvers_v2/` directory instead of refactoring `solvers/`
+
+**Rationale**:
+
+✅ **Clean slate**: Start fresh without legacy baggage
+
+✅ **Preserve history**: Keep old implementations for reference
+
+✅ **Safe refactoring**: New code doesn't break existing experiments
+
+✅ **Unified design**: Apply lessons learned, consistent patterns
+
+**Migration path**:
+
+1. Implement new solvers in `solvers_v2/`
+2. Validate parity with `solvers/` via tests
+3. Switch experiments to use `solvers_v2/`
+4. Eventually archive or remove `solvers/`
+
+**Current status**: `solvers_v2/` is production code, `solvers/` is legacy
+
+**Future**: May rename `solvers_v2/` → `solvers/` once legacy code removed
+
+---
+
+### Family Adapter Pattern
+
+**Decision**: Use family-specific adapter modules to bridge instances to algorithms
+
+**Structure**:
+
+```
+solvers_v2/
+├── common/           # Algorithm implementations (family-agnostic)
+└── families/         # Family-specific adapters
+    ├── sk/          # run_baseline_case(algo, instance, params, seed)
+    ├── ea/          # run_baseline_case(algo, instance, params, seed, dimension)
+    └── rrg/         # run_pairwise_case(algo, instance, params, seed)
+```
+
+**Rationale**:
+
+✅ **Separation of concerns**: Algorithms don't need to know about file formats
+
+✅ **Family-specific tuning**: Different update schemes (sequential vs checkerboard)
+
+✅ **Easy to extend**: Add new family without modifying algorithms
+
+✅ **Testable**: Can test algorithms and adapters independently
+
+**Example**: SK uses sequential updates, EA uses checkerboard updates
+
+**Adapter responsibilities**:
+
+1. Load instance file
+2. Apply appropriate update scheme
+3. Call algorithm with correct parameters
+4. Return standardized result
+
+**Algorithms remain generic**: Work on coupling matrices, don't care about problem type
+
+---
+
+### Plain Text Instance Format
+
+**Decision**: Store instances as plain text files with metadata headers
+
+**Rationale**:
+
+✅ **Universal compatibility**: Any language can parse
+
+✅ **Self-documenting**: Metadata in file header
+
+✅ **Inspectable**: Easy to check correctness by eye
+
+✅ **Git-friendly**: Text diffs show changes
+
+✅ **Simple schema**: No complex parsing library needed
+
+**Trade-offs**:
+
+❌ **File size**: Larger than binary (acceptable, instances are small)
+
+❌ **Parse overhead**: Slower to load (minor, dominated by compute time)
+
+**Format example**:
+
+```text
+# model=sk N=100 meanJ=0 seed=1051730 distribution=gaussian field=0 num_fields=100 num_couplings=4950
+# h_0
+0.12345
+# h_1
+-0.45678
+# J_0_1
+0.98765
+```
+
+See [File Format](../file_format.qmd) for specification.
+
+**Alternatives considered**:
+
+- **NPZ (NumPy compressed)**: Binary, Python-specific
+- **MAT (MATLAB)**: Binary, MATLAB-specific
+- **TSP/QUBO formats**: Existing standards, but less self-documenting
+
+**Conclusion**: Plain text best for transparency and accessibility
+
+---
+
+## Repository Organization Decisions
+
+### Why Monorepo?
+
+**Decision**: Single repository for instances, generators, solvers, and experiments
+
+**Rationale**:
+
+✅ **Atomic commits**: Changes to instances + solvers + docs in one commit
+
+✅ **Easier onboarding**: Clone once, have everything
+
+✅ **Consistent versioning**: Everything shares git history
+
+✅ **Simpler CI/CD**: One repo = one test suite = one deployment
+
+**Trade-offs**:
+
+❌ **Repository size**: Grows with instances (currently manageable)
+
+❌ **Clone time**: Users who only want instances must download everything
+
+**Mitigation**: Git LFS considered for future if size becomes issue
+
+---
+
+### Why Conda for Environments?
+
+**Decision**: Provide Conda environment files for reproducible setup
+
+**Rationale**:
+
+✅ **Cross-platform**: Works on Linux, macOS, Windows
+
+✅ **Package management**: Handles PyTorch, CUDA, and Python packages
+
+✅ **Isolation**: Separate environments for generators vs solvers
+
+✅ **Reproducibility**: Lock file specifies exact versions
+
+**Structure**:
+
+- `environments/solvers-core-gpu.yml` - GPU solvers
+- `environments/solvers-core-cpu.yml` - CPU-only fallback
+- `environments/generators.yml` - Instance generation
+
+**Alternatives considered**:
+
+- **pip + requirements.txt**: Simpler, but harder to manage CUDA
+- **Docker**: Maximum reproducibility, but higher barrier to entry
+- **Poetry**: Modern Python, but Conda better for scientific stack
+
+**Conclusion**: Conda best for scientific Python with GPU support
+
+---
+
+## Testing Strategy
+
+### Test Pyramid
+
+```
+           ╱ ╲
+          ╱ E2E╲           End-to-end (few, expensive)
+         ╱───────╲
+        ╱Integration╲      Integration (moderate)
+       ╱─────────────╲
+      ╱  Unit Tests   ╲    Unit (many, fast)
+     ╱─────────────────╲
+```
+
+**Unit tests**: Individual functions, pure logic
+
+- Generator output format
+- Energy calculations
+- Update schemes
+
+**Integration tests**: Component interactions
+
+- Solver + family adapter
+- Baseline parity (solvers_v2 vs legacy)
+- Experimental framework workflow
+
+**End-to-end tests**: Full workflows
+
+- Generate instance → run solver → check result
+- Complete experiment execution
+
+**Current coverage**: Strong unit + integration, limited E2E
+
+---
+
+### Continuous Integration
+
+**Tests run on**:
+
+- Every commit (GitHub Actions)
+- Multiple Python versions
+- CPU environments (no GPU in CI currently)
+
+**What's tested**:
+
+- All pytest suites pass
+- Code formatting (eventual)
+- Documentation builds
+
+**Future**: GPU CI runners for performance regression tests
+
+---
+
+## Performance Considerations
+
+### Where Performance Matters
+
+**Critical paths** (optimized with PyTorch/GPU):
+
+- ✅ Monte Carlo updates (tight loops)
+- ✅ Energy calculations (repeated millions of times)
+- ✅ MADE training (ML workload)
+
+**Non-critical paths** (plain Python):
+
+- File I/O (rare, not bottleneck)
+- Configuration parsing (once per run)
+- Result aggregation (post-processing)
+
+**Philosophy**: Optimize where it matters, keep rest simple
+
+---
+
+### Memory Management
+
+**Strategies**:
+
+- Reuse tensors where possible (in-place operations)
+- Batch operations to maximize GPU utilization
+- Clear unused tensors explicitly in long-running experiments
+
+**Typical memory usage** (GPU):
+
+- SK N=1000: ~500MB (dense couplings matrix)
+- EA3D N=32,768: ~2GB (sparse but large)
+
+**Constraint**: Most experiments fit in 8GB GPU memory
+
+---
+
+## Extensibility Points
+
+### Adding New Problem Families
+
+1. Create generator in `generators/generate_yourfamily.py`
+2. Add instances to `instances/yourfamily/`
+3. Create family adapter in `solvers_v2/families/yourfamily/`
+4. Implement `run_baseline_case()` or appropriate interface
+5. Add baseline tests
+6. Document in [Instance Library](instances.qmd)
+
+---
+
+### Adding New Algorithms
+
+1. Implement in `solvers_v2/common/your_algorithm/`
+2. Follow `SolverResult` output contract
+3. Add to family adapters (SK, EA, RRG)
+4. Create baseline test cases
+5. Document parameters in [Solvers](solvers.qmd)
+
+---
+
+### Adding New Result Metrics
+
+1. Add to `SolverResult.metrics` dict (standard metrics)
+2. Or add to `SolverResult.diagnostics` dict (algorithm-specific)
+3. Update schema documentation
+4. Update aggregation scripts if needed
+
+---
+
+## Documentation Philosophy
+
+### Principle: Docs as Code
+
+- Documentation lives in `docs/` (Quarto)
+- Rendered to static site via GitHub Pages
+- Versioned with code (same git history)
+- Built automatically on commit (GitHub Actions)
+
+### Multi-Layer Documentation
+
+1. **Conceptual** (`docs/` Quarto site): Why, what, theory
+2. **Technical** (README.md): How, quick reference, commands
+3. **Detailed** (Module READMEs): In-depth guides for each component
+4. **API** (Docstrings): Code-level documentation
+
+**Goal**: Right information at right level of detail
+
+---
+
+## Future Architectural Considerations
+
+### Potential Changes
+
+**Under discussion**:
+
+- Separate instances into standalone repository (if size grows)
+- Add database for result indexing (if result volume explodes)
+- Multi-GPU support (for very large instances)
+- Distributed execution (for massive parameter sweeps)
+
+**Not planned**:
+
+- Web API (instances are files, simple is good)
+- Real-time leaderboard (batch-oriented workflow is sufficient)
+- Cloud execution (users have diverse compute environments)
+
+---
+
+## Quick Reference
+
+| Decision | Rationale | Trade-off |
+|----------|-----------|-----------|
+| **PyTorch** | GPU acceleration | Large dependency |
+| **JSON results** | Human-readable | Larger files |
+| **Plain text instances** | Universal | Slower parsing |
+| **solvers_v2/** | Clean slate | Directory duplication |
+| **Family adapters** | Extensibility | Extra indirection |
+| **Conda** | Scientific Python | Not pip-native |
+| **Monorepo** | Atomic changes | Repository size |
+
+---
+
+**See also**:
+
+- [Current Status](status.qmd) - What's implemented
+- [Roadmap](roadmap.qmd) - Future plans
+- [Known Issues](known_issues.qmd) - Limitations

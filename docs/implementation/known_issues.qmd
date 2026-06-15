@@ -1,0 +1,403 @@
+---
+title: "Known Issues"
+subtitle: "Technical debt, limitations, and how to contribute fixes"
+date: last-modified
+---
+
+# Known Issues
+
+Documentation of known limitations, bugs, and technical debt.
+
+## High Priority 🔴
+
+### 1. Parallel Tempering on Lattices
+
+**Issue**: PT not thoroughly tested on EA2D/EA3D
+
+**Symptoms**:
+
+- May not converge as expected
+- Swap acceptance rates unknown
+- No checkerboard update integration
+
+**Impact**: Limits lattice problem exploration with PT
+
+**Root cause**: PT implementation uses sequential updates, optimal for lattices requires checkerboard
+
+**Workaround**: Use PA or GA for lattices
+
+**Fix needed**:
+
+- Implement checkerboard-aware PT variant
+- Validate on small EA2D instances
+- Benchmark swap statistics
+
+**Tracking**: See [Roadmap](roadmap.qmd#parallel-tempering-for-lattices)
+
+---
+
+### 2. Global Annealing on RRG
+
+**Issue**: GA untested on Random Regular Graphs
+
+**Symptoms**: Unknown if MADE model works on sparse graphs
+
+**Impact**: RRG limited to SA, PA, PT, Greedy (no ML-enhanced method)
+
+**Root cause**: MADE architecture designed for dense/lattice connectivity
+
+**Workaround**: Use PA for RRG
+
+**Investigation needed**:
+
+1. Test current GA implementation on RRG
+2. Measure MADE training quality on sparse graphs
+3. If poor: investigate sparse-aware MADE variants
+4. If good: validate and document
+
+**Decision point**: Test first before committing to fix
+
+**Tracking**: See [Roadmap](roadmap.qmd#global-annealing-for-rrg)
+
+---
+
+### 3. XOR-SAT Support Missing
+
+**Issue**: No XOR-SAT instances or solvers
+
+**Impact**: Cannot benchmark SAT-based algorithms
+
+**Status**:
+
+- ✅ Generator implemented (`generators/generate_xorsat.py`)
+- ❌ No instances generated
+- ❌ No solvers implemented
+
+**Fix needed**:
+
+1. Generate XOR-SAT instances (planted + random)
+2. Implement WalkSAT
+3. Adapt SA for XOR constraints
+4. Validate on planted instances
+
+**Blocking**: Instance generation parameter decisions (planted ratio?)
+
+**Tracking**: See [Roadmap](roadmap.qmd#xor-sat-solvers)
+
+---
+
+## Medium Priority 🟡
+
+### 4. Index Inconsistency (0-based vs 1-based)
+
+**Issue**: Some families use 0-based indices, others use 1-based
+
+**Current state**:
+
+- **SK**: 0-based (verified)
+- **EA2D**: 0-based (verified)
+- **EA3D**: 0-based (verified)
+- **RRG**: 0-based (verified)
+
+**Actually**: This is consistent! All use 0-based.
+
+**Status**: Resolved (documentation was unclear)
+
+**Action**: Remove from issue list after verification complete
+
+---
+
+### 5. GPU Memory Profiling
+
+**Issue**: No systematic profiling of GPU memory usage for large instances
+
+**Symptoms**:
+
+- Unknown maximum size per GPU memory capacity
+- No guidance for users with different GPUs
+- Potential OOM errors on very large instances
+
+**Impact**: Users don't know limits until failure
+
+**Workaround**: Start small, increase size gradually
+
+**Fix needed**:
+
+- Profile memory usage per algorithm
+- Create size-vs-memory table
+- Document GPU requirements per instance size
+- Add early OOM detection and clear error messages
+
+**Example needed**:
+
+| Instance | Algorithm | GPU Memory |
+|----------|-----------|------------|
+| SK N=1000 | GA | 2.3 GB |
+| EA3D 32³ | PA | 4.8 GB |
+
+---
+
+### 6. Legacy solvers/ Directory
+
+**Issue**: Old `solvers/` directory still present but unused
+
+**Impact**: Confusing for new contributors
+
+**Options**:
+
+1. **Archive**: Move to `legacy/` subdirectory
+2. **Remove**: Delete entirely (preserve in git history)
+3. **Document**: Add README explaining solvers/ vs solvers_v2/
+
+**Current action**: Option 3 (document)
+
+**Long-term**: Option 1 (archive) or Option 2 (remove)
+
+---
+
+### 7. Experiment Result Aggregation is Manual
+
+**Issue**: No automated aggregation across experiments
+
+**Current state**:
+
+- Results per experiment exist
+- Manual scripts per experiment (e.g., EA3D pilot)
+- No centralized aggregation
+
+**Impact**: Hard to compare across experiments
+
+**Fix needed**: Implement Priority 4 from [Roadmap](roadmap.qmd#priority-4-results-automation)
+
+---
+
+## Low Priority 🟢
+
+### 8. Code Style Inconsistencies
+
+**Issue**: No enforced code style (black, ruff, etc.)
+
+**Impact**: Style varies across modules
+
+**Fix needed**:
+
+- Add `black` and `ruff` to dev dependencies
+- Run on codebase
+- Add pre-commit hook
+- Enforce in CI
+
+**Status**: Cosmetic, low priority
+
+---
+
+### 9. Incomplete Docstrings
+
+**Issue**: Some functions lack docstrings
+
+**Impact**: Harder to understand code without reading implementation
+
+**Fix needed**: Add docstrings following numpy style
+
+**Examples of good docstrings**:
+
+```python
+def load_pairwise_couplings(path: str, symmetric: bool = False):
+    """Load coupling matrix from text file.
+
+    Parameters
+    ----------
+    path : str
+        Path to instance file
+    symmetric : bool, default False
+        Whether to symmetrize coupling matrix
+
+    Returns
+    -------
+    torch.Tensor
+        Coupling matrix of shape (N, N)
+    """
+```
+
+**Priority**: Low (code is readable, docstrings would help)
+
+---
+
+### 10. Conda Environment Specs Could Be More Minimal
+
+**Issue**: Environment files may include unnecessary dependencies
+
+**Impact**: Slower installation, larger environments
+
+**Fix needed**:
+
+- Audit dependencies
+- Remove unused packages
+- Create minimal vs full environments
+
+**Example split**:
+
+- `solvers-minimal.yml` - Core only
+- `solvers-full.yml` - With analysis tools, plotting
+
+**Status**: Low priority (current envs work fine)
+
+---
+
+## Limitations (By Design)
+
+These are **not bugs** but intentional design choices with trade-offs.
+
+### CPU Performance
+
+**Limitation**: PyTorch on CPU is slower than optimized C++/Fortran
+
+**Rationale**: GPU performance is priority, CPU is fallback
+
+**Mitigation**: Recommend GPU usage, provide GPU-friendly parameter sets
+
+**Workaround**: Use smaller instances on CPU, or invest in GPU
+
+---
+
+### Large Instance Scalability
+
+**Limitation**: Fully connected models (SK) scale poorly beyond N=1000
+
+**Rationale**: O(N²) couplings, memory and compute limits
+
+**Mitigation**: Sparse models (EA, RRG) scale better
+
+**Workaround**: Use sparse families for very large problems
+
+---
+
+### No Real-Time Optimization
+
+**Limitation**: Batch-oriented workflow, not real-time
+
+**Rationale**: Research benchmarks don't need millisecond response
+
+**Mitigation**: Results are cached, experiments are reproducible
+
+**Alternative**: For real-time needs, use specialized solvers outside framework
+
+---
+
+## Reporting New Issues
+
+### What to Include
+
+When reporting an issue, provide:
+
+1. **Minimal reproducible example** (code to trigger bug)
+2. **Expected behavior** (what should happen)
+3. **Actual behavior** (what actually happens)
+4. **Environment** (OS, Python version, GPU, CUDA version)
+5. **Error messages** (full traceback if applicable)
+
+### Example Good Report
+
+```markdown
+**Issue**: GA crashes on EA3D N=2744 with CUDA OOM
+
+**Code**:
+python -m experiments.src.cli experiments/myexp/experiment_meta.json
+
+**Expected**: Run completes successfully
+
+**Actual**:
+RuntimeError: CUDA out of memory. Tried to allocate 8.00 GiB
+
+**Environment**:
+- OS: Ubuntu 22.04
+- Python: 3.11.5
+- PyTorch: 2.1.0+cu118
+- GPU: NVIDIA RTX 3080 (10GB)
+
+**Workaround**: Reduce pop_size from 100 to 50
+```
+
+### Where to Report
+
+- **GitHub Issues**: https://github.com/ocadni/spin-glass-benchmarks/issues
+- **Label**: bug, enhancement, documentation, question
+
+---
+
+## Contributing Fixes
+
+### Process
+
+1. **Check issue list**: May already be reported or fixed
+2. **Discuss approach**: Open issue first for large changes
+3. **Create branch**: `git checkout -b fix/issue-name`
+4. **Implement fix**: Write code + test
+5. **Verify**: Run test suite
+6. **Submit PR**: With description and test
+7. **Code review**: Iterate on feedback
+8. **Merge**: After approval
+
+### Testing Requirements
+
+All fixes must include tests:
+
+- **Bug fix**: Test that reproduces bug (fails before, passes after)
+- **Feature**: Test new functionality
+- **Refactor**: Ensure existing tests still pass
+
+### Documentation Requirements
+
+Update relevant docs:
+
+- **Fix**: Update known_issues.qmd (remove from list)
+- **Feature**: Update appropriate implementation page
+- **API change**: Update docstrings + README
+
+---
+
+## Issue Triage
+
+### Priority Levels
+
+- 🔴 **High**: Blocks major use cases, affects correctness
+- 🟡 **Medium**: Affects usability, performance, or maintainability
+- 🟢 **Low**: Cosmetic, nice-to-have, edge cases
+
+### Resolution Targets
+
+- 🔴 High: Address before "complete" milestone
+- 🟡 Medium: Address opportunistically or when convenient
+- 🟢 Low: Accept contributions, low priority for maintainers
+
+---
+
+## Known Good Workarounds
+
+Temporary solutions until fixes are implemented:
+
+| Issue | Workaround | Quality |
+|-------|------------|---------|
+| PT on lattices | Use PA instead | Good (PA works well) |
+| GA on RRG | Use PA instead | Good (untested ≠ broken) |
+| XOR-SAT missing | Wait for implementation | N/A |
+| GPU OOM | Reduce pop_size or use smaller instances | Acceptable |
+| Legacy solvers/ confusion | Read EXPERIMENTS_IMPLEMENTATION.md | Acceptable |
+
+---
+
+## Quick Reference
+
+| Category | Count | Examples |
+|----------|-------|----------|
+| 🔴 High priority | 3 | PT on lattices, GA on RRG, XOR-SAT missing |
+| 🟡 Medium priority | 4 | GPU profiling, legacy directory, aggregation |
+| 🟢 Low priority | 3 | Code style, docstrings, minimal envs |
+| Limitations (by design) | 3 | CPU perf, scalability, real-time |
+
+---
+
+**See also**:
+
+- [Roadmap](roadmap.qmd) - Planned fixes
+- [Current Status](status.qmd) - What works
+- [Architecture](architecture.qmd) - Design decisions

@@ -6,9 +6,15 @@ project:
     - problem_definition.qmd
     - literature_references.qmd
     - results.qmd
-    - implementation.qmd
     - file_format.qmd
     - project_contract.qmd
+    - implementation/index.qmd
+    - implementation/status.qmd
+    - implementation/instances.qmd
+    - implementation/solvers.qmd
+    - implementation/architecture.qmd
+    - implementation/roadmap.qmd
+    - implementation/known_issues.qmd
 
 website:
   title: "Spin-Glass and XORSAT Benchmarks"
@@ -20,18 +26,31 @@ website:
     left:
       - text: "Home"
         href: index.qmd
-      - text: "Benchmark Problems"
-        menu:
-          - text: "Problem Definition"
-            href: problem_definition.qmd
-      - text: "Literature References"
+      - text: "Problems"
+        href: problem_definition.qmd
+      - text: "Literature"
         href: literature_references.qmd
       - text: "Results"
         href: results.qmd
       - text: "Implementation"
         menu:
-          - text: "Implementation Plan"
-            href: implementation.qmd
+          - text: "Overview"
+            href: implementation/index.qmd
+          - text: "---"
+          - text: "Current Status"
+            href: implementation/status.qmd
+          - text: "Instance Library"
+            href: implementation/instances.qmd
+          - text: "Solver Implementations"
+            href: implementation/solvers.qmd
+          - text: "---"
+          - text: "Architecture"
+            href: implementation/architecture.qmd
+          - text: "Roadmap"
+            href: implementation/roadmap.qmd
+          - text: "Known Issues"
+            href: implementation/known_issues.qmd
+          - text: "---"
           - text: "File Format"
             href: file_format.qmd
           - text: "Project Contract"

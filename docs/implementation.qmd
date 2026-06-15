@@ -1,33 +1,25 @@
 ---
-title: "Implementation Plan"
-subtitle: "Repository status, roadmap, missing pieces, and contributor contract"
-date: last-modified
+title: "Implementation"
+page-layout: full
 ---
 
-# Implementation Plan
+# Implementation Documentation
 
-This page is a scaffold for the implementation status of the benchmark
-repository.
+**This page has been restructured into multiple focused sections.**
 
-## Repository Plan
+Please visit the **[Implementation Overview](implementation/index.qmd)** for complete documentation.
 
-TODO: Describe the intended package structure, documentation structure,
-benchmark generation flow, solver execution flow, and result publication flow.
+---
 
-## Implemented
+## Quick Navigation
 
-TODO: List what is currently implemented.
+- **[Current Status](implementation/status.qmd)** - What's implemented, in progress, and planned
+- **[Instance Library](implementation/instances.qmd)** - Benchmark instances details
+- **[Solver Implementations](implementation/solvers.qmd)** - Algorithm-family coverage matrix
+- **[Architecture](implementation/architecture.qmd)** - Design decisions
+- **[Roadmap](implementation/roadmap.qmd)** - Future priorities
+- **[Known Issues](implementation/known_issues.qmd)** - Technical debt and limitations
 
-## Missing
+---
 
-TODO: List the missing repository pieces and known technical debt.
-
-## Next Steps
-
-TODO: Define the next implementation milestones.
-
-## Related Implementation Documents
-
-- [File Format](file_format.qmd)
-- [Project Contract](project_contract.qmd)
-
+**Or use the Implementation dropdown menu in the navigation bar above.**

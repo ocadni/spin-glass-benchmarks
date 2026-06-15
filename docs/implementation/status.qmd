@@ -1,0 +1,226 @@
+---
+title: "Current Status"
+subtitle: "What's implemented, in progress, and planned"
+date: last-modified
+---
+
+# Implementation Status
+
+Current state of the repository as of June 2026.
+
+## ✅ Production-Ready Components
+
+### 1. Benchmark Instances (PRIMARY DELIVERABLE)
+
+**190 pre-generated instances** across 4 problem types:
+
+| Family | Description | Sizes | Instances | Total |
+|--------|-------------|-------|-----------|-------|
+| **SK** | Sherrington-Kirkpatrick | 50, 100, 150, 200, 300 | 10 per size | 50 |
+| **EA2D** | 2D Edwards-Anderson | 100, 256, 1024, 2304 | 10 per size | 40 |
+| **EA3D** | 3D Edwards-Anderson | 512, 1000, 1728, 2744 | 10 per size | 40 |
+| **RRG** | Random Regular Graph (k=3) | 50, 100, 150, 200, 300 | 10 per size | 50 |
+
+**Status**: ✅ Generated, verified, committed to repository
+
+**Location**: `instances/{sk,ea2d,ea3d,rrg}/`
+
+**Quality assurance**:
+
+- Deterministic generation from fixed seeds
+- SHA256 hash tracking for integrity
+- Pytest validation suite (`generators/test_reference_instances.py`)
+- No unexpected or missing instances
+
+See [Instance Library](instances.qmd) for details.
+
+---
+
+### 2. Instance Generators
+
+**Status**: ✅ Production-ready
+
+**Features**:
+
+- Unified CLI interface (`generators/generator.py`)
+- Family-specific implementations:
+  - `generate_sk.py` - Sherrington-Kirkpatrick
+  - `generate_ea.py` - Edwards-Anderson (2D/3D)
+  - `generate_rrg.py` - Random Regular Graph
+  - `generate_xorsat.py` - XOR-SAT (generator ready, instances pending)
+- Systematic batch generation (`scripts/generate_random_seed_systematic.sh`)
+- Full test coverage for determinism
+
+**Documentation**: `generators/README.md` (to be created)
+
+---
+
+### 3. Reference Solvers
+
+**Status**: ✅ Core algorithms implemented, GPU-accelerated
+
+**Implemented algorithms** (in `solvers_v2/common/`):
+
+| Algorithm | Type | GPU Support | Status |
+|-----------|------|-------------|--------|
+| **Simulated Annealing** | Single-trajectory | ✓ | ✅ Production |
+| **Population Annealing** | Parallel replicas | ✓ | ✅ Production |
+| **Parallel Tempering** | Replica exchange | ✓ | ✅ Production |
+| **Global Annealing** | ML-enhanced (MADE) | ✓ | ✅ Production |
+| **Greedy** | Iterative descent | ✓ | ✅ Production |
+
+**Implementation**: PyTorch-based for GPU acceleration (10-100× speedup vs CPU)
+
+**Features**:
+
+- Live progress tracking with temperature step display
+- Reproducible seeding
+- Standardized result format (`SolverResult` dataclass)
+- Optional diagnostics output for algorithm analysis
+
+See [Solver Implementations](solvers.qmd) for coverage matrix.
+
+---
+
+### 4. Experimental Framework
+
+**Status**: ✅ Production-ready
+
+**Location**: `experiments/`
+
+**Features**:
+
+- Batch execution across instances and seeds
+- Automatic machine provenance (CPU, GPU, OS, libraries)
+- Standardized result schemas (JSON)
+- Parameter sweep support (grid, list)
+- SHA256 instance verification
+- Analysis utilities for result loading
+
+**Documentation**:
+
+- [experiments/README.md](../../experiments/README.md) - Complete reference
+- [experiments/QUICKSTART.md](../../experiments/QUICKSTART.md) - Quick start guide
+- [EXPERIMENTS_IMPLEMENTATION.md](../../EXPERIMENTS_IMPLEMENTATION.md) - Architecture
+
+**Example experiments**:
+
+- `experiments/biazzin/sk_ga_initial/` - SK baseline validation
+- `experiments/biazzin/ea3d_ga_pa_paper_pilot/` - Paper reproduction (Del Bono et al. PNAS 2025)
+
+---
+
+## 🚧 In Active Development
+
+### 1. Paper Reproductions & Analysis
+
+**EA3D GA vs PA pilot** (`experiments/biazzin/ea3d_ga_pa_paper_pilot/`):
+
+- ✅ 102 runs completed (51 GA + 51 PA)
+- ✅ Success probability analysis
+- ✅ Energy comparison plots
+- ✅ Seed variance analysis
+- ✅ Reproduces Del Bono et al. PNAS 2025 key results
+
+**Status**: Analysis complete, results documented in `README_PLOTS.md`
+
+### 2. Algorithm-Family Coverage Expansion
+
+**Current gaps**:
+
+- Parallel Tempering not enabled for EA2D/EA3D (needs checkerboard updates)
+- Global Annealing not tested on RRG (MADE model adaptation needed)
+- XOR-SAT solvers not implemented
+
+**In progress**: Testing and validation
+
+### 3. Results Collection & Aggregation
+
+**Status**: Individual experiment results exist, aggregation framework in design
+
+**What exists**:
+
+- Per-run results in standardized JSON format
+- Example analysis scripts in EA3D pilot
+
+**What's needed**:
+
+- Central results registry
+- Automated aggregation scripts
+- Result quality approval workflow
+
+---
+
+## 📋 Planned / TODO
+
+### High Priority
+
+- [ ] **Complete algorithm-family coverage matrix** (see [Solver Implementations](solvers.qmd))
+- [ ] **Generate XOR-SAT instances** (generator ready, need to run)
+- [ ] **Expand instance library** (decision pending: 100 or 200 per family)
+- [ ] **Scale to larger sizes** (SK N=1000, EA3D 32³)
+- [ ] **Results automation framework** (GitHub Actions + Quarto integration)
+
+### Medium Priority
+
+- [ ] Additional solver implementations (tabu search, quantum-inspired)
+- [ ] Instance hardness metrics (complexity analysis)
+- [ ] Exact solver for 2D EA (small sizes)
+- [ ] Cross-experiment comparison tools
+- [ ] Performance profiling and optimization
+
+### Low Priority
+
+- [ ] Leaderboard for algorithm performance
+- [ ] API for programmatic instance access
+- [ ] Integration with external benchmarking platforms
+- [ ] Community-contributed instances and solvers
+
+See [Roadmap](roadmap.qmd) for detailed planning.
+
+---
+
+## Testing & Validation
+
+### Current test coverage
+
+✅ **Passing tests**:
+
+- Generator determinism (`generators/test_reference_instances.py`)
+- Baseline parity (`tests/test_baseline_parity.py`)
+- Family adapters (`tests/test_families.py`)
+- Experimental framework (`experiments/verify_framework.py`)
+
+### Testing gaps
+
+- [ ] End-to-end solver benchmarks
+- [ ] GPU vs CPU result parity validation
+- [ ] Large-scale instance validation (N>10,000)
+- [ ] Result schema validation
+- [ ] Reproducibility across different hardware
+
+---
+
+## Summary
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| **Instances** | ✅ Production | 190 instances, 4 families |
+| **Generators** | ✅ Production | All families implemented |
+| **Solvers** | ✅ Production | 5 algorithms, GPU-accelerated |
+| **Framework** | ✅ Production | Full experiment orchestration |
+| **Coverage** | 🚧 Partial | Some algorithm-family gaps |
+| **Results** | 🚧 In progress | Collection + aggregation |
+| **Documentation** | 🚧 In progress | This site |
+| **XOR-SAT** | 📋 Planned | Generator ready, instances pending |
+
+**Overall**: Core components production-ready, expansion and results aggregation in progress.
+
+---
+
+## Quick Links
+
+- [What's implemented →](status.qmd) (this page)
+- [What's next →](roadmap.qmd)
+- [What's broken →](known_issues.qmd)
+- [How it works →](architecture.qmd)

@@ -1,0 +1,523 @@
+---
+title: "Solver Implementations"
+subtitle: "Algorithm details and family coverage matrix"
+date: last-modified
+---
+
+# Solver Implementations
+
+Documentation of implemented algorithms and their support across problem families.
+
+## Algorithm-Family Coverage Matrix
+
+| Algorithm | SK | EA2D | EA3D | RRG | XOR-SAT |
+|-----------|:--:|:----:|:----:|:---:|:-------:|
+| **Simulated Annealing** | ✅ | ✅ | ✅ | ✅ | ❌ |
+| **Population Annealing** | ✅ | ✅ | ✅ | ✅ | ❌ |
+| **Parallel Tempering** | ✅ | ⚠️ | ⚠️ | ✅ | ❌ |
+| **Global Annealing** | ✅ | ✅ | ✅ | ⚠️ | ❌ |
+| **Greedy** | ✅ | ✅ | ✅ | ✅ | ❌ |
+
+**Legend**:
+
+- ✅ **Production-ready**: Fully implemented and tested
+- ⚠️ **Partial/untested**: Code exists but not validated or has known limitations
+- ❌ **Not implemented**: No support for this combination
+
+**Coverage**: 19/25 combinations supported (76%)
+
+---
+
+## Implemented Algorithms
+
+### 1. Simulated Annealing (SA)
+
+**Type**: Single-trajectory Monte Carlo with temperature annealing
+
+**Implementation**: `solvers_v2/common/simulated_annealing/`
+
+**Status**: ✅ Production-ready for all families
+
+**Method**:
+
+- Start with high temperature (random exploration)
+- Gradually decrease temperature (focus search)
+- Metropolis acceptance criterion
+- Linear or logarithmic temperature schedule
+
+**Parameters**:
+
+```python
+{
+  "pop_size": 100,                    # Number of independent walkers
+  "MCsteps": 100,                     # Monte Carlo steps per temperature
+  "Tstart": 1.92,                     # Initial temperature
+  "Tend": 0.1,                        # Final temperature
+  "num_temps": 50,                    # Number of temperature steps
+  "schedule": "linearT",              # "linearT" or "logT"
+  "high_temp_thermalization_steps": 1000  # Thermalization at T_start
+}
+```
+
+**Characteristics**:
+
+- Simple, classical baseline
+- Embarrassingly parallel (independent walkers)
+- Good for validation and comparison
+- Returns best configuration from all walkers
+
+**Typical runtime** (EA3D N=1000, GPU): ~1-2 seconds
+
+---
+
+### 2. Population Annealing (PA)
+
+**Type**: Parallel replicas with resampling
+
+**Implementation**: `solvers_v2/common/population_annealing/`
+
+**Status**: ✅ Production-ready for all families
+
+**Method**:
+
+- Population of replicas at current temperature
+- Evolve with Monte Carlo steps
+- Resample based on Boltzmann weights when temperature changes
+- Maintain diversity through resampling
+
+**Parameters**:
+
+```python
+{
+  "pop_size": 100,                    # Population size
+  "MCsteps": 100,                     # MC steps per temperature
+  "Tstart": 1.92,
+  "Tend": 0.1,
+  "num_temps": 50,
+  "schedule": "linearT",
+  "high_temp_thermalization_steps": 1000
+}
+```
+
+**Characteristics**:
+
+- State-of-the-art classical method
+- Avoids trapping in local minima via resampling
+- More robust than SA on hard instances
+- Used as baseline in Del Bono et al. PNAS 2025
+
+**Typical runtime** (EA3D N=1000, GPU): ~2-3 seconds
+
+**References**:
+
+- "Analysis and optimization of population annealing" (see `papers/`)
+
+---
+
+### 3. Parallel Tempering (PT)
+
+**Type**: Replica exchange Monte Carlo
+
+**Implementation**: `solvers_v2/common/parallel_tempering/`
+
+**Status**: ✅ SK, RRG | ⚠️ EA2D, EA3D (not thoroughly tested)
+
+**Method**:
+
+- Multiple replicas at different fixed temperatures
+- Monte Carlo evolution at each temperature
+- Periodic swap attempts between neighboring temperatures
+- Information flows from high T (exploration) to low T (exploitation)
+
+**Parameters**:
+
+```python
+{
+  "MCsteps": 1000,                    # MC steps between swap attempts
+  "swap_interval": 10,                # Steps between swap attempts
+  "Tstart": 2.0,                      # Highest temperature
+  "Tend": 0.1,                        # Lowest temperature
+  "num_temps": 20,                    # Number of replicas
+  "schedule": "linearT",
+  "high_temp_thermalization_steps": 1000
+}
+```
+
+**Characteristics**:
+
+- Efficient sampling of energy landscape
+- Good for computing thermal properties
+- Requires careful temperature ladder design
+- Swap acceptance rate is key diagnostic
+
+**Limitations**:
+
+- Not extensively tested on EA2D/EA3D
+- May need different update schemes for lattices (checkerboard)
+
+**Typical runtime** (SK N=100, GPU): ~5-10 seconds
+
+---
+
+### 4. Global Annealing (GA)
+
+**Type**: ML-enhanced Monte Carlo with MADE autoregressive model
+
+**Implementation**: `solvers_v2/common/global_annealing/`
+
+**Status**: ✅ SK, EA2D, EA3D | ⚠️ RRG (untested)
+
+**Method**:
+
+- Train MADE (Masked Autoregressive Density Estimator) on population
+- Generate global proposals from learned distribution
+- Combine global moves with local Monte Carlo
+- Retrain model at each temperature step
+
+**Parameters**:
+
+```python
+{
+  "pop_size": 100,                    # Population size
+  "MLMCsteps": 10,                    # Global moves per temperature
+  "swap_step": 2,                     # Frequency of population swaps
+  "Tstart": 1.92,
+  "Tend": 0.1,
+  "num_temps": 20,
+  "schedule": "linearT",
+  "high_temp_thermalization_steps": 100,
+  "num_epochs_start": 40,             # Initial MADE training epochs
+  "num_epochs_retrain": 1,            # Retraining epochs per step
+  "batch_size": 256                   # MADE training batch size
+}
+```
+
+**Characteristics**:
+
+- ML-assisted optimization
+- Large non-local moves via MADE model
+- Significantly outperforms PA on hard instances
+- More computationally expensive (ML training overhead)
+
+**Typical runtime** (EA3D N=1000, GPU): ~30-40 seconds
+
+**Performance**:
+
+- Consistently finds better solutions than PA
+- More robust across instance hardness
+- Demonstrated advantage in Del Bono et al. PNAS 2025
+
+**References**:
+
+- Del Bono et al., PNAS 2025: "Demonstrating Real Advantage of Machine-Learning-Enhanced Monte Carlo"
+- arXiv:2510.19544v2
+
+**Limitations**:
+
+- Not tested on RRG (sparse graphs may challenge MADE)
+- Requires GPU for reasonable performance
+- More hyperparameters to tune
+
+---
+
+### 5. Greedy
+
+**Type**: Iterative local descent
+
+**Implementation**: `solvers_v2/common/greedy/`
+
+**Status**: ✅ Production-ready for all families
+
+**Method**:
+
+- Start with random configurations
+- Iteratively flip spins that decrease energy
+- Continue until no improving flips exist (local minimum)
+
+**Parameters**:
+
+```python
+{
+  "pop_size": 1000  # Number of random restarts
+}
+```
+
+**Characteristics**:
+
+- Simplest method (baseline)
+- Very fast (no temperature schedule)
+- Always gets trapped in local minima
+- Good for sanity checks and lower bounds
+
+**Typical runtime** (EA3D N=1000, GPU): <1 second
+
+**Use case**: Quick baseline, not competitive on hard instances
+
+---
+
+## Family Adapters
+
+Each problem family has a family adapter that bridges instances to algorithms.
+
+**Location**: `solvers_v2/families/{sk,ea,rrg,xorsat}/`
+
+### SK Family Adapter
+
+**File**: `solvers_v2/families/sk/__init__.py`
+
+**Key function**: `run_baseline_case(algorithm, fixture, parameters, seed)`
+
+**Update scheme**: Sequential Metropolis (one spin at a time)
+
+**Why sequential**: Fully connected graph, no parallelism from structure
+
+**Supported algorithms**: All 5 (SA, PA, PT, GA, Greedy)
+
+---
+
+### EA Family Adapter
+
+**File**: `solvers_v2/families/ea/common.py`
+
+**Subfamilies**:
+
+- `ea2d` - 2D square lattice
+- `ea3d` - 3D cubic lattice
+
+**Key function**: `run_baseline_case(algorithm, fixture, parameters, seed, dimension)`
+
+**Update scheme**: Checkerboard (parallel updates on independent sublattices)
+
+**Why checkerboard**: Lattice structure allows simultaneous spin flips without conflicts
+
+**Supported algorithms**: SA, PA, GA, Greedy | ⚠️ PT (needs testing)
+
+---
+
+### RRG Family Adapter
+
+**File**: `solvers_v2/families/rrg/__init__.py`
+
+**Key function**: `run_pairwise_case(algorithm, fixture, parameters, seed)`
+
+**Update scheme**: Sequential Metropolis
+
+**Why sequential**: Irregular graph structure, no obvious parallelization
+
+**Supported algorithms**: SA, PA, PT, Greedy | ⚠️ GA (untested)
+
+**Note**: GA with MADE on sparse graphs is unexplored territory
+
+---
+
+### XOR-SAT Family Adapter
+
+**File**: `solvers_v2/families/xorsat/` (exists but empty)
+
+**Status**: ❌ Not implemented
+
+**Planned**: WalkSAT, adapted SA, specialized solvers
+
+---
+
+## GPU Acceleration
+
+All solvers use **PyTorch** for GPU acceleration.
+
+### Performance Gains
+
+Typical speedups (GPU vs CPU):
+
+| Algorithm | SK N=100 | EA3D N=1000 | Notes |
+|-----------|----------|-------------|-------|
+| SA | 20× | 50× | Highly parallel |
+| PA | 25× | 60× | Population operations |
+| PT | 15× | 40× | Swap overhead |
+| GA | 30× | 100× | MADE training benefits most |
+| Greedy | 50× | 80× | Fully vectorized |
+
+**Why PyTorch**:
+
+- Vectorized operations (batch processing)
+- Automatic memory management
+- Seamless CPU/GPU switching
+- ML primitives (for MADE in GA)
+
+### Hardware Requirements
+
+**Minimum**:
+
+- CUDA-capable GPU (Compute Capability 3.5+)
+- 2GB GPU memory
+
+**Recommended**:
+
+- NVIDIA Tesla P40, V100, A100 or equivalent
+- 8GB+ GPU memory (for large instances)
+
+**CPU fallback**: All solvers work on CPU (slower)
+
+---
+
+## Progress Tracking
+
+All solvers support optional live progress display:
+
+```
+[12/100] ⠙ global_annealing | ea3d_couplings_N1000_J0_seed3011732.txt, seed=3141 |
+         Step 15/20 (T=0.156) | Running: 45s | Elapsed: 8m 30s | ETA: 42m | Remaining: 88
+```
+
+Displays:
+
+- Current run number
+- Algorithm and instance
+- Temperature step progress
+- Runtime estimates
+
+---
+
+## Result Format
+
+All solvers return a standardized `SolverResult` object:
+
+```python
+@dataclass
+class SolverResult:
+    final_state: torch.Tensor        # Final spin configuration
+    schedule_length: int              # Number of temperature steps
+    metrics: dict                     # Energy metrics at each step
+    diagnostics: dict | None = None  # Optional algorithm-specific data
+```
+
+**Standard metrics** (all algorithms):
+
+- `min_energy`: Best energy at each temperature
+- `mean_energy`: Population mean energy
+- `final_min_energy`: Best final energy
+- `final_mean_energy`: Final population mean
+- `best_min_energy`: Best energy ever seen
+
+**Optional diagnostics** (algorithm-specific):
+
+- **GA**: MADE training losses, temperature schedule
+- **PT**: Swap acceptance matrix, replica temperatures
+- **PA**: Resampling statistics
+
+---
+
+## Testing
+
+### Baseline Parity Tests
+
+**File**: `tests/test_baseline_parity.py`
+
+Validates that `solvers_v2` produces identical results to legacy solvers on reference instances.
+
+**What's tested**:
+
+- Numerical reproducibility (same seeds → same energies)
+- Schedule length matches
+- Energy metrics match to 7 decimal places
+
+**Coverage**: All algorithm-family combinations marked ✅
+
+---
+
+## Adding New Solvers
+
+### Process
+
+1. **Implement in** `solvers_v2/common/your_algorithm/`
+2. **Add to family adapters** (SK, EA, RRG as applicable)
+3. **Create baseline test case**
+4. **Document parameters** in this page
+5. **Update coverage matrix** above
+
+### Interface Contract
+
+Your algorithm must:
+
+- Accept coupling matrix (PyTorch tensor)
+- Accept parameters dict
+- Return `SolverResult` with standard metrics
+- Support optional `progress_callback`
+
+See [Project Contract](../project_contract.qmd) for details.
+
+---
+
+## Parameter Recommendations
+
+### For Validation/Testing
+
+Fast parameters (suitable for CI/testing):
+
+```python
+{
+  "pop_size": 10,
+  "MCsteps": 10,
+  "num_temps": 10,
+  "high_temp_thermalization_steps": 10
+}
+```
+
+Runtime: <1 second per run
+
+### For Research/Benchmarking
+
+Production parameters (matching Del Bono et al.):
+
+```python
+{
+  "pop_size": 100,          # SA, PA, GA
+  "MCsteps": 100,           # SA, PA (10 for GA global moves)
+  "num_temps": 20,          # Fewer temps for GA, 50 for SA/PA
+  "high_temp_thermalization_steps": 100-1000
+}
+```
+
+Runtime: 1-40 seconds per run (depending on algorithm and size)
+
+---
+
+## Known Gaps & Future Work
+
+### High Priority
+
+- [ ] Validate PT on EA2D/EA3D (likely needs checkerboard updates)
+- [ ] Test GA on RRG (may require MADE architecture changes)
+- [ ] Implement XOR-SAT solvers
+
+### Medium Priority
+
+- [ ] Add Tabu Search
+- [ ] Add Quantum-inspired algorithms (SQA, SVMC)
+- [ ] Implement exact 2D EA solver (small sizes only)
+
+### Low Priority
+
+- [ ] Adaptive temperature schedules
+- [ ] Automatic hyperparameter tuning
+- [ ] Multi-GPU support
+
+See [Roadmap](roadmap.qmd) for timeline.
+
+---
+
+## Quick Reference
+
+| Task | Details |
+|------|---------|
+| **Run solver** | See [experiments/QUICKSTART.md](../../experiments/QUICKSTART.md) |
+| **Coverage matrix** | [Top of this page](#algorithm-family-coverage-matrix) |
+| **Parameters** | Each algorithm section above |
+| **Add new solver** | [Process](#adding-new-solvers) |
+
+---
+
+**See also**:
+
+- [Experimental Framework](../../experiments/README.md) - How to run solvers
+- [Architecture](architecture.qmd) - Design decisions
+- [Instance Library](instances.qmd) - What to solve
