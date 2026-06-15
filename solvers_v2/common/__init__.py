@@ -1,6 +1,7 @@
 """Common algorithms shared across all spin glass families."""
 
 from solvers_v2.common.global_annealing import global_annealing
+from solvers_v2.common.global_annealing.architectures import Architecture, MADEArchitecture
 from solvers_v2.common.greedy import greedy
 from solvers_v2.common.parallel_tempering import parallel_tempering
 from solvers_v2.common.population_annealing import population_annealing
@@ -12,4 +13,6 @@ __all__ = [
     "parallel_tempering",
     "greedy",
     "global_annealing",
+    "Architecture",
+    "MADEArchitecture",
 ]

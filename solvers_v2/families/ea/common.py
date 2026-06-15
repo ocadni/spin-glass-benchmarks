@@ -61,6 +61,12 @@ def run_baseline_case(
             progress_callback=progress_callback,
         )
     if algorithm == "global_annealing":
+        architecture = parameters.get("architecture", None)
+        if architecture is not None and isinstance(architecture, str):
+            if architecture.lower() == "made":
+                architecture = common.MADEArchitecture()
+            else:
+                raise ValueError(f"unsupported architecture: {architecture}")
         return common.global_annealing(
             couplings,
             pop_size=parameters["pop_size"],
@@ -75,6 +81,7 @@ def run_baseline_case(
             num_epochs_start=parameters.get("num_epochs_start", 40),
             num_epochs_retrain=parameters.get("num_epochs_retrain", 1),
             batch_size=parameters.get("batch_size", 256),
+            architecture=architecture,
             progress_callback=progress_callback,
         )
     raise ValueError(f"unsupported EA algorithm: {algorithm}")

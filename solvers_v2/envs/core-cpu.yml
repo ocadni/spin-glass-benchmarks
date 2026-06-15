@@ -1,11 +1,1 @@
-name: sgbench-solvers-core
-channels:
-  - conda-forge
-dependencies:
-  - python=3.12.2
-  - numpy=2.2.3
-  - pytorch=2.7.0=*cpu*
-  - pytest=9.0.3
-  - pandas=2.2.3
-  - networkx=3.4.2
-  - tqdm=4.67.1
+../../environments/solvers-core-cpu.yml

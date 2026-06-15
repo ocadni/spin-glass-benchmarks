@@ -1,4 +1,4 @@
-"""Global Annealing with ML-enhanced sampling using MADE."""
+"""Global Annealing with ML-enhanced sampling."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ from collections.abc import Callable
 import torch
 import torch.nn as nn
 
-from solvers_v2.common.global_annealing.made import MADE, generate_config_fast, retrain_made, train_made
+from solvers_v2.common.global_annealing.architectures import Architecture, MADEArchitecture
 from solvers_v2.src.observables import Observables, compute_energy
 from solvers_v2.src.result import SolverResult
 from solvers_v2.src.schedules import schedule_temperatures
@@ -18,29 +18,27 @@ ProgressFn = Callable[[int, int, str], None]
 
 
 def ml_metropolis_update(
-    model: MADE,
+    architecture: Architecture,
+    model: nn.Module,
     population: torch.Tensor,
     couplings: torch.Tensor,
     beta: float,
     device: torch.device,
     num_steps: int = 1,
 ) -> torch.Tensor:
-    """ML-assisted Metropolis update using MADE model."""
+    """ML-assisted Metropolis update using neural network model."""
     with torch.no_grad():
-        bce = nn.BCELoss(reduction="none")
         current_config = population.clone()
 
         for _ in range(num_steps):
             num_configs, num_spins = current_config.shape
-            new_config = generate_config_fast(model, num_spins, num_configs, device)
+            new_config = architecture.generate_configs(model, num_spins, num_configs, device)
 
             current_energy = compute_energy(current_config, couplings)
-            current_probability = torch.sum(
-                bce(model(current_config), (current_config + 1) / 2), axis=1
-            )
+            current_probability = architecture.compute_log_probability(model, current_config)
 
             new_energy = compute_energy(new_config, couplings)
-            new_probability = torch.sum(bce(model(new_config), (new_config + 1) / 2), axis=1)
+            new_probability = architecture.compute_log_probability(model, new_config)
 
             arg_new = -beta * new_energy + new_probability
             arg_current = -beta * current_energy + current_probability
@@ -67,12 +65,13 @@ def global_annealing(
     num_epochs_start: int = 40,
     num_epochs_retrain: int = 1,
     batch_size: int = 256,
+    architecture: Architecture | None = None,
     device: torch.device | None = None,
     progress_callback: ProgressFn | None = None,
 ) -> SolverResult:
     """Global annealing with ML-enhanced sampling.
 
-    Combines MADE-based proposal generation with standard MC updates.
+    Combines neural network-based proposal generation with standard MC updates.
 
     Args:
         couplings: Coupling matrix
@@ -85,13 +84,18 @@ def global_annealing(
         schedule: Temperature schedule type
         update: Standard MC update function
         high_temp_thermalization_steps: Thermalization steps at high T
-        num_epochs_start: Initial MADE training epochs
-        num_epochs_retrain: MADE retraining epochs per temperature
-        batch_size: Batch size for MADE training
+        num_epochs_start: Initial training epochs
+        num_epochs_retrain: Retraining epochs per temperature
+        batch_size: Batch size for training
+        architecture: Neural network architecture (default: MADEArchitecture)
         device: Device (cuda/cpu)
+        progress_callback: Optional progress callback
     """
     if device is None:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    if architecture is None:
+        architecture = MADEArchitecture()
 
     num_spins = couplings.shape[0]
     couplings = couplings.to(device)
@@ -106,18 +110,23 @@ def global_annealing(
         population = update(population, couplings, 1.0 / old_temperature)
     observables.update(population)
 
-    model = train_made(population, num_spins, device, epochs=num_epochs_start, batch_size=batch_size)
+    model = architecture.create_model(num_spins)
+    model = architecture.train(
+        model, population, device, epochs=num_epochs_start, batch_size=batch_size, learning_rate=1e-3
+    )
 
     for temp_idx, temperature in enumerate(temperatures[1:-1], start=1):
         if progress_callback:
             progress_callback(temp_idx, num_temps, f"T={temperature:.3f}")
         beta = 1.0 / temperature
         for _ in range(num_steps_mc):
-            population = ml_metropolis_update(model, population, couplings, beta, device, num_steps=1)
+            population = ml_metropolis_update(architecture, model, population, couplings, beta, device, num_steps=1)
             for _ in range(swap_step):
                 population = update(population, couplings, beta)
 
-        model = retrain_made(model, population, device, epochs=num_epochs_retrain, batch_size=batch_size)
+        model = architecture.retrain(
+            model, population, device, epochs=num_epochs_retrain, batch_size=batch_size, learning_rate=1e-3
+        )
         observables.update(population)
 
     temperature = temperatures[-1]
@@ -125,7 +134,7 @@ def global_annealing(
         progress_callback(num_temps - 1, num_temps, f"T={temperature:.3f} (final)")
     beta = 1.0 / temperature
     for _ in range(num_steps_mc):
-        population = ml_metropolis_update(model, population, couplings, beta, device, num_steps=1)
+        population = ml_metropolis_update(architecture, model, population, couplings, beta, device, num_steps=1)
         for _ in range(swap_step):
             population = update(population, couplings, beta)
     observables.update(population)
