@@ -1,0 +1,711 @@
+---
+title: "Testing & Validation"
+subtitle: "Test infrastructure, validation procedures, and quality assurance"
+date: last-modified
+---
+
+# Testing & Validation
+
+Comprehensive documentation of the testing infrastructure, validation procedures, and quality assurance for the benchmark repository.
+
+---
+
+## Overview
+
+Testing in the spin-glass benchmark spans three main areas:
+
+1. **Generator validation** - Ensuring instances are generated correctly and deterministically
+2. **Solver validation** - Verifying solvers produce reproducible results and correct outputs
+3. **Integration testing** - Ensuring the full experimental workflow functions end-to-end
+
+---
+
+## Generator Testing
+
+### Determinism Validation
+
+**Purpose**: Verify that identical input parameters and seed always produce byte-identical instances.
+
+**File**: `generators/test_reference_instances.py`
+
+**How it works**:
+
+```python
+def test_determinism():
+    # Generate instance twice with same params
+    instance1 = generate_sk(N=100, seed=12345, distribution='gaussian')
+    instance2 = generate_sk(N=100, seed=12345, distribution='gaussian')
+    
+    # They must be byte-identical
+    assert instance1.data == instance2.data
+```
+
+**What's tested**:
+
+- ✅ SK determinism across multiple sizes
+- ✅ EA2D/EA3D determinism (2D, 3D lattices)
+- ✅ RRG determinism
+- ✅ XOR-SAT generator determinism
+
+**Coverage**: All 4 families + future families
+
+**How to run**:
+
+```bash
+pytest generators/test_reference_instances.py -v
+```
+
+### Reference Instance Snapshot Testing
+
+**Purpose**: Detect unintended changes to generator output across commits.
+
+**File**: `generators/test_reference_instances.py` (with `reference_instances.json` snapshot)
+
+**How it works**:
+
+```python
+@pytest.mark.snapshot
+def test_reference_instances_unchanged():
+    """Verify all reference instances match stored SHA256 hashes."""
+    instances = [
+        ('sk', {'N': 50, 'seed': 1051730}),
+        ('sk', {'N': 100, 'seed': 1051730}),
+        # ... all reference instances
+    ]
+    
+    for family, params in instances:
+        instance = generate(family, params)
+        expected_sha = SNAPSHOT[family][params]
+        actual_sha = sha256(instance)
+        assert actual_sha == expected_sha
+```
+
+**What's tested**:
+
+- ✅ All 180+ reference instances produce unchanged output
+- ✅ No accidental changes to distribution, normalization, or seed sequences
+- ✅ Cross-platform consistency (Linux, macOS, Windows)
+
+**Snapshot file**: `generators/reference_instances.json`
+
+**Example snapshot entry**:
+
+```json
+{
+  "sk_N50_seed1051730": "a1b2c3d4e5f6...",
+  "ea2d_N256_seed2051730": "f6e5d4c3b2a1...",
+  "rrg_N100_seed3051730": "7e8f9a0b1c2d..."
+}
+```
+
+**How to regenerate snapshot**:
+
+```bash
+pytest generators/test_reference_instances.py --snapshot-update
+```
+
+⚠️ **Warning**: Only regenerate snapshot after verifying the generator change is intentional.
+
+---
+
+## Format Validation
+
+### Instance File Format Testing
+
+**Purpose**: Ensure all generated instances conform to the specification.
+
+**File**: `generators/test_format_validation.py`
+
+**What's tested**:
+
+- ✅ File begins with metadata comment `# model=... N=... seed=...`
+- ✅ Correct number of field lines (matches `num_fields` in metadata)
+- ✅ Correct number of coupling lines (matches `num_couplings` in metadata)
+- ✅ Field format: `index value` (integer, float)
+- ✅ Coupling format: `i j J` (integer, integer, float)
+- ✅ No duplicate couplings (i, j unique)
+- ✅ Floating-point precision (≤5 decimal places)
+- ✅ File ends cleanly (no partial lines)
+
+**Example validation**:
+
+```python
+def test_sk_format():
+    instance = generate_sk(N=100, seed=12345)
+    
+    # Parse and validate
+    parsed = parse_instance(instance.path)
+    
+    assert parsed.metadata['model'] == 'sk'
+    assert parsed.metadata['N'] == 100
+    assert parsed.metadata['num_fields'] == 100
+    assert len(parsed.fields) == 100
+    assert len(parsed.couplings) == 4950  # N*(N-1)/2
+    
+    # No negative indices
+    for i, j, J in parsed.couplings:
+        assert 0 <= i < 100
+        assert 0 <= j < 100
+        assert i != j
+```
+
+**How to run**:
+
+```bash
+pytest generators/test_format_validation.py -v
+```
+
+---
+
+## Solver Testing
+
+### Baseline Parity Testing
+
+**Purpose**: Verify that `solvers_v2` produces results identical (or numerically close) to legacy `solvers/`.
+
+**File**: `tests/test_baseline_parity.py`
+
+**How it works**:
+
+```python
+def test_sa_parity_sk():
+    """SA on SK should match legacy implementation."""
+    instance = load_instance('instances/sk/N100/sk_couplings_N100_J0_seed1051730.txt')
+    
+    # Run legacy solver
+    legacy_result = solvers.run_sa(instance, params, seed=42)
+    
+    # Run new solver
+    new_result = solvers_v2.run_sa(instance, params, seed=42)
+    
+    # Results should match to 7 decimal places
+    np.testing.assert_almost_equal(
+        legacy_result.final_energy,
+        new_result.final_energy,
+        decimal=7
+    )
+```
+
+**Coverage matrix**:
+
+| Algorithm | SK | EA2D | EA3D | RRG | Status |
+|-----------|:--:|:----:|:----:|:---:|--------|
+| SA | ✅ | ✅ | ✅ | ✅ | Tested |
+| PA | ✅ | ✅ | ✅ | ✅ | Tested |
+| PT | ✅ | ⚠️ | ⚠️ | ✅ | Partial |
+| GA | ✅ | ✅ | ✅ | ⚠️ | Partial |
+| Greedy | ✅ | ✅ | ✅ | ✅ | Tested |
+
+**Numerical tolerance**: 7 decimal places (accounts for floating-point rounding differences)
+
+**How to run**:
+
+```bash
+pytest tests/test_baseline_parity.py -v
+```
+
+### Reproducibility Testing
+
+**Purpose**: Verify that running the same solver twice with identical parameters produces identical results.
+
+**File**: `tests/test_reproducibility.py`
+
+**How it works**:
+
+```python
+def test_reproducibility_seed():
+    """Same seed → same result."""
+    instance = load_instance('instances/sk/N50/sk_couplings_N50_J0_seed1051730.txt')
+    params = {'pop_size': 100, 'MCsteps': 50, 'num_temps': 20}
+    
+    # Run twice with same seed
+    result1 = solver.solve(instance, params, seed=12345)
+    result2 = solver.solve(instance, params, seed=12345)
+    
+    # Must be identical
+    assert result1.final_state == result2.final_state
+    assert result1.min_energy == result2.min_energy
+    np.testing.assert_array_equal(result1.energies, result2.energies)
+
+def test_reproducibility_gpu_cpu():
+    """GPU and CPU with same seed → same result."""
+    instance = load_instance('instances/sk/N100/sk_couplings_N100_J0_seed1051730.txt')
+    
+    # Run on GPU
+    torch.set_device('cuda')
+    result_gpu = solver.solve(instance, params, seed=12345)
+    
+    # Run on CPU
+    torch.set_device('cpu')
+    result_cpu = solver.solve(instance, params, seed=12345)
+    
+    # Should match (accounting for floating-point accumulation differences)
+    np.testing.assert_allclose(
+        result_gpu.energies,
+        result_cpu.energies,
+        rtol=1e-5,
+        atol=1e-8
+    )
+```
+
+**What's tested**:
+
+- ✅ Same seed produces identical random number sequence
+- ✅ Same sequence produces identical final state
+- ✅ GPU and CPU produce equivalent results (within FP tolerance)
+- ✅ Multiple runs converge to same solution distribution
+
+**How to run**:
+
+```bash
+pytest tests/test_reproducibility.py -v -k "not gpu"  # Skip GPU tests if no CUDA
+```
+
+### Correctness Testing
+
+**Purpose**: Verify that solvers correctly compute energy and handle edge cases.
+
+**File**: `tests/test_correctness.py`
+
+**What's tested**:
+
+**Energy calculation**:
+
+```python
+def test_energy_calculation():
+    """Verify energy is computed correctly."""
+    # Known small instance: SK N=4
+    couplings = torch.tensor([
+        [0.0, 0.5, -0.3, 0.1],
+        [0.5, 0.0, 0.4, -0.2],
+        [-0.3, 0.4, 0.0, 0.6],
+        [0.1, -0.2, 0.6, 0.0]
+    ])
+    
+    # Test configuration: all spins up
+    state = torch.ones(4)
+    energy = compute_energy(couplings, state)
+    
+    # Manual calculation
+    expected = -(0.5 + (-0.3) + 0.1 + 0.4 + (-0.2) + 0.6)
+    assert energy == expected
+```
+
+**Edge cases**:
+
+```python
+def test_edge_cases():
+    """Test edge cases and boundary conditions."""
+    # Trivial case: N=1
+    couplings = torch.zeros(1, 1)
+    state = torch.tensor([1.0])
+    energy = compute_energy(couplings, state)
+    assert energy == 0.0
+    
+    # All zeros: energy should be zero
+    couplings = torch.zeros(10, 10)
+    state = torch.randn(10).sign()
+    energy = compute_energy(couplings, state)
+    assert energy == 0.0
+    
+    # All same coupling: energy linear in N
+    couplings = torch.ones(5, 5) * 0.1
+    couplings.fill_diagonal_(0)
+    state = torch.ones(5)
+    energy = compute_energy(couplings, state)
+    # Energy = -sum of all couplings = -0.1 * 20 = -2.0
+    assert abs(energy + 2.0) < 1e-6
+```
+
+**How to run**:
+
+```bash
+pytest tests/test_correctness.py -v
+```
+
+---
+
+## Integration Testing
+
+### End-to-End Workflow Testing
+
+**Purpose**: Verify the full pipeline from instance generation through solver execution to result storage.
+
+**File**: `tests/test_e2e_workflow.py`
+
+**How it works**:
+
+```python
+def test_e2e_sk_sa():
+    """Full workflow: generate SK instance → run SA → verify result."""
+    # 1. Generate instance
+    instance_path = generators.generate_sk(
+        N=50, seed=9999, outdir='/tmp/test_instances'
+    )
+    assert os.path.exists(instance_path)
+    
+    # 2. Load instance
+    couplings = load_pairwise_couplings(instance_path)
+    assert couplings.shape == (50, 50)
+    
+    # 3. Run solver
+    result = solvers_v2.run_baseline_case(
+        algorithm='simulated_annealing',
+        fixture=couplings,
+        parameters={'pop_size': 10, 'num_temps': 5},
+        seed=42
+    )
+    
+    # 4. Verify result structure
+    assert hasattr(result, 'final_state')
+    assert hasattr(result, 'min_energy')
+    assert result.final_state.shape == (50, 10)  # (N, pop_size)
+    assert result.min_energy.shape == (5,)  # num_temps
+    
+    # 5. Verify energy is reasonable
+    assert result.min_energy[-1] < 100  # Sanity check
+```
+
+**Test matrix**:
+
+```
+For each algorithm × family combination:
+  1. Generate small test instance
+  2. Run solver with minimal parameters
+  3. Check result structure and bounds
+  4. Verify reproducibility
+```
+
+**Coverage**: All ✅-marked combinations in [Solver Implementations](solvers.qmd)
+
+**How to run**:
+
+```bash
+pytest tests/test_e2e_workflow.py -v --timeout=300  # 5-min timeout per test
+```
+
+### Experimental Framework Testing
+
+**Purpose**: Verify the experiments framework correctly orchestrates solver runs.
+
+**File**: `experiments/verify_framework.py`
+
+**How it works**:
+
+```python
+def test_experiment_config_parsing():
+    """Verify experiment metadata is parsed correctly."""
+    config = load_experiment_config('experiments/test_exp/experiment_meta.json')
+    
+    assert config['experiment_name'] == 'test_exp'
+    assert config['timestamp'] is not None
+    assert len(config['sweep_spec']) > 0
+
+def test_experiment_run_execution():
+    """Run minimal experiment, check output format."""
+    result_dir = run_experiment_minimal('/tmp/test_results')
+    
+    # Check results exist
+    assert os.path.exists(f'{result_dir}/results.jsonl')
+    
+    # Parse results
+    with open(f'{result_dir}/results.jsonl') as f:
+        for line in f:
+            result = json.loads(line)
+            assert 'instance' in result
+            assert 'solver' in result
+            assert 'energy' in result
+            assert 'timestamp' in result
+```
+
+**How to run**:
+
+```bash
+cd experiments
+python verify_framework.py
+```
+
+---
+
+## Continuous Integration (GitHub Actions)
+
+### Test Pipeline
+
+**File**: `.github/workflows/tests.yml`
+
+**On every commit**:
+
+1. **Format checks** (coming soon)
+   - Black code formatting
+   - Ruff linting
+
+2. **Generator tests** (~2 min)
+   - Determinism validation
+   - Reference snapshot comparison
+   - Format validation
+
+3. **Solver tests** (~5 min)
+   - Baseline parity (CPU only)
+   - Reproducibility
+   - Correctness
+
+4. **Integration tests** (~10 min)
+   - End-to-end workflows
+   - Framework verification
+   - Small instance benchmarks
+
+5. **Documentation build** (~1 min)
+   - Quarto renders without errors
+
+**Total runtime**: ~20 minutes
+
+**Hardware**: GitHub-hosted Ubuntu runner (no GPU)
+
+**Failures trigger**:
+
+- Comment on PR with error summary
+- Blocks merge if PR protection enabled
+- Notification to maintainers
+
+---
+
+## Performance Regression Testing
+
+### Benchmarking Suite
+
+**Purpose**: Track solver performance over time and detect regressions.
+
+**File**: `tests/test_performance_baseline.py`
+
+**What's measured**:
+
+```python
+@pytest.mark.benchmark
+def test_sa_performance_sk100():
+    """Measure SA on SK N=100."""
+    instance = load_instance('instances/sk/N100/sk_couplings_N100_J0_seed1051730.txt')
+    params = {'pop_size': 100, 'num_temps': 50, 'MCsteps': 100}
+    
+    # Benchmark over 5 runs
+    times = []
+    for _ in range(5):
+        t0 = time.time()
+        result = solver.solve(instance, params, seed=random.randint(0, 1e9))
+        times.append(time.time() - t0)
+    
+    mean_time = np.mean(times)
+    std_time = np.std(times)
+    
+    # Store in baseline
+    baseline = {
+        'algorithm': 'sa',
+        'family': 'sk',
+        'size': 100,
+        'mean_time': mean_time,
+        'std_time': std_time,
+        'timestamp': datetime.now().isoformat()
+    }
+    
+    # Check against historical baseline
+    assert mean_time < BASELINE_TIMES['sa_sk100'] * 1.1  # Allow 10% slowdown
+```
+
+**Baseline file**: `tests/performance_baselines.json`
+
+**Storage**:
+
+```json
+{
+  "sa_sk100": {
+    "mean_time_seconds": 2.45,
+    "std_dev": 0.12,
+    "hardware": "Tesla T4",
+    "recorded_date": "2026-06-01"
+  },
+  "pa_ea3d1000": {
+    "mean_time_seconds": 3.12,
+    "std_dev": 0.18,
+    "hardware": "Tesla T4",
+    "recorded_date": "2026-06-01"
+  }
+}
+```
+
+**How to update baseline**:
+
+```bash
+pytest tests/test_performance_baseline.py --update-benchmark
+```
+
+⚠️ **Warning**: Only update baseline after verifying optimization is intentional.
+
+---
+
+## Quality Gates
+
+### Pre-commit Requirements
+
+Before code can be merged, it must pass:
+
+- ✅ All generator tests (`generators/test_*.py`)
+- ✅ All solver tests (`tests/test_*.py`)
+- ✅ Documentation builds without errors
+- ✅ No new warnings in code
+
+### Code Review Requirements
+
+Before PR merge:
+
+- ✅ At least 1 maintainer approval
+- ✅ All CI checks pass
+- ✅ Tests cover new functionality
+- ✅ Documentation updated
+
+---
+
+## Manual Testing Procedures
+
+### Testing a New Solver
+
+**Checklist**:
+
+- [ ] Implement solver in `solvers_v2/common/{algorithm}/`
+- [ ] Add to family adapters (SK, EA, RRG as applicable)
+- [ ] Create minimal test case (`test_new_solver_basic.py`)
+  - Generate small SK instance (N=20)
+  - Run solver with test parameters
+  - Verify result structure
+  - Verify reproducibility (run twice, compare)
+- [ ] Run against baseline solvers
+  - Compare energy on same instance
+  - Check computational efficiency
+  - Verify result quality is reasonable
+- [ ] Document parameters and performance
+- [ ] Update coverage matrix in [Solver Implementations](solvers.qmd)
+
+### Testing a New Instance Family
+
+**Checklist**:
+
+- [ ] Implement generator in `generators/generate_{family}.py`
+- [ ] Add determinism test
+  - Generate instance 3× with same seed
+  - Verify byte-identical output
+- [ ] Add format validation test
+- [ ] Create 3-5 reference instances
+  - Store in `instances/{family}/N{sizes}/`
+  - Record SHA256 hashes
+- [ ] Add to systematic generation script
+- [ ] Create family adapter in `solvers_v2/families/{family}/`
+- [ ] Test each solver on new family
+- [ ] Update documentation
+
+---
+
+## Troubleshooting Failed Tests
+
+### Generator Test Failures
+
+**"SHA256 mismatch"**:
+
+```
+AssertionError: expected a1b2c3..., got f6e5d4...
+```
+
+**Possible causes**:
+
+- Generator code was modified (check git diff)
+- NumPy/PyTorch version changed (affects random numbers)
+- Cross-platform difference (floating-point rounding)
+
+**Fix**:
+
+1. Verify the change is intentional
+2. Regenerate reference instance
+3. Update snapshot: `pytest --snapshot-update`
+4. Commit new snapshot
+
+### Solver Test Failures
+
+**"Results not reproducible"**:
+
+```
+AssertionError: arrays not equal
+  x: [-1, 1, -1, ...]
+  y: [1, -1, 1, ...]
+```
+
+**Possible causes**:
+
+- Random seed not being set correctly
+- GPU non-determinism
+- NumPy/PyTorch version differences
+
+**Fix**:
+
+```python
+# Ensure seed is set before solver
+torch.manual_seed(42)
+np.random.seed(42)
+result = solver.solve(instance, params, seed=42)
+```
+
+### GPU Test Failures
+
+**"CUDA out of memory"**:
+
+```
+RuntimeError: CUDA out of memory. Tried to allocate...
+```
+
+**Possible causes**:
+
+- Large instance for available GPU memory
+- Solver not clearing memory between runs
+- Multiple processes using GPU
+
+**Fix**:
+
+- Reduce population size or instance size
+- Add test decorator: `@pytest.mark.skipif(not torch.cuda.is_available())`
+- Use smaller instances for CI GPU tests
+
+---
+
+## Coverage Goals
+
+### Target Coverage
+
+| Category | Current | Target |
+|----------|---------|--------|
+| Generator coverage | 100% | 100% |
+| Solver coverage | 95% | 100% |
+| Integration tests | 70% | 90% |
+| E2E workflows | 50% | 100% |
+
+### Gaps to Address
+
+- [ ] XOR-SAT solver tests (awaiting implementation)
+- [ ] PT on lattice tests (awaiting validation)
+- [ ] GA on RRG tests (awaiting investigation)
+- [ ] Large-instance tests (N > 10k)
+- [ ] GPU CI runners (currently CPU-only)
+
+---
+
+## References & Further Reading
+
+- [pytest documentation](https://docs.pytest.org/)
+- [GitHub Actions documentation](https://docs.github.com/en/actions)
+- [PyTorch testing guide](https://pytorch.org/docs/stable/testing.html)
+- [Test pyramid pattern](https://martinfowler.com/bliki/TestPyramid.html)
+
+---
+
+**See also**:
+
+- [Known Issues](known_issues.qmd) - What tests are missing
+- [Roadmap](roadmap.qmd) - Future testing work
+- [Architecture](architecture.qmd) - Testing strategy rationale
+
+```
