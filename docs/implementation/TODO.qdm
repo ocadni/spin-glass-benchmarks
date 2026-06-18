@@ -1,0 +1,87 @@
+---
+title: "Benchmark plan"
+author: ""
+date: "June 2026"
+format: html
+---
+
+## SK
+
+Sizes: 50, 100, 200, 300, 500, 1000, 1500, 2000.
+
+- For sizes 50, 100, 200, 300, and 500: 100 instances of the $J_{ij}$.
+- For sizes 1000, 1500, and 2000: 10 instances (for now) of the $J_{ij}$.
+
+## Small instances
+
+For the small instances in which greedy works, just run greedy. We consider the performances of the other algorithms to be the same, as one can choose the hyperparameters in such a way as to make them work like greedy.
+
+### Linear time {#sec-linear}
+
+Test the algorithms so that they use a time scaling linearly in $N$.
+
+In particular, start from the $N^*$ for which greedy fails. For each algorithm $a$, find—by varying the hyperparameters—the minimum time $t_a(N^*)$ for which algorithm $a$, at size $N^*$, is able to find the ground state (GS) in most instances. For example, we can choose a 90%–95% success rate.
+
+For $N>N^*$, run the different algorithms so that the time scales linearly with $N$. For greedy, SA, and PA, it is enough to keep the same hyperparameters. For GA, it might be necessary to slightly decrease the number of temperatures, as the number of parameters in the network scales quadratically with $N$ in principle.
+
+For the different instances, run each algorithm 10 times—or 100 times if the required time is not too large. For each run and instance, save:
+
+1. The run ID, instance seed, and related metadata.
+2. The minimum energy found during the run.
+3. The runtime, both in seconds and in number of operations (see later).
+4. The configuration corresponding to the best energy, if storing it is not too expensive. Otherwise, retain only the best configuration among all runs.
+5. Any other quantities that might be important.
+
+We will then aggregate the minimum energies found across the runs, computing:
+
+1. The minimum of the minimum energies.
+2. The maximum of the minimum energies.
+3. The mean energy.
+4. The median energy.
+5. The fraction of runs that found the GS.
+
+### Exact GS {#sec-exact}
+
+For the exact GS, we want to compute the time required to reach a 75% success probability, $P_{75\%}$.
+
+First, look for the ground state by performing very long runs.
+
+<span style="color: red;">To decide: how should these long runs be performed?</span>
+
+Then, perform a bisection search to find the time required to reach $P_{75\%}$. We also define a time interval $\Delta t$ at which to stop the search.
+
+<span style="color: red;">To decide: choose the stopping interval $\Delta t$.</span>
+
+Estimate the success rate over 10 runs—or 100 runs if the required time is not too large. For each run, save the quantities listed in [Section @sec-linear].
+
+Depending on the required runtime, we can repeat the procedure for a 25% success rate. Some of the previous runs can be reused for this calculation.
+
+From $P_{75\%}$, compute the time to reach a 99% probability of success.
+
+### Approximation
+
+Use the same procedure as in [Section @sec-exact], but with a given tolerance
+
+$$
+\epsilon = \left|e_{\mathrm{ES}} - e\right|.
+$$
+
+A run is considered successful when it finds a value such that
+
+$$
+\left|e_{\mathrm{ES}} - e\right| \leq \epsilon.
+$$
+
+<span style="color: red;">To decide: choose the tolerance level, for example $\epsilon=0.5\%$ or $1\%$.</span>
+
+## How to vary the runtimes
+
+To vary the runtimes:
+
+- **SA:** Use the maximum population $M$ that saturates the GPU—that is, the largest value that does not slow down a single Monte Carlo step. Then increase the number of temperatures used in the annealing process.
+
+- **GA:** Fix $M=2^{17}$ and use the hyperparameters from the paper to choose the schedule. Use a schedule that is logarithmic in temperature, $\log T$, and increase the runtime by increasing the number of temperatures.
+
+- **PA:** Choose a population size that saturates the GPU memory—that is, the largest possible $M$. Change the number of temperatures. If the number of temperatures is very small, we can also try decreasing the population size; this is to be discussed.
+
+We can start with the algorithms above. Parallel tempering and quantum methods will be added at a later stage.
