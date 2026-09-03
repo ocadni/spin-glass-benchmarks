@@ -9,13 +9,14 @@ import pytest
 
 
 ROOT = Path(__file__).resolve().parents[1]
-GENERATORS = ROOT / "generators"
-sys.path.insert(0, str(GENERATORS))
 
-from generate_ea import generate_ea  # noqa: E402
-from generate_rrg import generate_rrg  # noqa: E402
-from generate_sk import generate_sk  # noqa: E402
-from generate_xorsat import generate_sets, generate_xorsat  # noqa: E402
+from generators.generate_ea import generate_ea
+from generators.generate_rrg import generate_rrg
+from generators.generate_sk import generate_sk
+from generators.generate_xorsat import generate_sets, generate_xorsat
+
+
+GENERATORS = ROOT / "generators"
 
 
 def coupling_values(couplings):

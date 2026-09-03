@@ -18,7 +18,7 @@ import numpy as np
 from load_couplings import load_couplings_from_file
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = Path(__file__).resolve().parent / "figures" / "coupling_colormaps_5x5.png"
 
 

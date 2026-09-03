@@ -6,8 +6,12 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from generator_adapters import generate_pairwise_instance
-from pairwise_io import default_instance_path, write_pairwise_instance
+if __package__:
+    from .generator_adapters import generate_pairwise_instance
+    from .pairwise_io import default_instance_path, write_pairwise_instance
+else:
+    from generator_adapters import generate_pairwise_instance
+    from pairwise_io import default_instance_path, write_pairwise_instance
 
 
 def parse_args() -> argparse.Namespace:

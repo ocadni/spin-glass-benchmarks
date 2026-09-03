@@ -29,7 +29,7 @@ Current state of the repository as of June 2026.
 
 - Deterministic generation from fixed seeds
 - SHA256 hash tracking for integrity
-- Pytest validation suite (`generators/test_reference_instances.py`)
+- Pytest validation suite (`tests/generators/test_reference_instances.py`)
 - No unexpected or missing instances
 
 See [Instance Library](instances.qmd) for details.
@@ -186,7 +186,7 @@ See [Roadmap](roadmap.qmd) for detailed planning.
 
 ✅ **Passing tests**:
 
-- Generator determinism (`generators/test_reference_instances.py`)
+- Generator determinism (`tests/generators/test_reference_instances.py`)
 - Baseline parity (`tests/test_baseline_parity.py`)
 - Family adapters (`tests/test_families.py`)
 - Experimental framework (`experiments/verify_framework.py`)

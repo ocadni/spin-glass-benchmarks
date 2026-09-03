@@ -58,12 +58,13 @@ experiments/
                                  pilot with plotting and result artifacts.
 
 tests/
-  Main pytest suite for the refactored solvers and generators. The README in
-  this directory explains baseline parity tests and when to regenerate baselines.
-
-tests_data/
-  Stable development-time fixtures. Contains small instance snapshots and JSON
-  solver baselines used to detect unintended numerical changes in solvers_v2.
+  Main pytest suite for the refactored solvers and generators. It also contains
+  test support material:
+    generators/  Generator adapter, I/O, instance, and snapshot tests.
+    data/        Stable fixtures and JSON solver baselines used to detect
+                 unintended numerical changes in solvers_v2.
+    plots/       Plotting scripts and generated figures for checking coupling
+                 distributions and colormaps.
 
 docs/
   Quarto documentation site source. Includes problem definitions, file format
@@ -92,10 +93,6 @@ example_notebook/
   Demonstration notebook area with example data, solver code copies, generated
   images, and a performance comparison image.
 
-tests_plots/
-  Plotting scripts and generated figures for checking coupling distributions and
-  colormaps.
-
 papers/
   Reference PDFs related to spin-glass, XORSAT, population annealing, quantum
   heuristic optimization, and equation planting benchmark literature.
@@ -122,7 +119,7 @@ How The Pieces Fit Together
   4. Reproducible experiment runs are configured and launched through
      experiments/.
   5. Tests in tests/ compare solver behavior against fixtures and baselines in
-     tests_data/.
+     tests/data/.
   6. Documentation in docs/ explains the mathematical problems, file formats,
      architecture, implementation status, and results.
   7. Legacy/reference implementations remain in solvers/, systematic_solver/,

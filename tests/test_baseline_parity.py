@@ -10,7 +10,7 @@ import pytest
 pytest.importorskip("torch")
 
 ROOT = Path(__file__).resolve().parents[1]
-BASELINE_DIR = ROOT / "tests_data" / "solver_baselines"
+BASELINE_DIR = ROOT / "tests/data" / "solver_baselines"
 
 
 def baseline_files() -> list[Path]:

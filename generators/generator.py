@@ -1,10 +1,16 @@
 import argparse
 from pathlib import Path
 
-from generate_ea import generate_ea
-from generate_rrg import generate_rrg
-from generate_sk import generate_sk
-from generate_xorsat import generate_xorsat
+if __package__:
+    from .generate_ea import generate_ea
+    from .generate_rrg import generate_rrg
+    from .generate_sk import generate_sk
+    from .generate_xorsat import generate_xorsat
+else:
+    from generate_ea import generate_ea
+    from generate_rrg import generate_rrg
+    from generate_sk import generate_sk
+    from generate_xorsat import generate_xorsat
 
 
 def _format_number(value):

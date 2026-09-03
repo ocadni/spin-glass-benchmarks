@@ -6,7 +6,10 @@ import re
 from pathlib import Path
 from typing import Iterable
 
-from pairwise_instance import PairwiseInstance
+if __package__:
+    from .pairwise_instance import PairwiseInstance
+else:
+    from pairwise_instance import PairwiseInstance
 
 
 SUPPORTED_FAMILIES = {"sk", "ea2d", "ea3d", "rrg"}

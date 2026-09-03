@@ -1,15 +1,8 @@
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
 import pytest
 
-HERE = Path(__file__).resolve().parent
-if str(HERE) not in sys.path:
-    sys.path.insert(0, str(HERE))
-
-from pairwise_instance import Interaction, PairwiseInstance
+from generators.pairwise_instance import Interaction, PairwiseInstance
 
 
 def test_energy_with_fields_uses_documented_sign_convention():

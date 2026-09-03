@@ -132,7 +132,7 @@ python generators/generator.py sk 100 --seed 12345 --outdir instances/sk
 bash scripts/generate_random_seed_systematic.sh
 
 # Verify integrity
-python -m pytest generators/test_reference_instances.py
+python -m pytest tests/generators/test_reference_instances.py
 ```
 
 [Generator documentation →](https://ocadni.github.io/spin-glass-benchmarks/implementation/instances.html#generation-methodology)
@@ -173,7 +173,7 @@ solvers_v2/         # 🔧 Solver implementations (PyTorch, GPU)
 experiments/        # 📊 Experimental framework (optional)
 docs/               # 🌐 Documentation site (Quarto)
 environments/       # Conda environment specifications
-tests/              # Test suites
+tests/              # Test suites, fixtures, baselines, and plot checks
 ```
 
 [Architecture details →](https://ocadni.github.io/spin-glass-benchmarks/implementation/architecture.html)
@@ -208,7 +208,7 @@ cat experiments/biazzin/ea3d_ga_pa_paper_pilot/README_PLOTS.md
 python -m pytest
 
 # Instance integrity only
-python -m pytest generators/test_reference_instances.py
+python -m pytest tests/generators/test_reference_instances.py
 
 # Solver baseline parity
 python -m pytest tests/test_baseline_parity.py

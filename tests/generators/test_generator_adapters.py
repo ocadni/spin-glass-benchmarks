@@ -1,18 +1,9 @@
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
-
-ROOT = Path(__file__).resolve().parents[1]
-GENERATORS = ROOT / "generators"
-if str(GENERATORS) not in sys.path:
-    sys.path.insert(0, str(GENERATORS))
-
-from generate_ea import generate_ea  # noqa: E402
-from generate_rrg import generate_rrg  # noqa: E402
-from generate_sk import generate_sk  # noqa: E402
-from generator_adapters import generate_pairwise_instance  # noqa: E402
+from generators.generate_ea import generate_ea
+from generators.generate_rrg import generate_rrg
+from generators.generate_sk import generate_sk
+from generators.generator_adapters import generate_pairwise_instance
 
 
 def test_sk_adapter_matches_existing_generator():

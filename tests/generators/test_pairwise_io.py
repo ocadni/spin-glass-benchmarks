@@ -1,22 +1,20 @@
 from __future__ import annotations
 
 from pathlib import Path
-import sys
+
+from generators.pairwise_instance import PairwiseInstance
+from generators.pairwise_io import (
+    format_instance_number,
+    load_pairwise_instance,
+    write_pairwise_instance,
+)
 
 
-HERE = Path(__file__).resolve().parent
-if str(HERE) not in sys.path:
-    sys.path.insert(0, str(HERE))
-
-from pairwise_instance import PairwiseInstance
-from pairwise_io import format_instance_number, load_pairwise_instance, write_pairwise_instance
-
-
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def test_load_existing_benchmark_format():
-    path = ROOT / "tests_data" / "instances" / "sk" / "N50" / "sk_couplings_N50_J0_seed1051730.txt"
+    path = ROOT / "tests/data" / "instances" / "sk" / "N50" / "sk_couplings_N50_J0_seed1051730.txt"
 
     instance = load_pairwise_instance(path)
 
@@ -84,7 +82,7 @@ def test_writer_uses_legacy_five_decimal_format(tmp_path):
 
 
 def test_rrg_loader_infers_graph_generation_metadata():
-    path = ROOT / "tests_data" / "instances" / "rrg" / "N50" / "rrg_couplings_N50_J0_seed4051730.txt"
+    path = ROOT / "tests/data" / "instances" / "rrg" / "N50" / "rrg_couplings_N50_J0_seed4051730.txt"
 
     instance = load_pairwise_instance(path)
 

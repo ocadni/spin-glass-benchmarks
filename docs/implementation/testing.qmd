@@ -26,7 +26,7 @@ Testing in the spin-glass benchmark spans three main areas:
 
 **Purpose**: Verify that identical input parameters and seed always produce byte-identical instances.
 
-**File**: `generators/test_reference_instances.py`
+**File**: `tests/generators/test_reference_instances.py`
 
 **How it works**:
 
@@ -52,14 +52,14 @@ def test_determinism():
 **How to run**:
 
 ```bash
-pytest generators/test_reference_instances.py -v
+pytest tests/generators/test_reference_instances.py -v
 ```
 
 ### Reference Instance Snapshot Testing
 
 **Purpose**: Detect unintended changes to generator output across commits.
 
-**File**: `generators/test_reference_instances.py` (with `reference_instances.json` snapshot)
+**File**: `tests/generators/test_reference_instances.py`
 
 **How it works**:
 
@@ -101,7 +101,7 @@ def test_reference_instances_unchanged():
 **How to regenerate snapshot**:
 
 ```bash
-pytest generators/test_reference_instances.py --snapshot-update
+pytest tests/generators/test_reference_instances.py
 ```
 
 ⚠️ **Warning**: Only regenerate snapshot after verifying the generator change is intentional.
@@ -114,7 +114,7 @@ pytest generators/test_reference_instances.py --snapshot-update
 
 **Purpose**: Ensure all generated instances conform to the specification.
 
-**File**: `generators/test_format_validation.py`
+**File**: `tests/generators/test_pairwise_io.py`
 
 **What's tested**:
 
@@ -152,7 +152,7 @@ def test_sk_format():
 **How to run**:
 
 ```bash
-pytest generators/test_format_validation.py -v
+pytest tests/generators/test_pairwise_io.py -v
 ```
 
 ---
@@ -547,7 +547,7 @@ pytest tests/test_performance_baseline.py --update-benchmark
 
 Before code can be merged, it must pass:
 
-- ✅ All generator tests (`generators/test_*.py`)
+- ✅ All generator tests (`tests/test_generators.py` and `tests/generators/`)
 - ✅ All solver tests (`tests/test_*.py`)
 - ✅ Documentation builds without errors
 - ✅ No new warnings in code

@@ -8,7 +8,7 @@
     "torch": "2.7.0"
   },
   "family": "ea2d",
-  "fixture": "tests_data/instances/ea2d/N100/ea2d_couplings_N100_J0_seed2011730.txt",
+  "fixture": "tests/data/instances/ea2d/N100/ea2d_couplings_N100_J0_seed2011730.txt",
   "fixture_sha256": "8b044034e4691738912962fd245c1fb526ae1b69237b07f6d2b371f2f50e2c73",
   "matrix_mode": "symmetric",
   "metrics": {

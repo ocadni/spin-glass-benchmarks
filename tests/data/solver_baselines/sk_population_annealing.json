@@ -1,6 +1,6 @@
 {
-  "algorithm": "parallel_tempering",
-  "baseline_id": "sk_parallel_tempering",
+  "algorithm": "population_annealing",
+  "baseline_id": "sk_population_annealing",
   "environment": {
     "numpy": "2.2.3",
     "platform": "Linux-5.14.0-687.12.1.el9_8.x86_64-x86_64-with-glibc2.34",
@@ -8,22 +8,24 @@
     "torch": "2.7.0"
   },
   "family": "sk",
-  "fixture": "tests_data/instances/sk/N50/sk_couplings_N50_J0_seed1051730.txt",
+  "fixture": "tests/data/instances/sk/N50/sk_couplings_N50_J0_seed1051730.txt",
   "fixture_sha256": "7f9f3eedc6e7f926bd2ffe904ce2e908be3346dfc5e5f012c70a276e0b05da92",
   "matrix_mode": "sk_legacy_upper",
   "metrics": {
-    "best_min_energy": -0.022868700325489044,
-    "final_mean_energy": 0.11833252757787704,
-    "final_min_energy": 0.11833252757787704,
+    "best_min_energy": 0.06322991102933884,
+    "final_mean_energy": 0.17427276074886322,
+    "final_min_energy": 0.13764730095863342,
     "mean_energy": [
-      -0.022868700325489044,
-      0.03862209618091583,
-      0.11833252757787704
+      0.12547022104263306,
+      0.1721605658531189,
+      0.12968170642852783,
+      0.17427276074886322
     ],
     "min_energy": [
-      -0.022868700325489044,
-      0.03862209618091583,
-      0.11833252757787704
+      0.06322991102933884,
+      0.0815712958574295,
+      0.0765220895409584,
+      0.13764730095863342
     ]
   },
   "parameters": {
@@ -32,8 +34,8 @@
     "Tstart": 1.92,
     "high_temp_thermalization_steps": 1,
     "num_temps": 4,
-    "schedule": "linearT",
-    "swap_interval": 1
+    "pop_size": 8,
+    "schedule": "linearT"
   },
   "schedule_length": 4,
   "schema_version": 1,
@@ -42,5 +44,5 @@
     "python_random": 1729,
     "torch": 1729
   },
-  "solver_file": "solvers/System specific solvers/SK/Modern/optimization/PT_SK.py"
+  "solver_file": "solvers/System specific solvers/SK/Modern/optimization/population_annealing_SK.py"
 }

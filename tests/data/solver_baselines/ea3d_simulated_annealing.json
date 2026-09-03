@@ -8,7 +8,7 @@
     "torch": "2.7.0"
   },
   "family": "ea3d",
-  "fixture": "tests_data/instances/ea3d/N512/ea3d_couplings_N512_J0_seed3009730.txt",
+  "fixture": "tests/data/instances/ea3d/N512/ea3d_couplings_N512_J0_seed3009730.txt",
   "fixture_sha256": "8efb7bf3af2145763346af79de27ca14915a1075495895485447f20c50115d02",
   "matrix_mode": "symmetric",
   "metrics": {

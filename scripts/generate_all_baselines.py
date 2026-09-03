@@ -75,7 +75,7 @@ def generate_baseline(family: str, algorithm: str, fixture: Path, parameters: di
         "solver_file": f"solvers_v2/families/{family}/__init__.py",
     }
 
-    output_file = ROOT / f"tests_data/solver_baselines/{baseline_id}.json"
+    output_file = ROOT / f"tests/data/solver_baselines/{baseline_id}.json"
     output_file.write_text(json.dumps(baseline, indent=2) + "\n")
 
     print(f"  ✅ {baseline_id}.json")
@@ -90,7 +90,7 @@ def main():
     generate_baseline(
         family="ea2d",
         algorithm="population_annealing",
-        fixture=ROOT / "tests_data/instances/ea2d/N100/ea2d_couplings_N100_J0_seed2011730.txt",
+        fixture=ROOT / "tests/data/instances/ea2d/N100/ea2d_couplings_N100_J0_seed2011730.txt",
         parameters={
             "L": 10,
             "pop_size": 8,
@@ -106,7 +106,7 @@ def main():
     )
 
     # RRG baselines (use same parameters as SK for consistency)
-    rrg_fixture = ROOT / "tests_data/instances/rrg/N50/rrg_couplings_N50_J0_seed4051730.txt"
+    rrg_fixture = ROOT / "tests/data/instances/rrg/N50/rrg_couplings_N50_J0_seed4051730.txt"
 
     # Check if RRG fixture exists
     if not rrg_fixture.exists():

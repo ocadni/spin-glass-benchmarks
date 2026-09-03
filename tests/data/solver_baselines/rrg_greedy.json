@@ -8,7 +8,7 @@
     "torch": "2.7.0"
   },
   "family": "rrg",
-  "fixture": "tests_data/instances/rrg/N50/rrg_couplings_N50_J0_seed4051730.txt",
+  "fixture": "tests/data/instances/rrg/N50/rrg_couplings_N50_J0_seed4051730.txt",
   "fixture_sha256": "d2fa153b8b6a2747c7cf2b84cba6671808303bb95bd0cf12e0ed283f7b6017aa",
   "matrix_mode": "symmetric",
   "metrics": {

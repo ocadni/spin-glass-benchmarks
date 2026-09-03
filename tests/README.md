@@ -25,7 +25,7 @@ The exact package versions are locked in `solvers_v2/envs/core-cpu-linux-64.lock
 From the repository root:
 
 ```bash
-python -m pytest tests/ generators/test_*.py -v
+python -m pytest tests/ -v
 ```
 
 ---
@@ -37,7 +37,10 @@ python -m pytest tests/ generators/test_*.py -v
 ```
 tests/
 ├── test_baseline_parity.py    # Main solver validation (13 tests)
-├── test_generators.py          # Generator validation
+├── test_generators.py          # Low-level generator validation
+├── generators/                 # Generator adapter, I/O, instance, and snapshot tests
+├── data/                       # Test fixtures and solver baselines
+├── plots/                      # Plotting helpers and generated test figures
 └── README.md                   # This file
 ```
 
@@ -62,7 +65,7 @@ Baseline tests ensure **numerical reproducibility** - the same inputs always pro
 
 ### How They Work
 
-1. Load a baseline JSON file from `tests_data/solver_baselines/`
+1. Load a baseline JSON file from `tests/data/solver_baselines/`
 2. Run the solver with the baseline's parameters and seed
 3. Compare output metrics (min_energy, mean_energy) to baseline values
 4. Fail if any value differs by more than 1e-7
@@ -103,11 +106,11 @@ From the repo root with `sgbench-solvers-core` environment active:
 PYTHONPATH=. python scripts/generate_all_baselines.py
 ```
 
-This regenerates all 13 baseline JSON files in `tests_data/solver_baselines/`.
+This regenerates all 13 baseline JSON files in `tests/data/solver_baselines/`.
 
 ### After Regeneration
 
-1. **Review every changed file** using `git diff tests_data/solver_baselines/`
+1. **Review every changed file** using `git diff tests/data/solver_baselines/`
 2. Understand **why** values changed
 3. Verify changes are intentional (not bugs)
 4. Document reason in commit message
@@ -121,7 +124,7 @@ Each baseline JSON contains:
   "algorithm": "simulated_annealing",
   "baseline_id": "sk_simulated_annealing",
   "family": "sk",
-  "fixture": "tests_data/instances/sk/N50/...",
+  "fixture": "tests/data/instances/sk/N50/...",
   "fixture_sha256": "7f9f3ee...",
   "parameters": { "pop_size": 8, "MCsteps": 2, ... },
   "seed_values": { "torch": 1729, "numpy": 1729, "python_random": 1729 },
@@ -161,7 +164,7 @@ When you add a new algorithm to `solvers_v2/common/`:
 4. **Run generation script** to create baseline JSON
 5. **Verify test passes**: `pytest tests/test_baseline_parity.py -k my_algorithm`
 
-The test framework automatically discovers new baselines from `tests_data/solver_baselines/*.json`.
+The test framework automatically discovers new baselines from `tests/data/solver_baselines/*.json`.
 
 ---
 
@@ -192,7 +195,7 @@ The test framework automatically discovers new baselines from `tests_data/solver
 Generator tests validate instance file creation and I/O:
 
 ```bash
-python -m pytest tests/test_generators.py generators/test_*.py -v
+python -m pytest tests/test_generators.py tests/generators/ -v
 ```
 
 These tests check:
@@ -259,6 +262,6 @@ Consider creating separate `tests/performance/` directory for benchmark suites.
 ## References
 
 - Solver implementation: `solvers_v2/`
-- Baseline data: `tests_data/solver_baselines/`
+- Baseline data: `tests/data/solver_baselines/`
 - Generation scripts: `scripts/generate_all_baselines.py`
 - Environment spec: `solvers_v2/envs/core-cpu.yml`

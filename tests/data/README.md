@@ -5,7 +5,7 @@ Reference data for development-time testing.
 ## Directory Structure
 
 ```
-tests_data/
+tests/data/
 ├── instances/              # Small test instances
 │   ├── sk/
 │   ├── ea2d/
@@ -32,17 +32,17 @@ These are **snapshots** from the main `instances/` directory, providing stable t
 
 | Family | Sizes | Count | Example |
 |--------|-------|-------|---------|
-| **SK** | N=50 | 10 | `sk_couplings_N50_J0_seed1051730.txt` |
-| **EA2D** | N=100 (10×10) | 10 | `ea2d_couplings_N100_J0_seed2011730.txt` |
-| **EA3D** | N=125 (5×5×5) | 10 | `ea3d_couplings_N125_J0_seed3011730.txt` |
-| **RRG** | N=50, k=3 | 10 | `rrg_couplings_N50_J0_seed4051730.txt` |
+| **SK** | N=50, 100, 150, 200, 300 | 50 | `sk_couplings_N50_J0_seed1051730.txt` |
+| **EA2D** | N=100, 256, 1024, 2304 | 40 | `ea2d_couplings_N100_J0_seed2011730.txt` |
+| **EA3D** | N=512, 1000, 1728, 2744 | 40 | `ea3d_couplings_N512_J0_seed3009730.txt` |
+| **RRG** | N=50, 100, 150, 200, 300 | 50 | `rrg_couplings_N50_J0_seed4051730.txt` |
 
 ### Usage
 
 Tests reference these via relative paths:
 ```python
 ROOT = Path(__file__).resolve().parents[1]
-fixture = ROOT / "tests_data/instances/sk/N50/sk_couplings_N50_J0_seed1051730.txt"
+fixture = ROOT / "tests/data/instances/sk/N50/sk_couplings_N50_J0_seed1051730.txt"
 ```
 
 ---
@@ -87,7 +87,7 @@ Each JSON file contains:
   "algorithm": "simulated_annealing",
   "family": "sk",
   
-  "fixture": "tests_data/instances/sk/N50/...",
+  "fixture": "tests/data/instances/sk/N50/...",
   "fixture_sha256": "7f9f3eedc6e7f926...",
   
   "parameters": {
@@ -150,7 +150,7 @@ PYTHONPATH=. python scripts/generate_all_baselines.py
 ```
 
 Then:
-1. Review `git diff tests_data/solver_baselines/`
+1. Review `git diff tests/data/solver_baselines/`
 2. Verify changes are intentional
 3. Document reason in commit message
 
@@ -193,7 +193,7 @@ Baseline changes should be **rare** and **intentional**:
 ### Adding New Test Instances
 
 1. Generate instance in main `instances/` directory
-2. Copy small example (N ≤ 200) to `tests_data/instances/<family>/`
+2. Copy small example (N ≤ 200) to `tests/data/instances/<family>/`
 3. Use in baseline generation script
 4. Commit both instance and baseline
 

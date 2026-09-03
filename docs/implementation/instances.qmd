@@ -273,7 +273,7 @@ sha256sum instances/sk/N100/sk_couplings_N100_J0_seed1051730.txt
 **Pytest validation**:
 
 ```bash
-python -m pytest generators/test_reference_instances.py
+python -m pytest tests/generators/test_reference_instances.py
 ```
 
 This test:
@@ -365,7 +365,7 @@ Format is language-agnostic:
 python generators/generator.py sk 500 --seed 9999999 --outdir instances/sk
 
 # Verify format
-python -m pytest generators/test_reference_instances.py
+python -m pytest tests/generators/test_reference_instances.py
 
 # If systematic, update script
 # Edit scripts/generate_random_seed_systematic.sh
@@ -429,7 +429,7 @@ Decision pending based on:
 |------|---------|
 | **Load instance** | `load_pairwise_couplings("path/to/instance.txt")` |
 | **Generate new** | `python generators/generator.py sk 100 --seed 12345` |
-| **Validate all** | `pytest generators/test_reference_instances.py` |
+| **Validate all** | `pytest tests/generators/test_reference_instances.py` |
 | **Regenerate systematic** | `bash scripts/generate_random_seed_systematic.sh` |
 
 ---

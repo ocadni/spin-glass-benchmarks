@@ -1,21 +1,15 @@
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 import pytest
 
-
-HERE = Path(__file__).resolve().parent
-if str(HERE) not in sys.path:
-    sys.path.insert(0, str(HERE))
-
-from pairwise_io import benchmark_files  # noqa: E402
+from generators.pairwise_io import benchmark_files
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 GENERATED_ROOT = ROOT / "instances"
-REFERENCE_ROOT = ROOT / "tests_data" / "instances"
+REFERENCE_ROOT = ROOT / "tests/data" / "instances"
 REFERENCE_FILES_BY_RELATIVE_PATH = {
     path.relative_to(REFERENCE_ROOT): path for path in benchmark_files(REFERENCE_ROOT)
 }
@@ -36,7 +30,7 @@ def test_generated_instance_file_set_matches_reference_snapshot():
     unexpected = sorted(generated_paths - reference_paths)
 
     assert not missing and not unexpected, (
-        "instances/ does not match tests_data/instances/.\n"
+        "instances/ does not match tests/data/instances/.\n"
         f"Missing files: {_format_paths(missing)}\n"
         f"Unexpected files: {_format_paths(unexpected)}"
     )
