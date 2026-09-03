@@ -33,16 +33,16 @@ def compute_sha256(file_path: Path) -> str:
 def generate_baseline(family: str, algorithm: str, fixture: Path, parameters: dict, seed: int, baseline_id: str):
     """Generate a single baseline."""
     if family == "sk":
-        from solvers_v2.families import sk
+        from solvers.families import sk
         runner = sk
     elif family == "ea2d":
-        from solvers_v2.families.ea import ea2d
+        from solvers.families.ea import ea2d
         runner = ea2d
     elif family == "ea3d":
-        from solvers_v2.families.ea import ea3d
+        from solvers.families.ea import ea3d
         runner = ea3d
     elif family == "rrg":
-        from solvers_v2.families import rrg
+        from solvers.families import rrg
         runner = rrg
     else:
         raise ValueError(f"Unknown family: {family}")

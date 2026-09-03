@@ -58,19 +58,19 @@ def test_solvers_v2_matches_old_solver_baselines(baseline_file):
 
 def _runner_for_family(family: str):
     if family == "sk":
-        from solvers_v2.families import sk
+        from solvers.families import sk
 
         return sk
     if family == "ea2d":
-        from solvers_v2.families.ea import ea2d
+        from solvers.families.ea import ea2d
 
         return ea2d
     if family == "ea3d":
-        from solvers_v2.families.ea import ea3d
+        from solvers.families.ea import ea3d
 
         return ea3d
     if family == "rrg":
-        from solvers_v2.families import rrg
+        from solvers.families import rrg
 
         return rrg
     raise ValueError(f"no solvers_v2 baseline runner for family {family!r}")
