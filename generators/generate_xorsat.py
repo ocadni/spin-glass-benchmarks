@@ -1,6 +1,21 @@
+import argparse
 import random
+from pathlib import Path
 
 import numpy as np
+
+if __package__:
+    from ._file_writer import (
+        append_couplings,
+        instance_file_path,
+        write_pairwise_text_file,
+    )
+else:
+    from _file_writer import (
+        append_couplings,
+        instance_file_path,
+        write_pairwise_text_file,
+    )
 
 
 def _try_generate_sets(K, rng):
@@ -103,6 +118,65 @@ def generate_xorsat(K, field=0.0, seed=None):
     return field_list, coupling_list, metadata
 
 
+def save_xorsat(
+    K,
+    *,
+    field=0.0,
+    seed=None,
+    outdir: str | Path = "instances",
+    include_family_dir: bool = True,
+):
+    """Generate and write a 3-XORSAT-derived Ising instance directly to disk."""
+    fields, couplings, metadata = generate_xorsat(K, field=field, seed=seed)
+    num_spins = len(fields)
+    field_values = np.fromiter((value for _, value in fields), dtype=np.float64, count=num_spins)
+    i_idx = np.fromiter((i for i, _, _ in couplings), dtype=np.int64, count=len(couplings))
+    j_idx = np.fromiter((j for _, j, _ in couplings), dtype=np.int64, count=len(couplings))
+    values = np.fromiter((value for _, _, value in couplings), dtype=np.float64, count=len(couplings))
+    path = instance_file_path(
+        root=outdir,
+        family="xorsat",
+        num_spins=num_spins,
+        mean_j=0.0,
+        seed=seed,
+        include_family_dir=include_family_dir,
+    )
+    write_pairwise_text_file(
+        path=path,
+        family="xorsat",
+        num_spins=num_spins,
+        mean_j=0.0,
+        seed=seed,
+        distribution="gaussian",
+        field=field,
+        field_values=field_values,
+        num_couplings=len(couplings),
+        extra_metadata={"K": metadata["K"]},
+    )
+    append_couplings(path, i_idx, j_idx, values)
+    return path
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Generate a satisfiable 3-XORSAT Ising instance.")
+    parser.add_argument("K", type=int, help="Number of physical variables and clauses.")
+    parser.add_argument("--seed", type=int, required=True, help="Random seed.")
+    parser.add_argument("--outdir", type=Path, default=Path("instances"))
+    parser.add_argument("--field", type=float, default=0.0)
+    return parser.parse_args()
+
+
+def main():
+    args = parse_args()
+    path = save_xorsat(
+        args.K,
+        field=args.field,
+        seed=args.seed,
+        outdir=args.outdir,
+    )
+    print(path)
+
+
 def generate_XORSAT(K, rng=None):
     """
     Compatibility wrapper for older code.
@@ -121,3 +195,7 @@ def generate_XORSAT(K, rng=None):
         np.array(metadata["b"]),
         np.ones(K),
     )
+
+
+if __name__ == "__main__":
+    main()

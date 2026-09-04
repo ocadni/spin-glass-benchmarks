@@ -10,10 +10,10 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 
-from generators.generate_ea import generate_ea
-from generators.generate_rrg import generate_rrg
-from generators.generate_sk import generate_sk
-from generators.generate_xorsat import generate_sets, generate_xorsat
+from generators.generate_ea import generate_ea, save_ea
+from generators.generate_rrg import generate_rrg, save_rrg
+from generators.generate_sk import generate_sk, save_sk
+from generators.generate_xorsat import generate_sets, generate_xorsat, save_xorsat
 
 
 GENERATORS = ROOT / "generators"
@@ -256,6 +256,24 @@ def test_generate_xorsat_is_reproducible_for_same_seed():
 def test_generate_xorsat_rejects_invalid_k():
     with pytest.raises(ValueError, match="K must satisfy"):
         generate_xorsat(8, seed=1)
+
+
+def test_direct_save_functions_write_canonical_layout(tmp_path):
+    paths = [
+        save_sk(4, seed=1, outdir=tmp_path),
+        save_ea(L=3, dim=2, seed=2, outdir=tmp_path),
+        save_rrg(10, degree=3, seed=3, outdir=tmp_path),
+        save_xorsat(7, seed=4, outdir=tmp_path),
+    ]
+
+    assert paths[0] == tmp_path / "sk" / "N4" / "sk_couplings_N4_J0_seed1.txt"
+    assert paths[1] == tmp_path / "ea2d" / "N9" / "ea2d_couplings_N9_J0_seed2.txt"
+    assert paths[2] == tmp_path / "rrg" / "N10" / "rrg_couplings_N10_J0_seed3.txt"
+    assert paths[3] == tmp_path / "xorsat" / "N14" / "xorsat_couplings_N14_J0_seed4.txt"
+    assert paths[0].read_text(encoding="utf-8").splitlines()[0] == (
+        "# model=sk N=4 meanJ=0 seed=1 distribution=gaussian "
+        "field=0 num_fields=4 num_couplings=6"
+    )
 
 
 def run_generator(*args):

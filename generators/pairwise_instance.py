@@ -25,6 +25,45 @@ def canonical_float(value: float) -> str:
     return format(number, ".17g")
 
 
+def _validate_interactions(
+    interactions_in: tuple["Interaction", ...], num_spins: int
+) -> tuple["Interaction", ...]:
+    """Validate edges and return them sorted with no duplicates.
+
+    Generators emit edges already sorted with i < j, so this checks that in a
+    single linear pass and only pays for a full sort + dedup when the input
+    isn't already in canonical order (e.g. hand-built or loaded out of order).
+    """
+    prev_edge: tuple[int, int] | None = None
+    already_sorted = True
+    for interaction in interactions_in:
+        if not isinstance(interaction, Interaction):
+            raise TypeError("interactions must contain Interaction objects")
+        if interaction.j >= num_spins:
+            raise ValueError("interaction index out of range")
+        edge = (interaction.i, interaction.j)
+        if prev_edge is not None and edge <= prev_edge:
+            already_sorted = False
+            break
+        prev_edge = edge
+
+    if already_sorted:
+        return tuple(interactions_in)
+
+    interactions = tuple(sorted(interactions_in))
+    seen_edges: set[tuple[int, int]] = set()
+    for interaction in interactions:
+        if not isinstance(interaction, Interaction):
+            raise TypeError("interactions must contain Interaction objects")
+        if interaction.j >= num_spins:
+            raise ValueError("interaction index out of range")
+        edge = (interaction.i, interaction.j)
+        if edge in seen_edges:
+            raise ValueError(f"duplicate interaction edge: {edge}")
+        seen_edges.add(edge)
+    return interactions
+
+
 def _freeze_mapping(values: Mapping[str, Any] | None) -> Mapping[str, Any]:
     if values is None:
         return MappingProxyType({})
@@ -85,17 +124,7 @@ class PairwiseInstance:
         if any(not math.isfinite(value) for value in fields):
             raise ValueError("fields must be finite")
 
-        interactions = tuple(sorted(self.interactions))
-        seen_edges: set[tuple[int, int]] = set()
-        for interaction in interactions:
-            if not isinstance(interaction, Interaction):
-                raise TypeError("interactions must contain Interaction objects")
-            if interaction.j >= self.num_spins:
-                raise ValueError("interaction index out of range")
-            edge = (interaction.i, interaction.j)
-            if edge in seen_edges:
-                raise ValueError(f"duplicate interaction edge: {edge}")
-            seen_edges.add(edge)
+        interactions = _validate_interactions(self.interactions, self.num_spins)
 
         object.__setattr__(self, "fields", fields)
         object.__setattr__(self, "interactions", interactions)

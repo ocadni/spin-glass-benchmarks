@@ -7,11 +7,13 @@ import argparse
 from pathlib import Path
 
 if __package__:
-    from .generator_adapters import generate_pairwise_instance
-    from .pairwise_io import default_instance_path, write_pairwise_instance
+    from .generate_ea import save_ea
+    from .generate_rrg import save_rrg
+    from .generate_sk import save_sk
 else:
-    from generator_adapters import generate_pairwise_instance
-    from pairwise_io import default_instance_path, write_pairwise_instance
+    from generate_ea import save_ea
+    from generate_rrg import save_rrg
+    from generate_sk import save_sk
 
 
 def parse_args() -> argparse.Namespace:
@@ -40,21 +42,21 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    params = {
+    common = {
         "mean_j": args.mean_j,
         "distribution": args.distribution,
         "field": args.field,
+        "seed": args.seed,
+        "outdir": args.outdir,
+        "include_family_dir": True,
     }
-    if args.L is not None:
-        params["L"] = args.L
+    if args.family == "sk":
+        path = save_sk(args.N, **common)
+    elif args.family == "rrg":
+        path = save_rrg(args.N, degree=args.degree, **common)
     else:
-        params["N"] = args.N
-    if args.family == "rrg":
-        params["degree"] = args.degree
-
-    instance = generate_pairwise_instance(args.family, params, seed=args.seed)
-    path = default_instance_path(instance, args.outdir)
-    write_pairwise_instance(instance, path)
+        dim = 2 if args.family == "ea2d" else 3
+        path = save_ea(args.N, L=args.L, dim=dim, **common)
     print(path)
 
 

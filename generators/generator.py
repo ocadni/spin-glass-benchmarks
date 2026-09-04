@@ -2,50 +2,15 @@ import argparse
 from pathlib import Path
 
 if __package__:
-    from .generate_ea import generate_ea
-    from .generate_rrg import generate_rrg
-    from .generate_sk import generate_sk
-    from .generate_xorsat import generate_xorsat
+    from .generate_ea import save_ea
+    from .generate_rrg import save_rrg
+    from .generate_sk import save_sk
+    from .generate_xorsat import save_xorsat
 else:
-    from generate_ea import generate_ea
-    from generate_rrg import generate_rrg
-    from generate_sk import generate_sk
-    from generate_xorsat import generate_xorsat
-
-
-def _format_number(value):
-    text = f"{value:.5f}".rstrip("0").rstrip(".")
-    return "0" if text in {"", "-0"} else text
-
-
-def _write_instance(
-    path,
-    model,
-    N,
-    mean_j,
-    seed,
-    distribution,
-    field,
-    fields,
-    couplings,
-    extra_metadata=None,
-):
-    extra_metadata = extra_metadata or {}
-    with path.open("w", encoding="utf-8") as handle:
-        extra = "".join(
-            f" {key}={value}" for key, value in extra_metadata.items()
-        )
-        handle.write(
-            "# "
-            f"model={model} N={N} meanJ={_format_number(mean_j)} seed={seed} "
-            f"distribution={distribution} field={_format_number(field)} "
-            f"num_fields={len(fields)} num_couplings={len(couplings)}"
-            f"{extra}\n"
-        )
-        for index, value in fields:
-            handle.write(f"{index} {_format_number(value)}\n")
-        for i, j, value in couplings:
-            handle.write(f"{i} {j} {_format_number(value)}\n")
+    from generate_ea import save_ea
+    from generate_rrg import save_rrg
+    from generate_sk import save_sk
+    from generate_xorsat import save_xorsat
 
 
 def parse_args():
@@ -148,68 +113,41 @@ def main():
     if N is None:
         raise ValueError(f"N is required for model '{args.model}'")
 
-    output_model = args.model
-    output_N = N
-    extra_metadata = {}
-
+    outdir = Path(args.outdir)
+    common = {
+        "field": args.field,
+        "seed": args.seed,
+        "outdir": outdir,
+        "include_family_dir": False,
+    }
     if args.model == "sk":
-        fields, couplings = generate_sk(
+        path = save_sk(
             N,
             mean_j=args.mean_j,
             distribution=distribution,
-            field=args.field,
-            seed=args.seed,
+            **common,
         )
     elif args.model == "ea":
-        output_model = f"ea{args.dim}d"
-        fields, couplings = generate_ea(
+        path = save_ea(
             N,
             dim=args.dim,
             mean_j=args.mean_j,
             distribution=distribution,
-            field=args.field,
-            seed=args.seed,
+            **common,
         )
     elif args.model == "rrg":
-        fields, couplings = generate_rrg(
+        path = save_rrg(
             N,
             degree=args.degree,
             mean_j=args.mean_j,
             distribution=distribution,
-            field=args.field,
-            seed=args.seed,
+            **common,
         )
     else:
-        fields, couplings, metadata = generate_xorsat(
+        path = save_xorsat(
             N,
-            field=args.field,
-            seed=args.seed,
+            **common,
         )
-        output_N = len(fields)
-        extra_metadata = {"K": metadata["K"]}
-
-    outdir = Path(args.outdir)
-    size_dir = f"N{output_N}"
-    if outdir.name != size_dir:
-        outdir = outdir / size_dir
-    outdir.mkdir(parents=True, exist_ok=True)
-    filename = (
-        f"{output_model}_couplings_N{output_N}_"
-        f"J{_format_number(args.mean_j)}_seed{args.seed}.txt"
-    )
-    path = outdir / filename
-    _write_instance(
-        path,
-        output_model,
-        output_N,
-        args.mean_j,
-        args.seed,
-        distribution,
-        args.field,
-        fields,
-        couplings,
-        extra_metadata=extra_metadata,
-    )
     print(path)
 
 
