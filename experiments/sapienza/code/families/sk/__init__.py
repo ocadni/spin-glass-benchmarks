@@ -3,11 +3,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from experiments.sapienza import common
-from experiments.sapienza.src.io import load_pairwise_couplings
-from experiments.sapienza.src.reproducibility import set_reproducible_seed
-from experiments.sapienza.src.result import SolverResult
-from experiments.sapienza.src.updates import sequential_metropolis_update
+from experiments.sapienza.code import common
+from experiments.sapienza.code.src.io import load_pairwise_couplings
+from experiments.sapienza.code.src.reproducibility import set_reproducible_seed
+from experiments.sapienza.code.src.result import SolverResult
+from experiments.sapienza.code.src.updates import sequential_metropolis_update
 
 
 def run_baseline_case(algorithm: str, fixture: str | Path, parameters: dict, seed: int, progress_callback=None) -> SolverResult:

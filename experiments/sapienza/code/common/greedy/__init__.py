@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import torch
 
-from experiments.sapienza.src.device import default_device
-from experiments.sapienza.src.observables import Observables
-from experiments.sapienza.src.result import SolverResult
-from experiments.sapienza.src.updates import greedy_update
+from experiments.sapienza.code.src.device import default_device
+from experiments.sapienza.code.src.observables import Observables
+from experiments.sapienza.code.src.result import SolverResult
+from experiments.sapienza.code.src.updates import greedy_update
 
 
 def greedy(couplings: torch.Tensor, pop_size: int, device: torch.device | None = None) -> SolverResult:

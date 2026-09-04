@@ -5,6 +5,7 @@ import torch.nn as nn
 from torch.optim import Adam
 from tqdm import tqdm
 import random
+from device_utils import empty_cache, get_device
 
 
 def generate_config(model, N_spins, N_config, J):
@@ -22,9 +23,8 @@ def generate_config(model, N_spins, N_config, J):
 
     with torch.no_grad():
         # Initialize a tensor with random binary configurations (values of -1 or 1)
-        #config = (torch.bernoulli(torch.full((N_config, N_spins), 0.5)) * 2 - 1).to("cuda")
-        #config = torch.ones((N_config, N_spins)).to("cuda")
-        config = torch.zeros((N_config, N_spins)).to("cuda")
+        device = get_device(next(model.parameters()))
+        config = torch.zeros((N_config, N_spins), device=device)
     
         # Generate each spin in an autoregressive manner
         for n in range(N_spins):
@@ -33,7 +33,7 @@ def generate_config(model, N_spins, N_config, J):
             
             # Sample new spin values based on probabilities and update the configuration
             config[:, n] = (torch.bernoulli(probs[:, n]) * 2 - 1)
-            torch.cuda.empty_cache()
+            empty_cache(device)
     
     return config
 
@@ -52,9 +52,8 @@ def generate_config_fast(model, N_spins, N_config, J):
 
     with torch.no_grad():
         # Initialize a tensor with random binary configurations (values of -1 or 1)
-        #config = (torch.bernoulli(torch.full((N_config, N_spins), 0.5)) * 2 - 1).to("cuda")
-        #config = torch.ones((N_config, N_spins)).to("cuda")
-        config = torch.zeros((N_config, N_spins)).to("cuda")
+        device = get_device(next(model.parameters()))
+        config = torch.zeros((N_config, N_spins), device=device)
     
         # Generate each spin in an autoregressive manner
         for n in range(N_spins):
@@ -63,7 +62,7 @@ def generate_config_fast(model, N_spins, N_config, J):
             
             # Sample new spin values based on probabilities and update the configuration
             config[:, n] = (torch.bernoulli(probs) * 2 - 1)
-            torch.cuda.empty_cache()
+            empty_cache(device)
     
     return config
 
@@ -96,7 +95,8 @@ def generate(model, current_config, new_beta, N, J, N_data = 100000, N_configs =
         
         # Store the current configurations
         old_configs = torch.clone(current_config)
-        torch.cuda.empty_cache()
+        device = current_config.device
+        empty_cache(device)
         
         # Perform Metropolis-Hastings updates
         for t in tqdm(range(N_configs)):
@@ -111,15 +111,14 @@ def generate(model, current_config, new_beta, N, J, N_data = 100000, N_configs =
             arg_new = -new_beta * new_energies + torch.sum(bce(model(new_configs), (new_configs + 1) / 2), axis=1)
             
             # Acceptance probability calculation
-            acc = (torch.log(torch.rand(size=(N_data,))).to("cuda") < (arg_new - arg_old)).int()
-            #acc = (torch.log(torch.rand(size=(N_data,))).to("cuda") < (arg_new - arg_old))
+            acc = (torch.log(torch.rand(size=(N_data,), device=device)) < (arg_new - arg_old)).int()
             acc_rate += torch.sum(acc)
             
             # Update configurations based on acceptance
             old_configs = torch.einsum("i, ij->ij", (1 - acc), old_configs) + torch.einsum("i, ij->ij", acc, new_configs)
             #old_configs[acc] = new_configs[acc]
             
-            torch.cuda.empty_cache()
+            empty_cache(device)
         
         # Calculate and return the acceptance rate
         return old_configs, float(acc_rate / N_data / N_configs)

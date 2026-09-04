@@ -4,40 +4,87 @@ subtitle: "Benchmark instances, solver runs, and reported metrics"
 date: last-modified
 ---
 
-# Results
+This page summarizes solver results per model family. Tables are generated
+from `experiments/**/summary.csv` files by
+`scripts/generate_results_tables.py` — run that script and re-render the site
+to refresh them (do not hand-edit content between the `AUTO-GENERATED`
+markers below, it will be overwritten).
 
-This page summarizes solver results per model family. Each section's table is
-scraped from the `experiments/` results (fetch/format TODO).
+Only the SK family is shown for now; other families are commented out below
+(wrapped in `.content-hidden` divs) until there's real data for them.
+
+# Leaderboard
+
+One row per instance: the best run, ranked by lowest energy, ties broken by
+lowest TTS.
 
 ## Sherrington-Kirkpatrick (SK)
 
-TODO: populate from experiments.
+<!-- BEGIN AUTO-GENERATED: sk -->
+| N | Seed | Best Algorithm | Hardware | Energy | TTS |
+|---|------|-----------------|----------|--------|-----|
+| 10 | 10 | tester | test | -1 | 10 |
+<!-- END AUTO-GENERATED: sk -->
 
-| Instance | N | Algorithm | Seed(s) | Best Energy | Mean Energy | Runtime | Hardware |
-|----------|---|-----------|---------|--------------|--------------|---------|----------|
-| TODO | | | | | | | |
+::: {.content-hidden}
 
 ## Edwards-Anderson 2D (EA2D)
 
+<!-- BEGIN AUTO-GENERATED: ea2d -->
 TODO: populate from experiments.
 
-| Instance | N | Algorithm | Seed(s) | Best Energy | Mean Energy | Runtime | Hardware |
-|----------|---|-----------|---------|--------------|--------------|---------|----------|
-| TODO | | | | | | | |
+| N | Seed | Best Algorithm | Hardware | Energy | TTS |
+|---|------|-----------------|----------|--------|-----|
+| TODO | | | | | |
+<!-- END AUTO-GENERATED: ea2d -->
 
 ## Edwards-Anderson 3D (EA3D)
 
+<!-- BEGIN AUTO-GENERATED: ea3d -->
 TODO: populate from experiments.
 
-| Instance | N | Algorithm | Seed(s) | Best Energy | Mean Energy | Runtime | Hardware |
-|----------|---|-----------|---------|--------------|--------------|---------|----------|
-| TODO | | | | | | | |
+| N | Seed | Best Algorithm | Hardware | Energy | TTS |
+|---|------|-----------------|----------|--------|-----|
+| TODO | | | | | |
+<!-- END AUTO-GENERATED: ea3d -->
 
 ## Random Regular Graph (RRG)
 
+<!-- BEGIN AUTO-GENERATED: rrg -->
 TODO: populate from experiments.
 
-| Instance | N | Algorithm | Seed(s) | Best Energy | Mean Energy | Runtime | Hardware |
-|----------|---|-----------|---------|--------------|--------------|---------|----------|
-| TODO | | | | | | | |
+| N | Seed | Best Algorithm | Hardware | Energy | TTS |
+|---|------|-----------------|----------|--------|-----|
+| TODO | | | | | |
+<!-- END AUTO-GENERATED: rrg -->
 
+:::
+
+# All
+
+Every recorded run, grouped by algorithm and then by instance type. Use the
+tabs to switch between algorithms and instance types.
+
+<!-- BEGIN AUTO-GENERATED: all -->
+::: {.panel-tabset}
+
+## tester
+
+::: {.panel-tabset}
+
+### Sherrington-Kirkpatrick (SK)
+
+| N | Seed | Energy | Runtime | Success Probability | TTS | Hardware |
+|---|------|--------|---------|----------------------|-----|----------|
+| 10 | 10 | -1 | 5 | 0.1 | 10 | test |
+
+<details>
+<summary>Notes</summary>
+
+This is a test.
+
+</details>
+
+:::
+:::
+<!-- END AUTO-GENERATED: all -->

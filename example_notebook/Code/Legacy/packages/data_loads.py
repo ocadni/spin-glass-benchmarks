@@ -7,8 +7,9 @@ import pandas as pd
 import random
 from geometry import *
 from utilities import *
+from device_utils import get_device
 
-def get_data(L: int, T: float, seed: int, EVERY = 1, RUN = 1, device = "cuda", back = "..", ordering = "spiral") -> tuple: 
+def get_data(L: int, T: float, seed: int, EVERY = 1, RUN = 1, device = None, back = "..", ordering = "spiral") -> tuple:
     """Load data (configurations and J)
     Inputs:
     - L (int): side dimension of the system
@@ -47,7 +48,6 @@ def get_data(L: int, T: float, seed: int, EVERY = 1, RUN = 1, device = "cuda", b
     #lattice = lattice[order][:,order]
     #lattice = np.triu(lattice, k=1).T
     data = data[:, order]
-    #lattice = torch.Tensor(lattice).cuda()
 
     Jmat = J[order][:,order]
     J = Jmat
@@ -67,6 +67,7 @@ def get_data(L: int, T: float, seed: int, EVERY = 1, RUN = 1, device = "cuda", b
     #use_weights = torch.cat((edge_weight, edge_weight, torch.ones(L*L)))
     use_weights = torch.cat((edge_weight, torch.ones(L*L)))
 
+    device = get_device(device)
     data = data.to(device)
     J = J.to(device)
     use_edges = use_edges.to(device)
@@ -75,7 +76,7 @@ def get_data(L: int, T: float, seed: int, EVERY = 1, RUN = 1, device = "cuda", b
 
     return data, J, use_edges, use_weights
 
-def get_data_old(L: int, T: float, seed: int, EVERY = 1, device = "cuda", back = "..") -> tuple: 
+def get_data_old(L: int, T: float, seed: int, EVERY = 1, device = None, back = "..") -> tuple:
     """Load data (configurations and J)
     Inputs:
     -L (int): side dimension of the system
@@ -104,7 +105,6 @@ def get_data_old(L: int, T: float, seed: int, EVERY = 1, device = "cuda", back =
     #lattice = lattice[order][:,order]
     #lattice = np.triu(lattice, k=1).T
     data = data[:, order]
-    #lattice = torch.Tensor(lattice).cuda()
 
     Jmat = J[order][:,order]
     J = Jmat
@@ -124,6 +124,7 @@ def get_data_old(L: int, T: float, seed: int, EVERY = 1, device = "cuda", back =
     #use_weights = torch.cat((edge_weight, edge_weight, torch.ones(L*L)))
     use_weights = torch.cat((edge_weight, torch.ones(L*L)))
 
+    device = get_device(device)
     data = data.to(device)
     J = J.to(device)
     use_edges = use_edges.to(device)
@@ -132,7 +133,7 @@ def get_data_old(L: int, T: float, seed: int, EVERY = 1, device = "cuda", back =
 
     return data, J, use_edges, use_weights
 
-def get_data_from_run2_old(L: int, T: float, seed: int, EVERY = 1, device = "cuda", back = "..") -> tuple: 
+def get_data_from_run2_old(L: int, T: float, seed: int, EVERY = 1, device = None, back = "..") -> tuple:
     """Load data (configurations and J)
     Inputs:
     -L (int): side dimension of the system
@@ -161,7 +162,6 @@ def get_data_from_run2_old(L: int, T: float, seed: int, EVERY = 1, device = "cud
     #lattice = lattice[order][:,order]
     #lattice = np.triu(lattice, k=1).T
     data = data[:, order]
-    #lattice = torch.Tensor(lattice).cuda()
 
     Jmat = J[order][:,order]
     J = Jmat
@@ -181,6 +181,7 @@ def get_data_from_run2_old(L: int, T: float, seed: int, EVERY = 1, device = "cud
     #use_weights = torch.cat((edge_weight, edge_weight, torch.ones(L*L)))
     use_weights = torch.cat((edge_weight, torch.ones(L*L)))
 
+    device = get_device(device)
     data = data.to(device)
     J = J.to(device)
     use_edges = use_edges.to(device)
@@ -189,7 +190,7 @@ def get_data_from_run2_old(L: int, T: float, seed: int, EVERY = 1, device = "cud
 
     return data, J, use_edges, use_weights
 
-def get_data_from_run2(L: int, T: float, seed: int, EVERY = 1, device = "cuda", back = "..") -> tuple: 
+def get_data_from_run2(L: int, T: float, seed: int, EVERY = 1, device = None, back = "..") -> tuple:
     """Load data (configurations and J)
     Inputs:
     -L (int): side dimension of the system
@@ -218,7 +219,6 @@ def get_data_from_run2(L: int, T: float, seed: int, EVERY = 1, device = "cuda", 
     #lattice = lattice[order][:,order]
     #lattice = np.triu(lattice, k=1).T
     data = data[:, order]
-    #lattice = torch.Tensor(lattice).cuda()
 
     Jmat = J[order][:,order]
     J = Jmat
@@ -238,6 +238,7 @@ def get_data_from_run2(L: int, T: float, seed: int, EVERY = 1, device = "cuda", 
     #use_weights = torch.cat((edge_weight, edge_weight, torch.ones(L*L)))
     use_weights = torch.cat((edge_weight, torch.ones(L*L)))
 
+    device = get_device(device)
     data = data.to(device)
     J = J.to(device)
     use_edges = use_edges.to(device)

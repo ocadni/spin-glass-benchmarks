@@ -13,6 +13,7 @@ from data_loads import *
 from monte_carlo import *
 from made import *
 from global_steps import *
+from device_utils import empty_cache, synchronize
 
 from copy import deepcopy
 import time
@@ -59,10 +60,10 @@ def MLMC_fast(model, data, beta, N, J, num_steps=10, return_correlations=False, 
             arg_new = -beta * new_energy + all_new_probabilities
             arg_current = -beta * current_energy + all_current_probabilities
 
-            acceptances = (torch.log(torch.rand(size=(len(data),), device="cuda")) < (arg_new - arg_current)).int()
+            acceptances = (torch.log(torch.rand(size=(len(data),), device=data.device)) < (arg_new - arg_current)).int()
             current_config = torch.einsum("i, ij->ij", (1 - acceptances), current_config) + torch.einsum("i, ij->ij", acceptances, new_config)
 
-            torch.cuda.empty_cache()
+            empty_cache(data.device)
 
             acc_rates.append(torch.sum(acceptances) / len(data))
 
@@ -82,12 +83,14 @@ def global_annealing(L, J, pop_size, num_steps_MC, swap_step, Tstart, Tend, Obse
                                 num_epochs_start = 40, num_epochs_retrain = 1, dimension = "3d"):
 
 
+    device = J.device
+
     #get the indices (needed for the checkerboard update)
     if dimension == "3d":
-        even_indices, odd_indices = get_indices(L)
+        even_indices, odd_indices = get_indices(L, device=device)
         N = L*L*L
     elif dimension == "2d":
-        even_indices, odd_indices = get_indices_2D(L)
+        even_indices, odd_indices = get_indices_2D(L, device=device)
         N = L*L
     else:
         raise ValueError("dimension must be either 3d or 2d")
@@ -96,7 +99,7 @@ def global_annealing(L, J, pop_size, num_steps_MC, swap_step, Tstart, Tend, Obse
     temperatures = schedule_temperatures(Tstart, Tend, num_temps_determiner, schedule, N)
 
     #initialize the population
-    population = torch.randint(0, 2, (pop_size,N), device="cuda").float() * 2 - 1
+    population = torch.randint(0, 2, (pop_size,N), device=device).float() * 2 - 1
     
     #initialize the observables
     observ = Observables(J, N)
@@ -106,10 +109,10 @@ def global_annealing(L, J, pop_size, num_steps_MC, swap_step, Tstart, Tend, Obse
     for i in range(high_temp_thermalization_steps):
         population = monte_carlo_update_fast(population, J, beta=1/oldT, even_indices=even_indices, odd_indices=odd_indices)
     observ.update(population) #save the minimum and mean energie
-    torch.cuda.synchronize()
+    synchronize(device)
     start_time_1 = time.time()
     model = train_made_improved(population, N, epochs = num_epochs_start)
-    torch.cuda.synchronize()
+    synchronize(device)
     start_time_2 = time.time()
     observ.set_start_time()
     for currT in temperatures[1:-1]:
@@ -129,10 +132,9 @@ def global_annealing(L, J, pop_size, num_steps_MC, swap_step, Tstart, Tend, Obse
         for j in range(swap_step):
             population = monte_carlo_update_fast(population, J, 1/currT, even_indices, odd_indices)
     observ.update(population)
-    torch.cuda.synchronize()
+    synchronize(device)
     end_time = time.time()
 
     elapsed_train_time = start_time_2 - start_time_1
     elapsed_annealing_time = end_time - start_time_2
     return temperatures, observ, elapsed_train_time, elapsed_annealing_time
-

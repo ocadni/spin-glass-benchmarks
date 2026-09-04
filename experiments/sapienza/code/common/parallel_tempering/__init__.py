@@ -4,10 +4,10 @@ from collections.abc import Callable
 
 import torch
 
-from experiments.sapienza.src.device import default_device
-from experiments.sapienza.src.observables import Observables, compute_energy
-from experiments.sapienza.src.result import SolverResult
-from experiments.sapienza.src.schedules import schedule_temperatures
+from experiments.sapienza.code.src.device import default_device
+from experiments.sapienza.code.src.observables import Observables, compute_energy
+from experiments.sapienza.code.src.result import SolverResult
+from experiments.sapienza.code.src.schedules import schedule_temperatures
 
 
 UpdateFn = Callable[[torch.Tensor, torch.Tensor, float], torch.Tensor]

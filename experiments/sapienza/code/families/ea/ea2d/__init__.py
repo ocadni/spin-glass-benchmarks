@@ -3,8 +3,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from experiments.sapienza.src.result import SolverResult
-from experiments.sapienza.families.ea.common import run_baseline_case as _run_ea_baseline_case
+from experiments.sapienza.code.src.result import SolverResult
+from experiments.sapienza.code.families.ea.common import run_baseline_case as _run_ea_baseline_case
 
 
 def run_baseline_case(algorithm: str, fixture: str | Path, parameters: dict, seed: int, progress_callback=None) -> SolverResult:

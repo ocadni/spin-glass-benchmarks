@@ -7,9 +7,9 @@ import torch.optim as optim
 from tqdm import tqdm
 import random
 from torch.optim.lr_scheduler import ExponentialLR
+from device_utils import empty_cache, get_device
 
-#set device to "cuda" if gpu is available
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = get_device()
 
 class AutoregressiveMasking(object):
     """Autoregressive constraint for weight matrices."""
@@ -64,8 +64,7 @@ class made(nn.Module):
         x = self.layer(x)
         # x = self.constraint(x)  # Commented out, not used in the forward pass
         x = self.activation(2 * x)  # Apply activation function
-        if device == "cuda":
-            torch.cuda.empty_cache()  # Clear GPU cache
+        empty_cache(x.device)
         return x
     
     def forward_n(self, input, n):
@@ -90,6 +89,8 @@ def train_made(dataset, input_size, epochs=50, batch_size=256, learning_rate=1e-
     Returns:
     - model: Trained MADE model.
     """
+    global device
+    device = get_device(dataset)
     data = torch.clone(dataset)
     model = made(input_size)
     model = model.to(device)
@@ -134,6 +135,8 @@ def train_made_improved(dataset, input_size, epochs=50, batch_size=256, patience
     Returns:
     - model: Trained MADE model.
     """
+    global device
+    device = get_device(dataset)
     data = torch.clone(dataset)
     model = made(input_size)
     model = model.to(device)
@@ -199,6 +202,8 @@ def retrain_made(model, dataset, epochs=50, batch_size=256, learning_rate = 0.00
     Returns:
     - model: Trained MADE model.
     """
+    global device
+    device = get_device(dataset)
     data = torch.clone(dataset)
     model.train()
     clipper = AutoregressiveMasking()

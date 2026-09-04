@@ -23,10 +23,6 @@ def systematic_resampling(probabilities: torch.Tensor, num_samples: int) -> torc
     Returns:
     - indices (torch.Tensor): The indices of resampled particles.
     """
-    # Move probabilities to GPU if not already there
-    if not probabilities.is_cuda:
-        probabilities = probabilities.cuda()
-    
     N = probabilities.size(0)  # Number of particles
     
     # Compute the cumulative sum of probabilities (CDF)
@@ -49,12 +45,14 @@ def population_annealing(L, J, pop_size, num_steps_MC, Tstart, Tend, Observables
                                 reweight_mode = "multinomial"):
     #num_temps_determiner is either Cv_factor or the number of temperatures depending on the schedule
 
+    device = J.device
+
     #get the indices (needed for the checkerboard update)
     if dimension == "3d":
-        even_indices, odd_indices = get_indices(L)
+        even_indices, odd_indices = get_indices(L, device=device)
         N = L*L*L
     elif dimension == "2d":
-        even_indices, odd_indices = get_indices_2D(L)
+        even_indices, odd_indices = get_indices_2D(L, device=device)
         N = L*L
     else:
         raise ValueError("dimension must be either 3d or 2d")
@@ -63,7 +61,7 @@ def population_annealing(L, J, pop_size, num_steps_MC, Tstart, Tend, Observables
     temperatures = schedule_temperatures(Tstart, Tend, num_temps_determiner, schedule, N)
 
     #initialize the population
-    population = torch.randint(0, 2, (pop_size,N), device="cuda").float() * 2 - 1
+    population = torch.randint(0, 2, (pop_size,N), device=device).float() * 2 - 1
     
     #initialize the observables
     observ = Observables(J, N)

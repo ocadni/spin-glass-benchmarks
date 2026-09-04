@@ -8,8 +8,9 @@ import time
 
 sys.path.append("../../../Code/Legacy/packages")
 from utilities import get_betas_3d, compute_energy
+from device_utils import get_device
 
-def get_indices(dim=10):
+def get_indices(dim=10, device=None):
     """
     Generate even and odd indices tensors for a 3D checkerboard pattern in a dim x dim x dim cube.
 
@@ -39,12 +40,13 @@ def get_indices(dim=10):
                     odd_indices.append(index)
 
     # Convert lists to tensors (numpy arrays)
-    even_indices_tensor = torch.tensor(even_indices)
-    odd_indices_tensor = torch.tensor(odd_indices)
+    device = get_device(device)
+    even_indices_tensor = torch.tensor(even_indices, device=device)
+    odd_indices_tensor = torch.tensor(odd_indices, device=device)
 
-    return even_indices_tensor.cuda(), odd_indices_tensor.cuda()
+    return even_indices_tensor, odd_indices_tensor
 
-def get_indices_2D(dim=10):
+def get_indices_2D(dim=10, device=None):
     """
     Generate even and odd indices tensors for a 2D checkerboard pattern in a dim x dim grid.
 
@@ -72,9 +74,9 @@ def get_indices_2D(dim=10):
             else:
                 odd_indices.append(index)
 
-    # Convert lists to tensors (CUDA-compatible if available)
-    even_indices_tensor = torch.tensor(even_indices).cuda()
-    odd_indices_tensor = torch.tensor(odd_indices).cuda()
+    device = get_device(device)
+    even_indices_tensor = torch.tensor(even_indices, device=device)
+    odd_indices_tensor = torch.tensor(odd_indices, device=device)
 
     return even_indices_tensor, odd_indices_tensor
 

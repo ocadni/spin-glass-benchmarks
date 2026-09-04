@@ -336,19 +336,19 @@ class ExperimentRunner:
     def _get_family_runner(self, family: str):
         """Get family adapter module."""
         if family == "sk":
-            from experiments.sapienza.families import sk
+            from experiments.sapienza.code.families import sk
 
             return sk
         elif family == "ea2d":
-            from experiments.sapienza.families.ea import ea2d
+            from experiments.sapienza.code.families.ea import ea2d
 
             return ea2d
         elif family == "ea3d":
-            from experiments.sapienza.families.ea import ea3d
+            from experiments.sapienza.code.families.ea import ea3d
 
             return ea3d
         elif family == "rrg":
-            from experiments.sapienza.families import rrg
+            from experiments.sapienza.code.families import rrg
 
             return rrg
         else:

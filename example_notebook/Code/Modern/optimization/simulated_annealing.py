@@ -14,12 +14,14 @@ def simulated_annealing(L, J, pop_size, num_steps_MC, Tstart, Tend, Observables,
                                 schedule = "Cv_beta", num_temps_determiner = 0.5, 
                                 high_temp_thermalization_steps = 200, dimension = "3d"):
 
+    device = J.device
+
     #get the indices (needed for the checkerboard update)
     if dimension == "3d":
-        even_indices, odd_indices = get_indices(L)
+        even_indices, odd_indices = get_indices(L, device=device)
         N = L*L*L
     elif dimension == "2d":
-        even_indices, odd_indices = get_indices_2D(L)
+        even_indices, odd_indices = get_indices_2D(L, device=device)
         N = L*L
     else:
         raise ValueError("dimension must be either 3d or 2d")
@@ -28,7 +30,7 @@ def simulated_annealing(L, J, pop_size, num_steps_MC, Tstart, Tend, Observables,
     temperatures = schedule_temperatures(Tstart, Tend, num_temps_determiner, schedule, N)
 
     #initialize the population
-    population = torch.randint(0, 2, (pop_size,N), device="cuda").float() * 2 - 1
+    population = torch.randint(0, 2, (pop_size,N), device=device).float() * 2 - 1
     
     #initialize the observables
     observ = Observables(J, N)

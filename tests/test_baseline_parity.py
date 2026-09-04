@@ -58,19 +58,19 @@ def test_solvers_v2_matches_old_solver_baselines(baseline_file):
 
 def _runner_for_family(family: str):
     if family == "sk":
-        from experiments.sapienza.families import sk
+        from experiments.sapienza.code.families import sk
 
         return sk
     if family == "ea2d":
-        from experiments.sapienza.families.ea import ea2d
+        from experiments.sapienza.code.families.ea import ea2d
 
         return ea2d
     if family == "ea3d":
-        from experiments.sapienza.families.ea import ea3d
+        from experiments.sapienza.code.families.ea import ea3d
 
         return ea3d
     if family == "rrg":
-        from experiments.sapienza.families import rrg
+        from experiments.sapienza.code.families import rrg
 
         return rrg
     raise ValueError(f"no Sapienza baseline runner for family {family!r}")
