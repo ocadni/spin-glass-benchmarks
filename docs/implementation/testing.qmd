@@ -161,7 +161,7 @@ pytest tests/generators/test_pairwise_io.py -v
 
 ### Baseline Parity Testing
 
-**Purpose**: Verify that `solvers_v2` produces results identical (or numerically close) to legacy `solvers/`.
+**Purpose**: Verify that `experiments/sapienza` produces results identical (or numerically close) to stored solver baselines.
 
 **File**: `tests/test_baseline_parity.py`
 

@@ -245,4 +245,4 @@ JSON with deterministic field order (Python 3.7+ dict ordering).
 - Test runner: `tests/test_baseline_parity.py`
 - Generation script: `scripts/generate_all_baselines.py`
 - Instance generators: `generators/`
-- Solver implementation: `solvers_v2/`
+- Solver implementation: `experiments/sapienza/`

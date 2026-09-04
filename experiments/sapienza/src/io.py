@@ -1,17 +1,10 @@
 from __future__ import annotations
 
 from pathlib import Path
-import sys
 
 import torch
 
-
-ROOT = Path(__file__).resolve().parents[2]
-GENERATORS_DIR = ROOT / "generators"
-if str(GENERATORS_DIR) not in sys.path:
-    sys.path.insert(0, str(GENERATORS_DIR))
-
-from pairwise_io import load_pairwise_instance  # noqa: E402
+from generators.pairwise_io import load_pairwise_instance
 
 
 def load_pairwise_couplings(path: str | Path, symmetric: bool) -> torch.Tensor:
@@ -22,4 +15,3 @@ def load_pairwise_couplings(path: str | Path, symmetric: bool) -> torch.Tensor:
         if symmetric:
             couplings[interaction.j, interaction.i] = interaction.coupling
     return couplings
-

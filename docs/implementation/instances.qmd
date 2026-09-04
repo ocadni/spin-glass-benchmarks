@@ -212,7 +212,7 @@ All instances use a standardized text format. See [File Format Documentation](..
 
 **Provided utilities**:
 
-- `solvers_v2.src.io.load_pairwise_couplings()` (Python/PyTorch)
+- `experiments.sapienza.src.io.load_pairwise_couplings()` (Python/PyTorch)
 - Manual parsing is straightforward (skip `#` lines, read values)
 
 ---
@@ -303,7 +303,7 @@ diff /tmp/test.txt instances/sk/N100/sk_couplings_N100_J0_seed1051730.txt
 ### Python (PyTorch)
 
 ```python
-from solvers_v2.src.io import load_pairwise_couplings
+from experiments.sapienza.src.io import load_pairwise_couplings
 
 # Load coupling matrix
 couplings = load_pairwise_couplings(

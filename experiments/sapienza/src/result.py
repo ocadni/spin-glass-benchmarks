@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from solvers.src.observables import Observables
+from experiments.sapienza.src.observables import Observables
 
 
 @dataclass(frozen=True)

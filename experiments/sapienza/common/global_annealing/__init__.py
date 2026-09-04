@@ -7,10 +7,11 @@ from collections.abc import Callable
 import torch
 import torch.nn as nn
 
-from solvers.common.global_annealing.architectures import Architecture, MADEArchitecture
-from solvers.src.observables import Observables, compute_energy
-from solvers.src.result import SolverResult
-from solvers.src.schedules import schedule_temperatures
+from experiments.sapienza.common.global_annealing.architectures import Architecture, MADEArchitecture
+from experiments.sapienza.src.device import default_device
+from experiments.sapienza.src.observables import Observables, compute_energy
+from experiments.sapienza.src.result import SolverResult
+from experiments.sapienza.src.schedules import schedule_temperatures
 
 
 UpdateFn = Callable[[torch.Tensor, torch.Tensor, float], torch.Tensor]
@@ -88,11 +89,11 @@ def global_annealing(
         num_epochs_retrain: Retraining epochs per temperature
         batch_size: Batch size for training
         architecture: Neural network architecture (default: MADEArchitecture)
-        device: Device (cuda/cpu)
+        device: Device (cuda/mps/cpu)
         progress_callback: Optional progress callback
     """
     if device is None:
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        device = default_device()
 
     if architecture is None:
         architecture = MADEArchitecture()

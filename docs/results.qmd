@@ -6,26 +6,38 @@ date: last-modified
 
 # Results
 
-This page is a scaffold for benchmark results.
+This page summarizes solver results per model family. Each section's table is
+scraped from the `experiments/` results (fetch/format TODO).
 
-## Result Summary
+## Sherrington-Kirkpatrick (SK)
 
-TODO: Add high-level result tables and plots.
+TODO: populate from experiments.
 
-## Instance Sets
+| Instance | N | Algorithm | Seed(s) | Best Energy | Mean Energy | Runtime | Hardware |
+|----------|---|-----------|---------|--------------|--------------|---------|----------|
+| TODO | | | | | | | |
 
-TODO: Document which benchmark instances were used for each result.
+## Edwards-Anderson 2D (EA2D)
 
-## Solver Configurations
+TODO: populate from experiments.
 
-TODO: Document solver versions, parameters, seeds, hardware, and runtime limits.
+| Instance | N | Algorithm | Seed(s) | Best Energy | Mean Energy | Runtime | Hardware |
+|----------|---|-----------|---------|--------------|--------------|---------|----------|
+| TODO | | | | | | | |
 
-## Metrics
+## Edwards-Anderson 3D (EA3D)
 
-TODO: Define and report objective quality, success rate, time to solution,
-scaling behavior, and reproducibility checks.
+TODO: populate from experiments.
 
-## Raw Data
+| Instance | N | Algorithm | Seed(s) | Best Energy | Mean Energy | Runtime | Hardware |
+|----------|---|-----------|---------|--------------|--------------|---------|----------|
+| TODO | | | | | | | |
 
-TODO: Link to generated result files and scripts used to reproduce figures.
+## Random Regular Graph (RRG)
+
+TODO: populate from experiments.
+
+| Instance | N | Algorithm | Seed(s) | Best Energy | Mean Energy | Runtime | Hardware |
+|----------|---|-----------|---------|--------------|--------------|---------|----------|
+| TODO | | | | | | | |
 

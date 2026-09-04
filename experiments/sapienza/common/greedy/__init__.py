@@ -2,14 +2,15 @@ from __future__ import annotations
 
 import torch
 
-from solvers.src.observables import Observables
-from solvers.src.result import SolverResult
-from solvers.src.updates import greedy_update
+from experiments.sapienza.src.device import default_device
+from experiments.sapienza.src.observables import Observables
+from experiments.sapienza.src.result import SolverResult
+from experiments.sapienza.src.updates import greedy_update
 
 
 def greedy(couplings: torch.Tensor, pop_size: int, device: torch.device | None = None) -> SolverResult:
     if device is None:
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        device = default_device()
 
     num_spins = couplings.shape[0]
     couplings = couplings.to(device)

@@ -25,7 +25,7 @@ The global annealing algorithm uses machine learning-enhanced sampling where a n
 ### Default (MADE)
 
 ```python
-from solvers_v2 import common
+from experiments.sapienza import common
 
 result = common.global_annealing(
     couplings=J,
@@ -45,7 +45,7 @@ result = common.global_annealing(
 ### Specifying an Architecture
 
 ```python
-from solvers_v2 import common
+from experiments.sapienza import common
 
 # Option 1: Pass architecture string in parameters
 parameters = {
@@ -74,7 +74,7 @@ result = common.global_annealing(
 To add a new architecture, create a new Python file in this directory and subclass `Architecture`:
 
 ```python
-from solvers_v2.common.global_annealing.architectures.base import Architecture
+from experiments.sapienza.common.global_annealing.architectures.base import Architecture
 import torch
 import torch.nn as nn
 

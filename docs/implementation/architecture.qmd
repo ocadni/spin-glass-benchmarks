@@ -37,7 +37,7 @@ spin-glass-benchmarks/
 │   ├── generate_rrg.py
 │   └── generate_xorsat.py
 │
-├── solvers_v2/             # Reference solver implementations
+├── experiments/sapienza/   # Reference solver implementations
 │   ├── common/            # Algorithm implementations
 │   │   ├── simulated_annealing/
 │   │   ├── population_annealing/
@@ -75,7 +75,7 @@ spin-glass-benchmarks/
 Key modules are **independent** and can be used separately:
 
 - **generators/**: Can be used standalone to create instances
-- **solvers_v2/**: Can be imported and used without experiments framework
+- **experiments/sapienza/**: Can be imported and used without experiments framework
 - **experiments/**: Optional orchestration layer, not required to use solvers
 
 **Design goal**: Low coupling, high cohesion
@@ -158,9 +158,9 @@ Key modules are **independent** and can be used separately:
 
 ---
 
-### Why solvers_v2/ vs solvers/?
+### Solver Package Location
 
-**Decision**: Create new `solvers_v2/` directory instead of refactoring `solvers/`
+**Decision**: Keep the maintained solver package under `experiments/sapienza/`
 
 **Rationale**:
 
@@ -174,14 +174,14 @@ Key modules are **independent** and can be used separately:
 
 **Migration path**:
 
-1. Implement new solvers in `solvers_v2/`
-2. Validate parity with `solvers/` via tests
-3. Switch experiments to use `solvers_v2/`
-4. Eventually archive or remove `solvers/`
+1. Implement maintained solvers in `experiments/sapienza/`
+2. Validate parity with stored solver baselines via tests
+3. Run experiment configs through the Sapienza solver package
+4. Keep historical solver metadata only for provenance
 
-**Current status**: `solvers_v2/` is production code, `solvers/` is legacy
+**Current status**: `experiments/sapienza/` is production solver code
 
-**Future**: May rename `solvers_v2/` → `solvers/` once legacy code removed
+**Future**: May split Sapienza solvers into a standalone package if needed
 
 ---
 

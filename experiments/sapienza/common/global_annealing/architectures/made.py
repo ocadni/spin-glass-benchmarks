@@ -9,7 +9,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.optim.lr_scheduler import ExponentialLR
 
-from solvers.common.global_annealing.architectures.base import Architecture
+from experiments.sapienza.common.global_annealing.architectures.base import Architecture
 
 
 class AutoregressiveMasking:

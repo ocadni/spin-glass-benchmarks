@@ -36,7 +36,7 @@ python -c "import torch; print('CUDA:', torch.cuda.is_available())"
 ### 2. Use Instances
 
 ```python
-from solvers_v2.src.io import load_pairwise_couplings
+from experiments.sapienza.src.io import load_pairwise_couplings
 
 # Load instance
 couplings = load_pairwise_couplings(
@@ -169,7 +169,7 @@ instances/          # 📦 Benchmark instances (main content)
 └── rrg/           # Random Regular Graph (50 instances)
 
 generators/         # Instance generation tools
-solvers_v2/         # 🔧 Solver implementations (PyTorch, GPU)
+experiments/sapienza/ # 🔧 Solver implementations (PyTorch, GPU)
 experiments/        # 📊 Experimental framework (optional)
 docs/               # 🌐 Documentation site (Quarto)
 environments/       # Conda environment specifications

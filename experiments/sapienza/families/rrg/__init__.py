@@ -3,10 +3,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from solvers import common
-from solvers.src.io import load_pairwise_couplings
-from solvers.src.reproducibility import set_reproducible_seed
-from solvers.src.updates import sequential_metropolis_update
+from experiments.sapienza import common
+from experiments.sapienza.src.io import load_pairwise_couplings
+from experiments.sapienza.src.reproducibility import set_reproducible_seed
+from experiments.sapienza.src.updates import sequential_metropolis_update
 
 
 def run_pairwise_case(algorithm: str, fixture: str | Path, parameters: dict, seed: int):
