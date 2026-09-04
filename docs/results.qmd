@@ -21,9 +21,23 @@ lowest TTS.
 ## Sherrington-Kirkpatrick (SK)
 
 <!-- BEGIN AUTO-GENERATED: sk -->
-| N | Seed | Best Algorithm | Hardware | Energy | TTS |
+| N | Seed | Best Algorithm | Hardware | Energy | TTS (s) |
 |---|------|-----------------|----------|--------|-----|
-| 10 | 10 | tester | test | -1 | 10 |
+| 50 | 1051732 | Random Greedy | Darwin arm64 | -0.666784 | 0.0007845 |
+| 50 | 1051735 | Random Greedy | Darwin arm64 | -0.691774 | 0.000518 |
+| 50 | 1051738 | Random Greedy | Darwin arm64 | -0.681092 | 0.001554 |
+| 50 | 1051741 | Random Greedy | Darwin arm64 | -0.659711 | 0.000775 |
+| 50 | 1051744 | Random Greedy | Darwin arm64 | -0.720381 | 0.001558 |
+| 100 | 1101732 | Random Greedy | Darwin arm64 | -0.725063 | 0.00497 |
+| 100 | 1101735 | Random Greedy | Darwin arm64 | -0.757933 | 0.004921 |
+| 100 | 1101738 | Random Greedy | Darwin arm64 | -0.740788 | 0.004822 |
+| 100 | 1101741 | Random Greedy | Darwin arm64 | -0.751339 | 0.004833 |
+| 100 | 1101744 | Random Greedy | Darwin arm64 | -0.724495 | 0.004854 |
+| 2000 | 3001732 | Random Greedy | Darwin arm64 | -0.687066 | 0.029927 |
+| 2000 | 3001735 | Random Greedy | Darwin arm64 | -0.695733 | 0.028778 |
+| 2000 | 3001738 | Random Greedy | Darwin arm64 | -0.703009 | 0.030265 |
+| 2000 | 3001741 | Random Greedy | Darwin arm64 | -0.703292 | 0.030256 |
+| 2000 | 3001744 | Random Greedy | Darwin arm64 | -0.69995 | 0.031055 |
 <!-- END AUTO-GENERATED: sk -->
 
 ::: {.content-hidden}
@@ -33,7 +47,7 @@ lowest TTS.
 <!-- BEGIN AUTO-GENERATED: ea2d -->
 TODO: populate from experiments.
 
-| N | Seed | Best Algorithm | Hardware | Energy | TTS |
+| N | Seed | Best Algorithm | Hardware | Energy | TTS (s) |
 |---|------|-----------------|----------|--------|-----|
 | TODO | | | | | |
 <!-- END AUTO-GENERATED: ea2d -->
@@ -43,7 +57,7 @@ TODO: populate from experiments.
 <!-- BEGIN AUTO-GENERATED: ea3d -->
 TODO: populate from experiments.
 
-| N | Seed | Best Algorithm | Hardware | Energy | TTS |
+| N | Seed | Best Algorithm | Hardware | Energy | TTS (s) |
 |---|------|-----------------|----------|--------|-----|
 | TODO | | | | | |
 <!-- END AUTO-GENERATED: ea3d -->
@@ -53,7 +67,7 @@ TODO: populate from experiments.
 <!-- BEGIN AUTO-GENERATED: rrg -->
 TODO: populate from experiments.
 
-| N | Seed | Best Algorithm | Hardware | Energy | TTS |
+| N | Seed | Best Algorithm | Hardware | Energy | TTS (s) |
 |---|------|-----------------|----------|--------|-----|
 | TODO | | | | | |
 <!-- END AUTO-GENERATED: rrg -->
@@ -68,15 +82,29 @@ tabs to switch between algorithms and instance types.
 <!-- BEGIN AUTO-GENERATED: all -->
 ::: {.panel-tabset}
 
-## tester
+## Random Greedy
 
 ::: {.panel-tabset}
 
 ### Sherrington-Kirkpatrick (SK)
 
-| N | Seed | Energy | Runtime | Success Probability | TTS | Hardware |
-|---|------|--------|---------|----------------------|-----|----------|
-| 10 | 10 | -1 | 5 | 0.1 | 10 | test |
+| N | Seed | Energy | Runtime (s) | Success Probability | Hardware |
+|---|------|--------|-------------|----------------------|----------|
+| 50 | 1051732 | -0.666784 | 1.569e-05 | 0.02 | Darwin arm64 |
+| 50 | 1051735 | -0.691774 | 1.554e-05 | 0.03 | Darwin arm64 |
+| 50 | 1051738 | -0.681092 | 1.554e-05 | 0.01 | Darwin arm64 |
+| 50 | 1051741 | -0.659711 | 1.55e-05 | 0.02 | Darwin arm64 |
+| 50 | 1051744 | -0.720381 | 1.558e-05 | 0.01 | Darwin arm64 |
+| 100 | 1101732 | -0.725063 | 4.97e-05 | 0.01 | Darwin arm64 |
+| 100 | 1101735 | -0.757933 | 4.921e-05 | 0.01 | Darwin arm64 |
+| 100 | 1101738 | -0.740788 | 4.822e-05 | 0.01 | Darwin arm64 |
+| 100 | 1101741 | -0.751339 | 4.833e-05 | 0.01 | Darwin arm64 |
+| 100 | 1101744 | -0.724495 | 4.854e-05 | 0.01 | Darwin arm64 |
+| 2000 | 3001732 | -0.687066 | 0.0149635 | 0.5 | Darwin arm64 |
+| 2000 | 3001735 | -0.695733 | 0.014389 | 0.5 | Darwin arm64 |
+| 2000 | 3001738 | -0.703009 | 0.0151325 | 0.5 | Darwin arm64 |
+| 2000 | 3001741 | -0.703292 | 0.015128 | 0.5 | Darwin arm64 |
+| 2000 | 3001744 | -0.69995 | 0.0155275 | 0.5 | Darwin arm64 |
 
 <details>
 <summary>Notes</summary>

@@ -130,7 +130,7 @@ def render_table(rows: list[Row]) -> str:
     if not rows:
         return (
             "TODO: populate from experiments.\n\n"
-            "| N | Seed | Best Algorithm | Hardware | Energy | TTS |\n"
+            "| N | Seed | Best Algorithm | Hardware | Energy | TTS (s) |\n"
             "|---|------|-----------------|----------|--------|-----|\n"
             "| TODO | | | | | |"
         )
@@ -140,7 +140,7 @@ def render_table(rows: list[Row]) -> str:
         by_instance.setdefault((row.n, row.seed), []).append(row)
 
     lines = [
-        "| N | Seed | Best Algorithm | Hardware | Energy | TTS |",
+        "| N | Seed | Best Algorithm | Hardware | Energy | TTS (s) |",
         "|---|------|-----------------|----------|--------|-----|",
     ]
     for (n, seed) in sorted(by_instance):
@@ -156,13 +156,13 @@ def render_table(rows: list[Row]) -> str:
 
 def render_raw_table(rows: list[Row]) -> str:
     lines = [
-        "| N | Seed | Energy | Runtime | Success Probability | TTS | Hardware |",
-        "|---|------|--------|---------|----------------------|-----|----------|",
+        "| N | Seed | Energy | Runtime (s) | Success Probability | Hardware |",
+        "|---|------|--------|-------------|----------------------|----------|",
     ]
     for row in sorted(rows, key=lambda r: (r.n, r.seed, r.hardware, r.tts)):
         lines.append(
             f"| {row.n} | {row.seed} | {row.min_energy:.6g} | {row.average_time:.6g} "
-            f"| {row.success_probability:.6g} | {row.tts:.6g} | {row.hardware} |"
+            f"| {row.success_probability:.6g} | {row.hardware} |"
         )
     return "\n".join(lines)
 
