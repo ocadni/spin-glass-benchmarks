@@ -1,9 +1,6 @@
 ---
 title: "Problem Definition"
 subtitle: "Spin glasses and XORSAT as benchmark optimization problems"
-author:
-  - name: "BENQODHI Working Group"
-    affiliation: "Joint Research Centre (European Commission) · Sapienza University of Rome"
 date: last-modified
 abstract: |
   This page defines the core optimization problems used in the benchmark suite.

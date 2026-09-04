@@ -1,6 +1,6 @@
 ---
 title: "Spin-Glass and XORSAT Benchmarks"
-subtitle: "Reproducible benchmark problems, references, results, and implementation notes for spin-glass and XORSAT optimization."
+subtitle: "Reproducible benchmark problems, references, and results for spin-glass and XORSAT optimization."
 page-layout: full
 toc: false
 ---
@@ -9,73 +9,12 @@ toc: false
 ::: {.hero-copy}
 # Spin-Glass and XORSAT Benchmarks
 
-A repository for benchmark instances and solver conventions across dense, sparse, and lattice spin-glass models, plus XORSAT-oriented higher-order families. The documentation is organised into benchmark problem definitions, literature references, benchmark results, and implementation notes.
+A repository for benchmark instances and solver conventions across dense, sparse, and lattice spin-glass models, plus XORSAT-oriented higher-order families. The documentation is organised into benchmark problem definitions, literature references, and benchmark results.
 
 [Problem definition](problem_definition.qmd){.btn .btn-primary .btn-lg}
-[Implementation](implementation.qmd){.btn .btn-outline-primary .btn-lg}
 :::
 
 ::: {.hero-visual}
 ![A stylized spin-glass coupling graph with positive and negative interactions.](assets/spin-glass-network.svg)
 :::
 ::::
-
-::::: {.content-band}
-## Documentation Map
-
-:::: {.grid}
-::: {.g-col-12 .g-col-md-6 .g-col-xl-3}
-### Benchmark Problems
-
-Mathematical definitions and benchmark roles for spin-glass and XORSAT problem families.
-
-[Read the definitions](problem_definition.qmd)
-:::
-
-::: {.g-col-12 .g-col-md-6 .g-col-xl-3}
-### Literature References
-
-Classical, AI-based, quantum-inspired, and quantum algorithm references for benchmark design.
-
-[Read the references](literature_references.qmd)
-:::
-
-::: {.g-col-12 .g-col-md-6 .g-col-xl-3}
-### Results
-
-Benchmark instance sets, solver configurations, metrics, and reported outputs.
-
-[View results](results.qmd)
-:::
-
-::: {.g-col-12 .g-col-md-6 .g-col-xl-3}
-### Implementation
-
-Repository status, implementation roadmap, file format, and contributor contract.
-
-[Read the plan](implementation.qmd)
-:::
-::::
-:::::
-
-::: {.content-band}
-## Implementation Documents
-
-| Document | Purpose |
-|---|---|
-| [Implementation Plan](implementation.qmd) | Repository roadmap, implemented pieces, missing work, and next milestones |
-| [File Format](file_format.qmd) | Instance storage conventions and text-file schema |
-| [Project Contract](project_contract.qmd) | Contributor and agentic implementation agreement |
-:::
-
-::: {.content-band .muted}
-## Current Scope
-
-| Area | Repository convention |
-|---|---|
-| Instance families | SK, EA 2D/3D, random regular graph, and 3-XORSAT |
-| Instance storage | Text-readable coupling files under `benchmarks/<model>/N<size>/` |
-| Generator contract | Deterministic generation from explicit parameters and seed |
-| Solver contract | Standardized status, objective, assignment, and metrics |
-| Publishing | Quarto website rendered from `docs/` and deployed through GitHub Pages |
-:::
