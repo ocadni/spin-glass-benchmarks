@@ -28,6 +28,9 @@ jobs:
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
+      - name: Generate results tables
+        run: python scripts/generate_results_tables.py
+
       - name: Render Quarto website
         run: quarto render docs --to html
 
