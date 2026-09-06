@@ -90,3 +90,6 @@ instances/**/*.txt
 !instances/sk/N2000/sk_couplings_N2000_J0_seed3001738.txt
 !instances/sk/N2000/sk_couplings_N2000_J0_seed3001741.txt
 !instances/sk/N2000/sk_couplings_N2000_J0_seed3001744.txt
+
+*results_part*
+*logs_parts*

@@ -9,7 +9,8 @@ The family (sk/ea2d/ea3d/rrg) is inferred from the name of the directory a
 summary.csv lives in, and the researcher from the path component right after
 experiments/. For every (family, N, seed) instance seen across all
 summary.csv files, the Leaderboard section reports the single best run:
-ranked first by lowest min_energy, ties broken by lowest TTS (and, in the
+ranked first by lowest min_energy, energies within 1e-6 of the minimum
+treated as tied, ties broken by lowest TTS (and, in the
 vanishingly unlikely case both are equal too, by program_name then hardware,
 for a fully deterministic result regardless of file/row order). The All
 section instead lists every run (with runtime and success probability, which
@@ -58,6 +59,10 @@ VISIBLE_FAMILIES = ("sk",)
 # Algorithm tabs shown in the "All" section, even before every algorithm has
 # uploaded results. Extra algorithm names found in summary.csv are appended.
 VISIBLE_ALGORITHMS = ("Greedy", "Random", "Reluctant")
+
+# Absolute tolerance in the reported energy units, applied against the
+# instance minimum so that selection does not depend on row order.
+ENERGY_TOLERANCE = 1e-6
 
 
 @dataclass(frozen=True)
@@ -146,7 +151,12 @@ def render_table(rows: list[Row]) -> str:
     best_by_n: dict[int, list[Row]] = {}
     for (n, _seed) in sorted(by_instance):
         instance_rows = by_instance[(n, _seed)]
-        best = min(instance_rows, key=lambda r: (r.min_energy, r.tts, r.program_name, r.hardware))
+        minimum_energy = min(r.min_energy for r in instance_rows)
+        tied_rows = [
+            r for r in instance_rows
+            if r.min_energy - minimum_energy <= ENERGY_TOLERANCE
+        ]
+        best = min(tied_rows, key=lambda r: (r.tts, r.program_name, r.hardware))
         best_by_n.setdefault(n, []).append(best)
 
     blocks = ["::: {.panel-tabset}"]
