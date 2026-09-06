@@ -1,6 +1,6 @@
 ---
 title: "Spin-Glass and XORSAT Benchmarks"
-subtitle: "Reproducible benchmark problems, references, and results for spin-glass and XORSAT optimization."
+subtitle: "Current SK benchmark definitions and solver results, with additional problem families planned."
 page-layout: full
 toc: false
 ---
@@ -9,9 +9,10 @@ toc: false
 ::: {.hero-copy}
 # Spin-Glass and XORSAT Benchmarks
 
-A repository for benchmark instances and solver conventions across dense, sparse, and lattice spin-glass models, plus XORSAT-oriented higher-order families. The documentation is organised into benchmark problem definitions, literature references, and benchmark results.
+This site currently documents the Sherrington--Kirkpatrick (SK) benchmark family and reports the available SK solver results. Edwards--Anderson models, sparse random graph spin glasses, and XORSAT problems are planned for future additions.
 
 [Problem definition](problem_definition.qmd){.btn .btn-primary .btn-lg}
+[Results](results.qmd){.btn .btn-outline-primary .btn-lg}
 :::
 
 ::: {.hero-visual}

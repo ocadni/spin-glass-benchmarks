@@ -139,32 +139,50 @@ def render_table(rows: list[Row]) -> str:
     for row in rows:
         by_instance.setdefault((row.n, row.seed), []).append(row)
 
-    lines = [
-        "| N | Seed | Best Algorithm | Hardware | Energy | TTS (s) |",
-        "|---|------|-----------------|----------|--------|-----|",
-    ]
-    for (n, seed) in sorted(by_instance):
-        instance_rows = by_instance[(n, seed)]
+    best_by_n: dict[int, list[Row]] = {}
+    for (n, _seed) in sorted(by_instance):
+        instance_rows = by_instance[(n, _seed)]
         best = min(instance_rows, key=lambda r: (r.min_energy, r.tts, r.program_name, r.hardware))
-        lines.append(
-            f"| {n} | {seed} "
-            f"| {best.program_name} | {best.hardware} "
-            f"| {best.min_energy:.6g} | {best.tts:.6g} |"
-        )
-    return "\n".join(lines)
+        best_by_n.setdefault(n, []).append(best)
+
+    blocks = ["::: {.panel-tabset}"]
+    for n in sorted(best_by_n):
+        lines = [
+            f"\n### N = {n}\n",
+            "| Seed | Best Algorithm | Hardware | Energy | TTS (s) |",
+            "|------|----------------|----------|--------|---------|",
+        ]
+        for best in sorted(best_by_n[n], key=lambda r: r.seed):
+            lines.append(
+                f"| {best.seed} "
+                f"| {best.program_name} | {best.hardware} "
+                f"| {best.min_energy:.6g} | {best.tts:.6g} |"
+            )
+        blocks.append("\n".join(lines))
+    blocks.append(":::")
+    return "\n".join(blocks)
 
 
 def render_raw_table(rows: list[Row]) -> str:
-    lines = [
-        "| N | Seed | Energy | Runtime (s) | Success Probability | Hardware |",
-        "|---|------|--------|-------------|----------------------|----------|",
-    ]
-    for row in sorted(rows, key=lambda r: (r.n, r.seed, r.hardware, r.tts)):
-        lines.append(
-            f"| {row.n} | {row.seed} | {row.min_energy:.6g} | {row.average_time:.6g} "
-            f"| {row.success_probability:.6g} | {row.hardware} |"
-        )
-    return "\n".join(lines)
+    rows_by_n: dict[int, list[Row]] = {}
+    for row in rows:
+        rows_by_n.setdefault(row.n, []).append(row)
+
+    blocks = ["::: {.panel-tabset}"]
+    for n in sorted(rows_by_n):
+        lines = [
+            f"\n#### N = {n}\n",
+            "| Seed | Energy | Runtime (s) | Success Probability | Hardware |",
+            "|------|--------|-------------|----------------------|----------|",
+        ]
+        for row in sorted(rows_by_n[n], key=lambda r: (r.seed, r.hardware, r.tts)):
+            lines.append(
+                f"| {row.seed} | {row.min_energy:.6g} | {row.average_time:.6g} "
+                f"| {row.success_probability:.6g} | {row.hardware} |"
+            )
+        blocks.append("\n".join(lines))
+    blocks.append(":::")
+    return "\n".join(blocks)
 
 
 def find_notes(researcher: str, family: str) -> Path | None:
