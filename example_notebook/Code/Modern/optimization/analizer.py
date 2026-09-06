@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
 """Convert greedy results.txt files to the website summary.csv format.
 
-The greedy runner writes whitespace-separated rows with columns:
+Supported input formats:
 
+New format:
+    repeat N instance_seed run_seed min_energy_perspin elapsed_time
+
+Old format:
     N instance_seed run_seed min_energy_perspin elapsed_time
 
-The generated CSV is consumed by scripts/generate_results_tables.py.
+The "repeat" column in the new format is ignored.
+
+The generated rows are appended to summary.csv.
 """
 
 from __future__ import annotations
@@ -22,8 +28,18 @@ from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parents[3]
+
 DEFAULT_INPUT = SCRIPT_DIR / "results.txt"
-DEFAULT_OUTPUT = REPO_ROOT / "experiments" / "sapienza" / "results" / "sk" / "summary.csv"
+
+DEFAULT_OUTPUT = (
+    REPO_ROOT
+    / "experiments"
+    / "sapienza"
+    / "results"
+    / "sk"
+    / "summary.csv"
+)
+
 DEFAULT_PROGRAM_NAME = "Random Greedy"
 MAX_RUN_SEED = 2**31 - 1
 
@@ -54,45 +70,55 @@ class InstanceSummary:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Create the website summary.csv from a greedy results.txt file."
+        description="Append greedy results to the website summary.csv."
     )
+
     parser.add_argument(
         "--input",
         type=Path,
         default=DEFAULT_INPUT,
         help=f"input results file (default: {DEFAULT_INPUT})",
     )
+
     parser.add_argument(
         "--output",
         type=Path,
         default=DEFAULT_OUTPUT,
         help=f"output website summary.csv (default: {DEFAULT_OUTPUT})",
     )
+
     parser.add_argument(
         "--program-name",
         default=DEFAULT_PROGRAM_NAME,
         help=f"program name to write in summary.csv (default: {DEFAULT_PROGRAM_NAME})",
     )
+
     parser.add_argument(
         "--hardware",
         default=f"{platform.system()} {platform.machine()}",
         help="hardware label to write in summary.csv",
     )
+
     parser.add_argument(
         "--success-tolerance",
         type=float,
         default=1e-12,
         help="energy tolerance for counting runs tied with the best energy",
     )
+
     parser.add_argument(
         "--strict-run-seed",
         action="store_true",
         help=f"skip rows whose run_seed is outside [0, {MAX_RUN_SEED}]",
     )
+
     return parser.parse_args()
 
 
-def parse_results(path: Path, strict_run_seed: bool) -> tuple[list[Run], list[str]]:
+def parse_results(
+    path: Path,
+    strict_run_seed: bool,
+) -> tuple[list[Run], list[str]]:
     runs: list[Run] = []
     warnings: list[str] = []
 
@@ -102,11 +128,16 @@ def parse_results(path: Path, strict_run_seed: bool) -> tuple[list[Run], list[st
     with path.open(encoding="utf-8") as handle:
         for line_number, raw_line in enumerate(handle, start=1):
             line = raw_line.strip()
+
             if not line:
                 continue
 
             parts = line.split()
-            if parts[:5] == [
+
+            # New-format header:
+            # repeat N instance_seed run_seed min_energy_perspin elapsed_time
+            if parts == [
+                "repeat",
                 "N",
                 "instance_seed",
                 "run_seed",
@@ -115,32 +146,72 @@ def parse_results(path: Path, strict_run_seed: bool) -> tuple[list[Run], list[st
             ]:
                 continue
 
-            if len(parts) != 5:
+            # Old-format header:
+            # N instance_seed run_seed min_energy_perspin elapsed_time
+            if parts == [
+                "N",
+                "instance_seed",
+                "run_seed",
+                "min_energy_perspin",
+                "elapsed_time",
+            ]:
+                continue
+
+            # New format:
+            # repeat N instance_seed run_seed min_energy_perspin elapsed_time
+            if len(parts) == 6:
+                (
+                    _repeat_str,
+                    n_str,
+                    instance_seed_str,
+                    run_seed_str,
+                    energy_str,
+                    time_str,
+                ) = parts
+
+            # Old format:
+            # N instance_seed run_seed min_energy_perspin elapsed_time
+            elif len(parts) == 5:
+                (
+                    n_str,
+                    instance_seed_str,
+                    run_seed_str,
+                    energy_str,
+                    time_str,
+                ) = parts
+
+            else:
                 warnings.append(
-                    f"{path}:{line_number}: expected 5 columns, got {len(parts)}"
+                    f"{path}:{line_number}: expected 5 or 6 columns, "
+                    f"got {len(parts)}; skipped"
                 )
                 continue
 
             try:
                 run = Run(
-                    n=int(parts[0]),
-                    instance_seed=int(parts[1]),
-                    run_seed=int(parts[2]),
-                    energy_per_spin=float(parts[3]),
-                    elapsed_time=float(parts[4]),
+                    n=int(n_str),
+                    instance_seed=int(instance_seed_str),
+                    run_seed=int(run_seed_str),
+                    energy_per_spin=float(energy_str),
+                    elapsed_time=float(time_str),
                 )
+
             except ValueError as exc:
-                warnings.append(f"{path}:{line_number}: {exc}")
+                warnings.append(
+                    f"{path}:{line_number}: {exc}; skipped"
+                )
                 continue
 
             if run.run_seed < 0 or run.run_seed > MAX_RUN_SEED:
                 message = (
-                    f"{path}:{line_number}: run_seed {run.run_seed} is outside "
-                    f"[0, {MAX_RUN_SEED}]"
+                    f"{path}:{line_number}: run_seed {run.run_seed} "
+                    f"is outside [0, {MAX_RUN_SEED}]"
                 )
+
                 if strict_run_seed:
                     warnings.append(message + "; skipped")
                     continue
+
                 warnings.append(message)
 
             runs.append(run)
@@ -151,29 +222,50 @@ def parse_results(path: Path, strict_run_seed: bool) -> tuple[list[Run], list[st
 def stddev(values: list[float]) -> float:
     if len(values) < 2:
         return 0.0
+
     return statistics.stdev(values)
 
 
 def summarize_instances(
-    runs: list[Run], success_tolerance: float
+    runs: list[Run],
+    success_tolerance: float,
 ) -> list[InstanceSummary]:
     grouped: dict[tuple[int, int], list[Run]] = defaultdict(list)
+
     for run in runs:
         grouped[(run.n, run.instance_seed)].append(run)
 
     summaries: list[InstanceSummary] = []
+
     for (n, instance_seed), instance_runs in sorted(grouped.items()):
         best = min(
             instance_runs,
-            key=lambda run: (run.energy_per_spin, run.elapsed_time, run.run_seed),
+            key=lambda run: (
+                run.energy_per_spin,
+                run.elapsed_time,
+                run.run_seed,
+            ),
         )
-        energies = [run.energy_per_spin for run in instance_runs]
-        times = [run.elapsed_time for run in instance_runs]
+
+        energies = [
+            run.energy_per_spin
+            for run in instance_runs
+        ]
+
+        times = [
+            run.elapsed_time
+            for run in instance_runs
+        ]
+
         successes = sum(
-            energy <= best.energy_per_spin + success_tolerance for energy in energies
+            energy <= best.energy_per_spin + success_tolerance
+            for energy in energies
         )
+
         success_probability = successes / len(instance_runs)
+
         tts = statistics.mean(times) / success_probability
+
         summaries.append(
             InstanceSummary(
                 n=n,
@@ -199,8 +291,19 @@ def write_summary_csv(
     hardware: str,
     program_name: str,
 ) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", newline="", encoding="utf-8") as handle:
+    path.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    # Write the header only if the file does not exist or is empty.
+    write_header = not path.exists() or path.stat().st_size == 0
+
+    with path.open(
+        "a",
+        newline="",
+        encoding="utf-8",
+    ) as handle:
         writer = csv.DictWriter(
             handle,
             fieldnames=[
@@ -215,7 +318,10 @@ def write_summary_csv(
             ],
             lineterminator="\n",
         )
-        writer.writeheader()
+
+        if write_header:
+            writer.writeheader()
+
         for summary in instance_summaries:
             writer.writerow(
                 {
@@ -233,17 +339,42 @@ def write_summary_csv(
 
 def main() -> int:
     args = parse_args()
-    runs, warnings = parse_results(args.input, args.strict_run_seed)
-    instance_summaries = summarize_instances(runs, args.success_tolerance)
 
-    write_summary_csv(
-        args.output, instance_summaries, args.hardware, args.program_name
+    runs, warnings = parse_results(
+        args.input,
+        args.strict_run_seed,
     )
 
-    print(f"wrote {args.output}")
+    if not runs:
+        print(
+            f"error: no valid runs found in {args.input}",
+            file=sys.stderr,
+        )
+        return 1
+
+    instance_summaries = summarize_instances(
+        runs,
+        args.success_tolerance,
+    )
+
+    write_summary_csv(
+        args.output,
+        instance_summaries,
+        args.hardware,
+        args.program_name,
+    )
+
+    print(f"appended results to {args.output}")
+    print(f"parsed {len(runs)} runs")
+    print(f"appended {len(instance_summaries)} instance summaries")
+
     if warnings:
         for warning in warnings:
-            print(f"warning: {warning}", file=sys.stderr)
+            print(
+                f"warning: {warning}",
+                file=sys.stderr,
+            )
+
     return 0
 
 
