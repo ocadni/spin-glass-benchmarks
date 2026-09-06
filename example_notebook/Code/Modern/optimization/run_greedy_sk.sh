@@ -96,24 +96,14 @@ for N in "$@"; do
       current_run_seed="$(random_run_seed)"
     fi
 
-    output="$("$BINARY" "$instance" \
+    "$BINARY" "$instance" \
       --num-spins "$N" \
       --pop-size "$POP_SIZE" \
       --sweeps "$SWEEPS" \
       --mode "$MODE" \
       --zero_fields "$ZERO_FIELDS" \
-      --seed "$current_run_seed")"
-
-    min_energy="$(printf "%s\n" "$output" | awk -F': ' '$1 == "min_energy_per_spin" {print $2}')"
-    elapsed_time="$(printf "%s\n" "$output" | awk -F': ' '$1 == "elapsed_seconds" {print $2}')"
-
-    if [ -z "$min_energy" ] || [ -z "$elapsed_time" ]; then
-      echo "warning: failed to parse greedy output for $instance" >&2
-      printf "%s\n" "$output" >&2
-      continue
-    fi
-
-    printf "%s %s %s %s %s\n" "$N" "$instance_seed" "$current_run_seed" "$min_energy" "$elapsed_time" >> "$RESULTS_FILE"
+      --seed "$current_run_seed" \
+      --instance-seed "$instance_seed" >> "$RESULTS_FILE"
     counter=$((counter + 1))
 
     if [ "$counter" -ge "$MAX_INSTANCES_PER_N" ]; then

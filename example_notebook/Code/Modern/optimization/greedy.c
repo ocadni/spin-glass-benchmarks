@@ -45,6 +45,8 @@ typedef struct {
     int num_spins;
     uint64_t seed;
     int seed_given;
+    uint64_t instance_seed;
+    int instance_seed_given;
     int zero_fields;
 } Options;
 
@@ -156,7 +158,12 @@ static void usage(const char *prog) {
         "  --num-spins N          REQUIRED; authoritative number of spins\n"
         "  --zero_fields BOOL     true: ignore h_i; false: use h_i (default false)\n"
         "  --seed N               RNG seed\n"
+        "  --instance-seed N      REQUIRED; the instance file's own seed, echoed in the result row\n"
         "  -h, --help             show this help\n"
+        "\n"
+        "Prints exactly one result row to stdout on success:\n"
+        "  N instance_seed run_seed min_energy_per_spin elapsed_seconds\n"
+        "All other diagnostics go to stderr.\n"
         "\n"
         "Input format:\n"
         "  first non-empty line: # ... metadata/comment ...\n"
@@ -234,6 +241,8 @@ static Options parse_args(int argc, char **argv) {
             NEED_VALUE(); o.zero_fields = parse_bool(argv[i], "zero_fields");
         } else if (!strcmp(a, "--seed")) {
             NEED_VALUE(); o.seed = parse_u64(argv[i], "seed"); o.seed_given = 1;
+        } else if (!strcmp(a, "--instance-seed")) {
+            NEED_VALUE(); o.instance_seed = parse_u64(argv[i], "instance-seed"); o.instance_seed_given = 1;
         } else if (!strcmp(a, "-h") || !strcmp(a, "--help")) {
             usage(argv[0]); exit(EXIT_SUCCESS);
         } else {
@@ -247,6 +256,7 @@ static Options parse_args(int argc, char **argv) {
     if (o.pop_size <= 0) die("--pop-size must be > 0");
     if (o.sweeps < 0) die("--sweeps must be >= 0");
     if (o.num_spins <= 0) die("--num-spins N is mandatory and must be > 0");
+    if (!o.instance_seed_given) die("--instance-seed is mandatory (the instance file's own seed, for the results row)");
     return o;
 }
 
@@ -747,23 +757,24 @@ int main(int argc, char **argv) {
     int early_stop = (max_flips < total_steps);
     double mean_final = sum_final / (double)o.pop_size;
 
+    /* Diagnostics go to stderr -- stdout carries only the one result row below,
+       so callers can redirect stdout straight into a results file with no parsing. */
     if (early_stop) {
-        printf("[%s] All replicas reached a local minimum at step %ld / %ld.\n",
-               mode_name_upper(o.mode), max_flips, total_steps);
+        fprintf(stderr, "[%s] All replicas reached a local minimum at step %ld / %ld.\n",
+                mode_name_upper(o.mode), max_flips, total_steps);
     }
+    fprintf(stderr, "instance: %s\n", o.instance);
+    fprintf(stderr, "edges: %zu\n", g.m);
+    fprintf(stderr, "fields_in_file: %s\n", g.has_fields ? "yes" : "no");
+    fprintf(stderr, "zero_fields: %s\n", o.zero_fields ? "true" : "false");
+    fprintf(stderr, "mode: %s\n", mode_name(o.mode));
+    fprintf(stderr, "pop_size: %ld\n", o.pop_size);
+    fprintf(stderr, "sweeps: %ld\n", o.sweeps);
+    fprintf(stderr, "final_mean_energy_per_spin: %.8f\n", mean_final);
 
-    printf("instance: %s\n", o.instance);
-    printf("N: %d\n", g.n);
-    printf("edges: %zu\n", g.m);
-    printf("fields_in_file: %s\n", g.has_fields ? "yes" : "no");
-    printf("zero_fields: %s\n", o.zero_fields ? "true" : "false");
-    printf("mode: %s\n", mode_name(o.mode));
-    printf("pop_size: %ld\n", o.pop_size);
-    printf("sweeps: %ld\n", o.sweeps);
-    printf("min_energy_per_spin: %.8f\n", min_final);
-    printf("final_mean_energy_per_spin: %.8f\n", mean_final);
-    printf("elapsed_seconds: %.6f\n", elapsed);
-    printf("seed: %" PRIu64 "\n", o.seed);
+    /* N instance_seed run_seed min_energy_per_spin elapsed_seconds */
+    printf("%d %" PRIu64 " %" PRIu64 " %.8f %.6f\n",
+           g.n, o.instance_seed, o.seed, min_final, elapsed);
 
     free(res);
     free_graph(&g);

@@ -55,6 +55,10 @@ FAMILY_LABELS = {
 # which "Best" sections are un-hidden (.content-hidden) in docs/results.qmd.
 VISIBLE_FAMILIES = ("sk",)
 
+# Algorithm tabs shown in the "All" section, even before every algorithm has
+# uploaded results. Extra algorithm names found in summary.csv are appended.
+VISIBLE_ALGORITHMS = ("Greedy", "Random", "Reluctant")
+
 
 @dataclass(frozen=True)
 class Row:
@@ -209,17 +213,25 @@ def render_all_section(rows_by_family: dict[str, list[Row]]) -> str:
         for row in rows_by_family.get(family, []):
             algorithms.setdefault(row.program_name, {}).setdefault(family, []).append(row)
 
-    if not algorithms:
+    if not algorithms and not VISIBLE_ALGORITHMS:
         return "TODO: populate from experiments."
 
     blocks = ["::: {.panel-tabset}"]
-    for algorithm in sorted(algorithms):
+    extra_algorithms = sorted(
+        algorithm for algorithm in algorithms if algorithm not in VISIBLE_ALGORITHMS
+    )
+    for algorithm in (*VISIBLE_ALGORITHMS, *extra_algorithms):
         blocks.append(f"\n## {algorithm}\n")
-        families_for_algorithm = algorithms[algorithm]
+        families_for_algorithm = algorithms.get(algorithm, {})
+        visible_families = [
+            family for family in VISIBLE_FAMILIES if family in families_for_algorithm
+        ]
+        if not visible_families:
+            blocks.append("TODO: populate from experiments.")
+            continue
+
         blocks.append("::: {.panel-tabset}")
-        for family in VISIBLE_FAMILIES:
-            if family not in families_for_algorithm:
-                continue
+        for family in visible_families:
             label = FAMILY_LABELS.get(family, family)
             blocks.append(f"\n### {label}\n")
             family_rows = families_for_algorithm[family]
