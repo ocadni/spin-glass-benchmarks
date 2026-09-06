@@ -4,7 +4,7 @@ project:
   render:
     - index.qmd
     - problem_definition.qmd
-    - literature_references.qmd
+    # - literature_references.qmd
     - results.qmd
     - file_format.qmd
     - project_contract.qmd
@@ -21,8 +21,8 @@ website:
         href: index.qmd
       - text: "Problems"
         href: problem_definition.qmd
-      - text: "Literature"
-        href: literature_references.qmd
+      # - text: "Literature"
+      #   href: literature_references.qmd
       - text: "Results"
         href: results.qmd
     right:
