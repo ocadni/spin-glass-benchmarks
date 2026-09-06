@@ -157,6 +157,10 @@ not native to most near-term quantum hardware. Therefore, when SK is used on
 sparse hardware, one must distinguish algorithmic difficulty from the overhead of
 embedding a dense graph into a sparse device topology.
 
+<div style="color: #c1121f; font-weight: 600; margin: 1rem 0;">
+For now, only SK has been added. EA, random graph, and XORSAT problems will be added in the future.
+</div>
+
 ## Edwards--Anderson model {#sec-ea}
 
 ### Definition
