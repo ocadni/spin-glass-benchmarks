@@ -35,7 +35,7 @@ typedef struct {
     real_t *weight;       /* CSR weights, 2m */
 } Graph;
 
-typedef enum { MODE_RANDOM = 0, MODE_RELUCTANT = 1 } Mode;
+typedef enum { MODE_RANDOM = 0, MODE_RELUCTANT = 1, MODE_GREEDY = 2 } Mode;
 
 typedef struct {
     const char *instance;
@@ -55,13 +55,14 @@ typedef struct {
 typedef struct {
     int8_t *spin;
     real_t *effective_field; /* h_i + sum_j J_ij s_j (or pairwise part only with --zero_fields true) */
+    Mode mode;
 
     /* random mode: dense O(1) removable set of downhill spins */
     int *moves;
     int *pos;
     int move_count;
 
-    /* reluctant mode: indexed max heap ordered by delta E (<0, closest to zero) */
+    /* heap modes: reluctant picks delta E closest to 0; greedy picks most negative delta E */
     int *heap;
     int *hpos;
     uint64_t *tie;
@@ -151,7 +152,7 @@ static void usage(const char *prog) {
         "Options:\n"
         "  --pop-size N           replicas (default 1000)\n"
         "  --sweeps N             max greedy sweeps (default 5)\n"
-        "  --mode random|reluctant (default random)\n"
+        "  --mode random|reluctant|greedy (default random)\n"
         "  --num-spins N          REQUIRED; authoritative number of spins\n"
         "  --zero_fields BOOL     true: ignore h_i; false: use h_i (default false)\n"
         "  --seed N               RNG seed\n"
@@ -222,7 +223,8 @@ static Options parse_args(int argc, char **argv) {
             NEED_VALUE();
             if (!strcmp(argv[i], "random")) o.mode = MODE_RANDOM;
             else if (!strcmp(argv[i], "reluctant")) o.mode = MODE_RELUCTANT;
-            else die("--mode must be random or reluctant");
+            else if (!strcmp(argv[i], "greedy")) o.mode = MODE_GREEDY;
+            else die("--mode must be random, reluctant, or greedy");
         } else if (!strcmp(a, "--num-spins")) {
             NEED_VALUE();
             long n = parse_long(argv[i], "num-spins");
@@ -455,6 +457,7 @@ static void free_graph(Graph *g) {
 static Workspace workspace_create(int n, Mode mode) {
     Workspace w;
     memset(&w, 0, sizeof(w));
+    w.mode = mode;
     w.spin = (int8_t *)xaligned((size_t)n * sizeof(*w.spin));
     w.effective_field = (real_t *)xaligned((size_t)n * sizeof(*w.effective_field));
     if (mode == MODE_RANDOM) {
@@ -511,11 +514,20 @@ static inline void set_refresh(Workspace *w, int i) {
     }
 }
 
-/* ---------- indexed heap for reluctant mode ---------- */
+/* ---------- indexed heap for reluctant / greedy modes ---------- */
 static inline int heap_better(const Workspace *w, int a, int b) {
     real_t da = delta_e(w, a), db = delta_e(w, b);
-    if (da > db) return 1;  /* both negative: larger = closer to zero */
-    if (da < db) return 0;
+
+    if (w->mode == MODE_GREEDY) {
+        /* Both are downhill: more negative delta E = greater energy decrease. */
+        if (da < db) return 1;
+        if (da > db) return 0;
+    } else {
+        /* Reluctant: less negative delta E = smallest available energy decrease. */
+        if (da > db) return 1;
+        if (da < db) return 0;
+    }
+
     return w->tie[a] > w->tie[b];
 }
 
@@ -638,7 +650,7 @@ static inline void apply_flip_random(const Graph *g, Workspace *w, int k, double
     for (size_t a = begin; a < end; ++a) set_refresh(w, g->nbr[a]);
 }
 
-static inline void apply_flip_reluctant(const Graph *g, Workspace *w, int k, RNG *rng, double *energy) {
+static inline void apply_flip_heap(const Graph *g, Workspace *w, int k, RNG *rng, double *energy) {
     const int old = w->spin[k];
     const real_t de = delta_e(w, k);
     *energy += (double)de;
@@ -671,13 +683,31 @@ static ReplicaResult run_replica(const Graph *g, Workspace *w, const Options *o,
         } else {
             if (w->heap_size == 0) break;
             k = w->heap[0];
-            apply_flip_reluctant(g, w, k, &rng, &energy);
+            apply_flip_heap(g, w, k, &rng, &energy);
         }
         ++flips;
     }
 
     ReplicaResult r = {energy, flips};
     return r;
+}
+
+static const char *mode_name(Mode mode) {
+    switch (mode) {
+        case MODE_RANDOM: return "random";
+        case MODE_RELUCTANT: return "reluctant";
+        case MODE_GREEDY: return "greedy";
+        default: return "unknown";
+    }
+}
+
+static const char *mode_name_upper(Mode mode) {
+    switch (mode) {
+        case MODE_RANDOM: return "RANDOM";
+        case MODE_RELUCTANT: return "RELUCTANT";
+        case MODE_GREEDY: return "GREEDY";
+        default: return "UNKNOWN";
+    }
 }
 
 int main(int argc, char **argv) {
@@ -719,7 +749,7 @@ int main(int argc, char **argv) {
 
     if (early_stop) {
         printf("[%s] All replicas reached a local minimum at step %ld / %ld.\n",
-               o.mode == MODE_RANDOM ? "RANDOM" : "RELUCTANT", max_flips, total_steps);
+               mode_name_upper(o.mode), max_flips, total_steps);
     }
 
     printf("instance: %s\n", o.instance);
@@ -727,7 +757,7 @@ int main(int argc, char **argv) {
     printf("edges: %zu\n", g.m);
     printf("fields_in_file: %s\n", g.has_fields ? "yes" : "no");
     printf("zero_fields: %s\n", o.zero_fields ? "true" : "false");
-    printf("mode: %s\n", o.mode == MODE_RANDOM ? "random" : "reluctant");
+    printf("mode: %s\n", mode_name(o.mode));
     printf("pop_size: %ld\n", o.pop_size);
     printf("sweeps: %ld\n", o.sweeps);
     printf("min_energy_per_spin: %.8f\n", min_final);
