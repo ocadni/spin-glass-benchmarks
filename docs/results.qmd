@@ -4,45 +4,7 @@ subtitle: "Benchmark instances, solver runs, and reported metrics"
 date: last-modified
 ---
 
-This page summarizes solver results per model family. Tables are generated
-from `experiments/**/summary.csv` files by
-`scripts/generate_results_tables.py` — run that script and re-render the site
-to refresh them (do not hand-edit content between the `AUTO-GENERATED`
-markers below, it will be overwritten).
-
-“Average steps” reports the mean number of spin flips per replica, averaged
-across runs for an instance. The optional `average_steps` CSV column supplies
-this value; “—” means step data was not recorded for every run. It is shown
-only in the All section's tables, not the leaderboard.
-
-To append solver output to a summary, run (from the repository root):
-
-```bash
-python example_notebook/Code/Modern/optimization/analizer.py \
-  --input experiments/sapienza/code/greedy_code/results_greedy.txt \
-  --program-name Greedy
-python scripts/generate_results_tables.py
-quarto render docs --to html
-```
-
-Use the matching input and program name for Random and Reluctant. The analyzer
-appends rows, so rerunning it on the same file adds duplicates. It reads the
-solver's first column as average steps, or the second column when PBS has
-prepended a repeat counter, then averages the values by `(N, instance_seed)`.
-Existing summaries are upgraded with the new column when needed; their older
-rows retain blank step values.
-
-Only the SK family is shown for now; other families are commented out below
-(wrapped in `.content-hidden` divs) until there's real data for them.
-
 # Leaderboard
-
-Use the tabs to switch between system sizes. Within each table, one row is shown
-per instance: the best run, ranked by lowest energy. Energies within an absolute
-tolerance of 10⁻⁶ of the instance's lowest reported energy are treated as tied,
-with ties broken by lowest TTS. This avoids ranking numerical differences below
-the displayed precision ahead of runtime. Comparisons use the reported metrics;
-the tolerance does not establish that two runs reached the same configuration.
 
 ## Sherrington-Kirkpatrick (SK)
 
@@ -1346,9 +1308,6 @@ TODO: populate from experiments.
 :::
 
 # All
-
-Every recorded run, grouped by algorithm, instance type, and system size. Use
-the tabs to switch between algorithms, instance types, and N values.
 
 <!-- BEGIN AUTO-GENERATED: all -->
 ::: {.panel-tabset}

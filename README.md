@@ -12,7 +12,7 @@
 
 - **190 benchmark instances** across SK, EA2D, EA3D, RRG families → [Details](https://ocadni.github.io/spin-glass-benchmarks/implementation/instances.html)
 - **5 GPU-accelerated solvers**: SA, PA, PT, GA, Greedy → [Coverage matrix](https://ocadni.github.io/spin-glass-benchmarks/implementation/solvers.html)
-- **Experimental framework** for reproducible runs → [Guide](experiments/QUICKSTART.md)
+- **Group submissions**: solver code + benchmark results per group → [Guide](experiments/QUICKSTART.md)
 
 **Learn more**: [Problem definitions](https://ocadni.github.io/spin-glass-benchmarks/problem_definition.html) | [Literature](https://ocadni.github.io/spin-glass-benchmarks/literature_references.html) | [Implementation status](https://ocadni.github.io/spin-glass-benchmarks/implementation/status.html)
 
@@ -53,14 +53,11 @@ print(f"Loaded {couplings.shape[0]} spins")
 ### 3. Run Example
 
 ```bash
-# Quick test (~30 seconds)
-./experiments/biazzin/sk_ga_initial/run_experiment.sh
-
-# Paper reproduction (~1 hour on GPU)
-./experiments/biazzin/ea3d_ga_pa_paper_pilot/run_experiment.sh
+# Run the sapienza group's greedy solver on the SK instances
+./experiments/sapienza/code/greedy_code/run_greedy_sk.sh 50 100 200
 ```
 
-[Create your own experiment →](experiments/QUICKSTART.md)
+[Submit your own group's results →](experiments/QUICKSTART.md)
 
 ---
 
@@ -95,24 +92,22 @@ print(f"Loaded {couplings.shape[0]} spins")
 
 ---
 
-## Running Experiments
+## Submitting Results
 
-The experimental framework provides batch execution, progress tracking, and automatic result storage.
+`experiments/<group_name>/` is where each participating group submits their
+solver code (`code/`) and benchmark results (`results/<family>/summary.csv`,
+with an optional `notes.md`). Mandatory `summary.csv` columns: `N`, `seed`,
+`min_energy`, `average_time`, `success_probability`, `TTS`, `hardware`,
+`program_name` — extra columns are allowed. See
+[experiments/sapienza/](experiments/sapienza/) for a working example.
 
-**Create experiment**:
+Once a `summary.csv` is added or updated, regenerate the site tables:
 ```bash
-# Copy template
-cp experiments/run_experiment_template.sh experiments/yourname/my_experiment/
-
-# Edit configs (experiment_meta.json, algorithm/config.json)
-
-# Run
-./experiments/yourname/my_experiment/run_experiment.sh
+python scripts/generate_results_tables.py
+quarto render docs --to html
 ```
 
-**Results are saved to**: `experiments/yourname/my_experiment/algorithm/runs/`
-
-[Full guide →](experiments/QUICKSTART.md) | [Framework reference →](experiments/README.md)
+[Full guide →](experiments/QUICKSTART.md) | [Submission reference →](experiments/README.md)
 
 ---
 
@@ -152,10 +147,9 @@ python -m pytest tests/generators/test_reference_instances.py
 
 ### Technical Guides
 
-- **[experiments/QUICKSTART.md](experiments/QUICKSTART.md)** - Create your first experiment
-- **[experiments/README.md](experiments/README.md)** - Framework reference
+- **[experiments/QUICKSTART.md](experiments/QUICKSTART.md)** - Submit your group's results
+- **[experiments/README.md](experiments/README.md)** - Submission reference
 - **[environments/README.md](environments/README.md)** - Setup troubleshooting
-- **[experiments/biazzin/ea3d_ga_pa_paper_pilot/README_PLOTS.md](experiments/biazzin/ea3d_ga_pa_paper_pilot/README_PLOTS.md)** - Example analysis
 
 ---
 
@@ -169,35 +163,14 @@ instances/          # 📦 Benchmark instances (main content)
 └── rrg/           # Random Regular Graph (50 instances)
 
 generators/         # Instance generation tools
-experiments/sapienza/ # 🔧 Solver implementations (PyTorch, GPU)
-experiments/        # 📊 Experimental framework (optional)
+experiments/        # 📊 Group submissions: solver code + benchmark results
+├── sapienza/      # e.g. code/ (solver code) + results/<family>/summary.csv
 docs/               # 🌐 Documentation site (Quarto)
 environments/       # Conda environment specifications
 tests/              # Test suites, fixtures, baselines, and plot checks
 ```
 
 [Architecture details →](https://ocadni.github.io/spin-glass-benchmarks/implementation/architecture.html)
-
----
-
-## Example: EA3D Paper Reproduction
-
-Reproduce key results from **Del Bono et al., PNAS 2025**:
-
-```bash
-# Run experiment (102 runs, ~1 hour on GPU)
-./experiments/biazzin/ea3d_ga_pa_paper_pilot/run_experiment.sh
-
-# View results
-cat experiments/biazzin/ea3d_ga_pa_paper_pilot/README_PLOTS.md
-```
-
-**Findings**:
-- GA achieves better energy than PA on all 11/11 instances
-- GA reaches 90% success rate at ~42s, PA doesn't reach 90% within time limit
-- GA shows 1.78× lower variance across seeds (more robust)
-
-[Full analysis →](experiments/biazzin/ea3d_ga_pa_paper_pilot/README_PLOTS.md)
 
 ---
 
@@ -244,8 +217,7 @@ conda env create -f environments/solvers-core-gpu.yml
 conda activate sgbench-solvers-gpu
 
 # === Run Examples ===
-./experiments/biazzin/sk_ga_initial/run_experiment.sh
-./experiments/biazzin/ea3d_ga_pa_paper_pilot/run_experiment.sh
+./experiments/sapienza/code/greedy_code/run_greedy_sk.sh 50 100 200
 
 # === Generate Instances ===
 conda activate sgbench-generators
