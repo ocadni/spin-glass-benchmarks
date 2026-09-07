@@ -6,6 +6,13 @@ date: last-modified
 
 # Leaderboard
 
+TTS is the standard time-to-solution metric (Ronnow et al. 2014):
+$\mathrm{TTS}_p = \bar{t} \cdot \log(1-p) / \log(1-P_s)$, the expected total
+time, running independent restarts, needed to be $p$-confident of finding the
+best-found energy at least once, where $\bar{t}$ is the mean per-run time and
+$P_s$ is the empirical single-run success probability. This site uses
+$p = 0.99$, the field's standard convention.
+
 <details open>
 <summary>Show tables</summary>
 

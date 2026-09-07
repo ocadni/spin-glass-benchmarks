@@ -19,6 +19,13 @@ already averages spin flips over replicas). If any run lacks steps, the
 instance's average_steps is left blank.
 
 The generated rows are appended to summary.csv.
+
+TTS follows the standard time-to-solution convention (Ronnow et al. 2014):
+TTS_p = mean_run_time * log(1 - p) / log(1 - success_probability), the total
+time needed, running independent restarts, to be p-confident of having found
+the best-found energy at least once. p defaults to 0.99. success_probability
+== 1 is treated as needing a single run (TTS_p = mean_run_time); == 0 is
+treated as never succeeding (TTS_p = inf).
 """
 
 from __future__ import annotations
@@ -51,6 +58,7 @@ DEFAULT_OUTPUT = (
 
 DEFAULT_PROGRAM_NAME = "Random Greedy"
 MAX_RUN_SEED = 2**31 - 1
+DEFAULT_TTS_TARGET_PROBABILITY = 0.99
 
 
 @dataclass(frozen=True)
@@ -126,7 +134,22 @@ def parse_args() -> argparse.Namespace:
         help=f"skip rows whose run_seed is outside [0, {MAX_RUN_SEED}]",
     )
 
-    return parser.parse_args()
+    parser.add_argument(
+        "--tts-target-probability",
+        type=float,
+        default=DEFAULT_TTS_TARGET_PROBABILITY,
+        help=(
+            "target confidence p for TTS_p (default: "
+            f"{DEFAULT_TTS_TARGET_PROBABILITY}, the standard convention)"
+        ),
+    )
+
+    args = parser.parse_args()
+
+    if not 0.0 < args.tts_target_probability < 1.0:
+        parser.error("--tts-target-probability must be strictly between 0 and 1")
+
+    return args
 
 
 def parse_results(
@@ -218,6 +241,31 @@ def parse_results(
     return runs, warnings
 
 
+def compute_tts(
+    mean_time: float,
+    success_probability: float,
+    target_probability: float,
+) -> float:
+    """Standard percentile time-to-solution, TTS_p (Ronnow et al. 2014).
+
+    The expected total time, running independent restarts, needed to be
+    target_probability-confident of having found the best-found energy at
+    least once.
+    """
+    if success_probability <= 0.0:
+        return float("inf")
+    if success_probability >= 1.0:
+        return mean_time
+    restarts_needed = math.log1p(-target_probability) / math.log1p(-success_probability)
+    return mean_time * restarts_needed
+
+
+def format_probability(value: float) -> str:
+    """Format a probability with at most 5 decimal places, trailing zeros trimmed."""
+    text = f"{value:.5f}".rstrip("0").rstrip(".")
+    return text if text else "0"
+
+
 def stddev(values: list[float]) -> float:
     if len(values) < 2:
         return 0.0
@@ -228,6 +276,7 @@ def stddev(values: list[float]) -> float:
 def summarize_instances(
     runs: list[Run],
     success_tolerance: float,
+    tts_target_probability: float = DEFAULT_TTS_TARGET_PROBABILITY,
 ) -> list[InstanceSummary]:
     grouped: dict[tuple[int, int], list[Run]] = defaultdict(list)
 
@@ -263,7 +312,9 @@ def summarize_instances(
 
         success_probability = successes / len(instance_runs)
 
-        tts = statistics.mean(times) / success_probability
+        tts = compute_tts(
+            statistics.mean(times), success_probability, tts_target_probability
+        )
         steps = [run.average_steps for run in instance_runs if run.average_steps is not None]
 
         summaries.append(
@@ -355,7 +406,7 @@ def write_summary_csv(
                     "seed": summary.instance_seed,
                     "min_energy": f"{summary.best_energy:.12g}",
                     "average_time": f"{summary.mean_elapsed_time:.12g}",
-                    "success_probability": f"{summary.success_probability:.12g}",
+                    "success_probability": format_probability(summary.success_probability),
                     "TTS": f"{summary.tts:.12g}",
                     "hardware": hardware,
                     "program_name": program_name,
@@ -385,6 +436,7 @@ def main() -> int:
     instance_summaries = summarize_instances(
         runs,
         args.success_tolerance,
+        args.tts_target_probability,
     )
 
     write_summary_csv(

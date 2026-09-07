@@ -188,6 +188,12 @@ def format_steps(row: Row) -> str:
     return f"{row.average_steps:.7g}" if row.average_steps is not None else "—"
 
 
+def format_probability(value: float) -> str:
+    """Format a probability with at most 5 decimal places, trailing zeros trimmed."""
+    text = f"{value:.5f}".rstrip("0").rstrip(".")
+    return text if text else "0"
+
+
 def render_raw_table(rows: list[Row]) -> str:
     rows_by_n: dict[int, list[Row]] = {}
     for row in rows:
@@ -204,7 +210,7 @@ def render_raw_table(rows: list[Row]) -> str:
             lines.append(
                 f"| {row.seed} | {row.min_energy:.7g} | {row.average_time:.7g} "
                 f"| {format_steps(row)} "
-                f"| {row.success_probability:.7g} | {row.hardware} |"
+                f"| {format_probability(row.success_probability)} | {row.hardware} |"
             )
         blocks.append("\n".join(lines))
     blocks.append(":::")

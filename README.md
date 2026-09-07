@@ -10,7 +10,8 @@
 
 ## What's Inside
 
-- **190 benchmark instances** across SK, EA2D, EA3D, RRG families → [Details](https://ocadni.github.io/spin-glass-benchmarks/implementation/instances.html)
+- **1,200 SK benchmark instances** (12 sizes × 100 seeds each), full sets on [Hugging Face](https://huggingface.co/datasets/Laplaxe/spin-glass-benchmarks), a 5-per-size sample committed to the repo → [Details](#available-instances)
+- **EA2D, EA3D, RRG families**: planned, not yet generated → [Details](https://ocadni.github.io/spin-glass-benchmarks/implementation/instances.html)
 - **5 GPU-accelerated solvers**: SA, PA, PT, GA, Greedy → [Coverage matrix](https://ocadni.github.io/spin-glass-benchmarks/implementation/solvers.html)
 - **Group submissions**: solver code + benchmark results per group → [Guide](experiments/QUICKSTART.md)
 
@@ -36,16 +37,14 @@ python -c "import torch; print('CUDA:', torch.cuda.is_available())"
 ### 2. Use Instances
 
 ```python
-from experiments.sapienza.src.io import load_pairwise_couplings
+import sys
+sys.path.insert(0, "generators")
+from pairwise_io import load_pairwise_instance
 
-# Load instance
-couplings = load_pairwise_couplings(
-    "instances/sk/N100/sk_couplings_N100_J0_seed1051730.txt",
-    symmetric=False  # Use True for EA/RRG
+instance = load_pairwise_instance(
+    "instances/sk/N100/sk_couplings_N100_J0_seed1101732.txt"
 )
-
-# couplings is a PyTorch tensor: shape (N, N)
-print(f"Loaded {couplings.shape[0]} spins")
+print(f"Loaded {instance.num_spins} spins, {len(instance.interactions)} couplings")
 ```
 
 [File format docs →](https://ocadni.github.io/spin-glass-benchmarks/file_format.html)
@@ -63,16 +62,50 @@ print(f"Loaded {couplings.shape[0]} spins")
 
 ## Available Instances
 
-| Family | Description | Sizes | Count | Location |
-|--------|-------------|-------|-------|----------|
-| **SK** | Sherrington-Kirkpatrick (fully connected) | 50, 100, 150, 200, 300 | 50 | `instances/sk/` |
-| **EA2D** | 2D Edwards-Anderson (square lattice) | 100, 256, 1024, 2304 | 40 | `instances/ea2d/` |
-| **EA3D** | 3D Edwards-Anderson (cubic lattice) | 512, 1000, 1728, 2744 | 40 | `instances/ea3d/` |
-| **RRG** | Random Regular Graph (k=3) | 50, 100, 150, 200, 300 | 50 | `instances/rrg/` |
+| Family | Description | Sizes | Seeds per size | Location |
+|--------|-------------|-------|-----------------|----------|
+| **SK** | Sherrington-Kirkpatrick (fully connected) | 50, 100, 200, 300, 400, 600, 800, 1000, 1200, 1400, 1600, 2000 | 100 | `instances/sk/` |
 
-**Total**: 180 instances
+**Total**: 1,200 SK instances. Only 5 per size (60 files) are committed to
+the repo, as a quick-access sample — the full set lives on
+[Hugging Face](https://huggingface.co/datasets/Laplaxe/spin-glass-benchmarks)
+and is fetched with the download script below.
+
+**EA2D, EA3D, and RRG** are planned families (see
+[roadmap](https://ocadni.github.io/spin-glass-benchmarks/implementation/roadmap.html))
+but have no generated instances yet — `instances/ea2d/`, `instances/ea3d/`,
+and `instances/rrg/` don't exist until then.
 
 [Instance library details →](https://ocadni.github.io/spin-glass-benchmarks/implementation/instances.html)
+
+### Downloading Instances
+
+The 5-per-size sample committed to the repo is enough to try things out, but
+for the full 1,200-instance SK set (or any subset of it), use
+[`instances/download_instances.py`](instances/download_instances.py):
+
+```bash
+pip install huggingface_hub
+
+# Everything available (currently: all SK instances)
+python instances/download_instances.py --type all
+
+# One family
+python instances/download_instances.py --type sk
+
+# One size (all 100 seeds)
+python instances/download_instances.py --type sk --N 1000
+
+# One specific instance
+python instances/download_instances.py --type sk --N 1000 --seed 2001732
+
+# List what's available without downloading anything
+python instances/download_instances.py --info
+```
+
+Downloaded files land directly under `instances/<family>/N<N>/`, alongside
+the committed sample. `--type ea2d`/`ea3d` are recognized but not yet
+available for download (no instances exist yet — see above).
 
 ---
 
@@ -156,16 +189,17 @@ python -m pytest tests/generators/test_reference_instances.py
 ## Repository Structure
 
 ```
-instances/          # 📦 Benchmark instances (main content)
-├── sk/            # Sherrington-Kirkpatrick (50 instances)
-├── ea2d/          # 2D Edwards-Anderson (40 instances)
-├── ea3d/          # 3D Edwards-Anderson (40 instances)
-└── rrg/           # Random Regular Graph (50 instances)
+instances/          # 📦 Benchmark instances
+├── sk/            # Sherrington-Kirkpatrick — 12 sizes × 100 seeds (5/size committed, rest via download)
+└── download_instances.py  # Fetches full instance sets from Hugging Face
+                            # (ea2d/, ea3d/, rrg/ are planned, not yet generated)
 
-generators/         # Instance generation tools
+generators/         # Instance generation tools (used to create the SK instances above)
 experiments/        # 📊 Group submissions: solver code + benchmark results
-├── sapienza/      # e.g. code/ (solver code) + results/<family>/summary.csv
-docs/               # 🌐 Documentation site (Quarto)
+└── sapienza/      # e.g. code/ (solver code) + results/<family>/summary.csv — see experiments/README.md
+example_notebook/   # Legacy/reference notebook and standalone solver code (C + Python)
+docs/               # 🌐 Documentation site (Quarto) — source for the GitHub Pages site
+scripts/            # Repo-wide utility scripts (e.g. regenerating the results tables)
 environments/       # Conda environment specifications
 tests/              # Test suites, fixtures, baselines, and plot checks
 ```
