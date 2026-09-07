@@ -44,7 +44,7 @@ merge_parts() {
 for MODE in greedy random reluctant; do
     merge_parts \
         "$RESULTS_PARTS_DIR/results_${MODE}_*.txt" \
-        "repeat N instance_seed run_seed min_energy_perspin elapsed_time" \
+        "repeat average_steps N instance_seed run_seed min_energy_perspin elapsed_time" \
         "$SCRIPT_DIR/results_${MODE}.txt"
 done
 

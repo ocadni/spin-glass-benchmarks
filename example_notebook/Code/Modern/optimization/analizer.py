@@ -3,13 +3,20 @@
 
 Supported input formats:
 
-New format:
-    repeat N instance_seed run_seed min_energy_perspin elapsed_time
+Solver format:
+    average_steps N instance_seed run_seed min_energy_perspin elapsed_time
+
+PBS format (the wrapper prepends a repeat counter):
+    repeat average_steps N instance_seed run_seed min_energy_perspin elapsed_time
 
 Old format:
     N instance_seed run_seed min_energy_perspin elapsed_time
 
-The "repeat" column in the new format is ignored.
+The repeat counter is ignored. Legacy six-column files explicitly headed
+"repeat N ..." are also supported, with steps left unknown. Each instance's
+average_steps is the arithmetic mean of its runs' step values (the solver
+already averages spin flips over replicas). If any run lacks steps, the
+instance's average_steps is left blank.
 
 The generated rows are appended to summary.csv.
 """
@@ -18,9 +25,11 @@ from __future__ import annotations
 
 import argparse
 import csv
+import math
 import platform
 import statistics
 import sys
+import tempfile
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
@@ -51,6 +60,7 @@ class Run:
     run_seed: int
     energy_per_spin: float
     elapsed_time: float
+    average_steps: float | None = None
 
 
 @dataclass(frozen=True)
@@ -66,6 +76,7 @@ class InstanceSummary:
     mean_elapsed_time: float
     success_probability: float
     tts: float
+    average_steps: float | None = None
 
 
 def parse_args() -> argparse.Namespace:
@@ -102,8 +113,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--success-tolerance",
         type=float,
-        default=1e-12,
-        help="energy tolerance for counting runs tied with the best energy",
+        default=1e-7,
+        help=(
+            "energy tolerance for counting runs tied with the best energy "
+            "(matches greedy.c's float32 real_t precision)"
+        ),
     )
 
     parser.add_argument(
@@ -121,6 +135,18 @@ def parse_results(
 ) -> tuple[list[Run], list[str]]:
     runs: list[Run] = []
     warnings: list[str] = []
+    legacy_repeat_header = False
+    base_header = [
+        "N", "instance_seed", "run_seed", "min_energy_perspin", "elapsed_time",
+    ]
+    headers = [
+        base_header,
+        ["repeat", *base_header],
+        ["average_steps", *base_header],
+        ["repeat", "average_steps", *base_header],
+        ["mean_flips", *base_header],
+        ["repeat", "mean_flips", *base_header],
+    ]
 
     if not path.exists():
         raise FileNotFoundError(f"results file not found: {path}")
@@ -134,66 +160,39 @@ def parse_results(
 
             parts = line.split()
 
-            # New-format header:
-            # repeat N instance_seed run_seed min_energy_perspin elapsed_time
-            if parts == [
-                "repeat",
-                "N",
-                "instance_seed",
-                "run_seed",
-                "min_energy_perspin",
-                "elapsed_time",
-            ]:
+            if parts in headers:
+                legacy_repeat_header = parts == ["repeat", *base_header]
                 continue
 
-            # Old-format header:
-            # N instance_seed run_seed min_energy_perspin elapsed_time
-            if parts == [
-                "N",
-                "instance_seed",
-                "run_seed",
-                "min_energy_perspin",
-                "elapsed_time",
-            ]:
-                continue
-
-            # New format:
-            # repeat N instance_seed run_seed min_energy_perspin elapsed_time
-            if len(parts) == 6:
-                (
-                    _repeat_str,
-                    n_str,
-                    instance_seed_str,
-                    run_seed_str,
-                    energy_str,
-                    time_str,
-                ) = parts
-
-            # Old format:
-            # N instance_seed run_seed min_energy_perspin elapsed_time
-            elif len(parts) == 5:
-                (
-                    n_str,
-                    instance_seed_str,
-                    run_seed_str,
-                    energy_str,
-                    time_str,
-                ) = parts
-
-            else:
+            if len(parts) not in (5, 6, 7):
                 warnings.append(
-                    f"{path}:{line_number}: expected 5 or 6 columns, "
+                    f"{path}:{line_number}: expected 5, 6 or 7 columns, "
                     f"got {len(parts)}; skipped"
                 )
                 continue
 
+            # Seven-column PBS rows carry steps even under the stale
+            # six-column header produced by older merge_results.sh versions.
+            steps_str = None
+            if len(parts) == 7:
+                steps_str = parts[1]
+            elif len(parts) == 6 and not legacy_repeat_header:
+                steps_str = parts[0]
+            n_str, instance_seed_str, run_seed_str, energy_str, time_str = parts[-5:]
+
             try:
+                average_steps = float(steps_str) if steps_str is not None else None
+                if average_steps is not None and (
+                    not math.isfinite(average_steps) or average_steps < 0
+                ):
+                    raise ValueError("average_steps must be finite and nonnegative")
                 run = Run(
                     n=int(n_str),
                     instance_seed=int(instance_seed_str),
                     run_seed=int(run_seed_str),
                     energy_per_spin=float(energy_str),
                     elapsed_time=float(time_str),
+                    average_steps=average_steps,
                 )
 
             except ValueError as exc:
@@ -265,6 +264,7 @@ def summarize_instances(
         success_probability = successes / len(instance_runs)
 
         tts = statistics.mean(times) / success_probability
+        steps = [run.average_steps for run in instance_runs if run.average_steps is not None]
 
         summaries.append(
             InstanceSummary(
@@ -279,6 +279,9 @@ def summarize_instances(
                 mean_elapsed_time=statistics.mean(times),
                 success_probability=success_probability,
                 tts=tts,
+                average_steps=(
+                    statistics.mean(steps) if len(steps) == len(instance_runs) else None
+                ),
             )
         )
 
@@ -298,6 +301,38 @@ def write_summary_csv(
 
     # Write the header only if the file does not exist or is empty.
     write_header = not path.exists() or path.stat().st_size == 0
+    fieldnames = [
+        "N", "seed", "min_energy", "average_time", "success_probability",
+        "TTS", "hardware", "program_name", "average_steps",
+    ]
+    if not write_header:
+        with path.open(newline="", encoding="utf-8") as handle:
+            reader = csv.DictReader(handle)
+            existing_fields = reader.fieldnames or []
+            if not set(fieldnames[:-1]).issubset(existing_fields):
+                raise ValueError(f"{path}: incompatible summary.csv header")
+            fieldnames = list(existing_fields)
+            if "average_steps" not in fieldnames:
+                fieldnames.append("average_steps")
+                # Upgrade existing rows without changing their metrics or
+                # custom columns. Replace only after the full copy succeeds.
+                temporary_path = None
+                try:
+                    with tempfile.NamedTemporaryFile(
+                        mode="w", newline="", encoding="utf-8",
+                        dir=path.parent, delete=False,
+                    ) as temporary:
+                        temporary_path = Path(temporary.name)
+                        writer = csv.DictWriter(
+                            temporary, fieldnames=fieldnames, lineterminator="\n"
+                        )
+                        writer.writeheader()
+                        writer.writerows(reader)
+                    temporary_path.chmod(path.stat().st_mode & 0o777)
+                    temporary_path.replace(path)
+                finally:
+                    if temporary_path is not None:
+                        temporary_path.unlink(missing_ok=True)
 
     with path.open(
         "a",
@@ -306,16 +341,7 @@ def write_summary_csv(
     ) as handle:
         writer = csv.DictWriter(
             handle,
-            fieldnames=[
-                "N",
-                "seed",
-                "min_energy",
-                "average_time",
-                "success_probability",
-                "TTS",
-                "hardware",
-                "program_name",
-            ],
+            fieldnames=fieldnames,
             lineterminator="\n",
         )
 
@@ -333,6 +359,10 @@ def write_summary_csv(
                     "TTS": f"{summary.tts:.12g}",
                     "hardware": hardware,
                     "program_name": program_name,
+                    "average_steps": (
+                        f"{summary.average_steps:.12g}"
+                        if summary.average_steps is not None else ""
+                    ),
                 }
             )
 

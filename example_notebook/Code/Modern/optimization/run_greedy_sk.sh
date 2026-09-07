@@ -72,7 +72,7 @@ if [ ! -x "$BINARY" ] || [ "$SOURCE" -nt "$BINARY" ]; then
 fi
 
 if [ ! -f "$RESULTS_FILE" ]; then
-  printf "N instance_seed run_seed min_energy_perspin elapsed_time\n" > "$RESULTS_FILE"
+  printf "average_steps N instance_seed run_seed min_energy_perspin elapsed_time\n" > "$RESULTS_FILE"
 fi
 
 for N in "$@"; do

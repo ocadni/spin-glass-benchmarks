@@ -3,7 +3,8 @@
 
 Scans experiments/<researcher>/results/<family>/summary.csv for rows with
 columns (any order): N, seed, min_energy, average_time, success_probability,
-TTS, hardware, program_name.
+TTS, hardware, program_name, plus optional average_steps. Missing step
+measurements are displayed as an em dash in both result tables.
 
 The family (sk/ea2d/ea3d/rrg) is inferred from the name of the directory a
 summary.csv lives in, and the researcher from the path component right after
@@ -76,6 +77,7 @@ class Row:
     hardware: str
     program_name: str
     researcher: str
+    average_steps: float | None = None
 
 
 def find_summary_files() -> list[Path]:
@@ -118,6 +120,10 @@ def parse_summary_file(path: Path) -> list[Row]:
                         hardware=record["hardware"],
                         program_name=record["program_name"],
                         researcher=researcher,
+                        average_steps=(
+                            float(record["average_steps"])
+                            if (record.get("average_steps") or "").strip() else None
+                        ),
                     )
                 )
             except (ValueError, TypeError) as exc:
@@ -139,9 +145,9 @@ def render_table(rows: list[Row]) -> str:
     if not rows:
         return (
             "TODO: populate from experiments.\n\n"
-            "| N | Seed | Best Algorithm | Hardware | Energy | TTS (s) |\n"
-            "|---|------|-----------------|----------|--------|-----|\n"
-            "| TODO | | | | | |"
+            "| N | Seed | Best Algorithm | Hardware | Energy | TTS (s) | Average steps |\n"
+            "|---|------|-----------------|----------|--------|-----|---------------|\n"
+            "| TODO | | | | | | |"
         )
 
     by_instance: dict[tuple[int, int], list[Row]] = {}
@@ -163,18 +169,22 @@ def render_table(rows: list[Row]) -> str:
     for n in sorted(best_by_n):
         lines = [
             f"\n### N = {n}\n",
-            "| Seed | Best Algorithm | Hardware | Energy | TTS (s) |",
-            "|------|----------------|----------|--------|---------|",
+            "| Seed | Best Algorithm | Hardware | Energy | TTS (s) | Average steps |",
+            "|------|----------------|----------|--------|---------|---------------|",
         ]
         for best in sorted(best_by_n[n], key=lambda r: r.seed):
             lines.append(
                 f"| {best.seed} "
                 f"| {best.program_name} | {best.hardware} "
-                f"| {best.min_energy:.6g} | {best.tts:.6g} |"
+                f"| {best.min_energy:.6g} | {best.tts:.6g} | {format_steps(best)} |"
             )
         blocks.append("\n".join(lines))
     blocks.append(":::")
     return "\n".join(blocks)
+
+
+def format_steps(row: Row) -> str:
+    return f"{row.average_steps:.6g}" if row.average_steps is not None else "—"
 
 
 def render_raw_table(rows: list[Row]) -> str:
@@ -186,12 +196,13 @@ def render_raw_table(rows: list[Row]) -> str:
     for n in sorted(rows_by_n):
         lines = [
             f"\n#### N = {n}\n",
-            "| Seed | Energy | Runtime (s) | Success Probability | Hardware |",
-            "|------|--------|-------------|----------------------|----------|",
+            "| Seed | Energy | Runtime (s) | Average steps | Success Probability | Hardware |",
+            "|------|--------|-------------|---------------|----------------------|----------|",
         ]
         for row in sorted(rows_by_n[n], key=lambda r: (r.seed, r.hardware, r.tts)):
             lines.append(
                 f"| {row.seed} | {row.min_energy:.6g} | {row.average_time:.6g} "
+                f"| {format_steps(row)} "
                 f"| {row.success_probability:.6g} | {row.hardware} |"
             )
         blocks.append("\n".join(lines))
