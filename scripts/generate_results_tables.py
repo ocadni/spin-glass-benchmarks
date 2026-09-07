@@ -176,7 +176,7 @@ def render_table(rows: list[Row]) -> str:
             lines.append(
                 f"| {best.seed} "
                 f"| {best.program_name} | {best.hardware} "
-                f"| {best.min_energy:.6g} | {best.tts:.6g} | {format_steps(best)} |"
+                f"| {best.min_energy:.7g} | {best.tts:.7g} | {format_steps(best)} |"
             )
         blocks.append("\n".join(lines))
     blocks.append(":::")
@@ -184,7 +184,7 @@ def render_table(rows: list[Row]) -> str:
 
 
 def format_steps(row: Row) -> str:
-    return f"{row.average_steps:.6g}" if row.average_steps is not None else "—"
+    return f"{row.average_steps:.7g}" if row.average_steps is not None else "—"
 
 
 def render_raw_table(rows: list[Row]) -> str:
@@ -201,9 +201,9 @@ def render_raw_table(rows: list[Row]) -> str:
         ]
         for row in sorted(rows_by_n[n], key=lambda r: (r.seed, r.hardware, r.tts)):
             lines.append(
-                f"| {row.seed} | {row.min_energy:.6g} | {row.average_time:.6g} "
+                f"| {row.seed} | {row.min_energy:.7g} | {row.average_time:.7g} "
                 f"| {format_steps(row)} "
-                f"| {row.success_probability:.6g} | {row.hardware} |"
+                f"| {row.success_probability:.7g} | {row.hardware} |"
             )
         blocks.append("\n".join(lines))
     blocks.append(":::")
