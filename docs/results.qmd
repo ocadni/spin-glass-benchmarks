@@ -6,6 +6,9 @@ date: last-modified
 
 # Leaderboard
 
+<details open>
+<summary>Show tables</summary>
+
 ## Sherrington-Kirkpatrick (SK)
 
 <!-- BEGIN AUTO-GENERATED: sk -->
@@ -1307,7 +1310,12 @@ TODO: populate from experiments.
 
 :::
 
+</details>
+
 # All
+
+<details open>
+<summary>Show tables</summary>
 
 <!-- BEGIN AUTO-GENERATED: all -->
 ::: {.panel-tabset}
@@ -5147,3 +5155,5 @@ This is a test.
 :::
 :::
 <!-- END AUTO-GENERATED: all -->
+
+</details>
