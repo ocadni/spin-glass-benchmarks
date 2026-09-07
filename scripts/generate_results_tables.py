@@ -4,7 +4,8 @@
 Scans experiments/<researcher>/results/<family>/summary.csv for rows with
 columns (any order): N, seed, min_energy, average_time, success_probability,
 TTS, hardware, program_name, plus optional average_steps. Missing step
-measurements are displayed as an em dash in both result tables.
+measurements are displayed as an em dash in the All section's table (the
+Leaderboard does not show steps at all).
 
 The family (sk/ea2d/ea3d/rrg) is inferred from the name of the directory a
 summary.csv lives in, and the researcher from the path component right after
@@ -14,10 +15,10 @@ ranked first by lowest min_energy, energies within 1e-6 of the minimum
 treated as tied, ties broken by lowest TTS (and, in the
 vanishingly unlikely case both are equal too, by program_name then hardware,
 for a fully deterministic result regardless of file/row order). The All
-section instead lists every run (with runtime and success probability, which
-the Leaderboard omits), grouped by algorithm then family, with each
-researcher's notes.md (if present and non-empty) shown as a collapsible
-toggle.
+section instead lists every run (with runtime, success probability, and
+average steps, none of which the Leaderboard shows), grouped by algorithm
+then family, with each researcher's notes.md (if present and non-empty)
+shown as a collapsible toggle.
 
 Usage: python scripts/generate_results_tables.py
 """
@@ -145,9 +146,9 @@ def render_table(rows: list[Row]) -> str:
     if not rows:
         return (
             "TODO: populate from experiments.\n\n"
-            "| N | Seed | Best Algorithm | Hardware | Energy | TTS (s) | Average steps |\n"
-            "|---|------|-----------------|----------|--------|-----|---------------|\n"
-            "| TODO | | | | | | |"
+            "| N | Seed | Best Algorithm | Hardware | Energy | TTS (s) |\n"
+            "|---|------|-----------------|----------|--------|-----|\n"
+            "| TODO | | | | | |"
         )
 
     by_instance: dict[tuple[int, int], list[Row]] = {}
@@ -169,14 +170,14 @@ def render_table(rows: list[Row]) -> str:
     for n in sorted(best_by_n):
         lines = [
             f"\n### N = {n}\n",
-            "| Seed | Best Algorithm | Hardware | Energy | TTS (s) | Average steps |",
-            "|------|----------------|----------|--------|---------|---------------|",
+            "| Seed | Best Algorithm | Hardware | Energy | TTS (s) |",
+            "|------|----------------|----------|--------|---------|",
         ]
         for best in sorted(best_by_n[n], key=lambda r: r.seed):
             lines.append(
                 f"| {best.seed} "
                 f"| {best.program_name} | {best.hardware} "
-                f"| {best.min_energy:.7g} | {best.tts:.7g} | {format_steps(best)} |"
+                f"| {best.min_energy:.7g} | {best.tts:.7g} |"
             )
         blocks.append("\n".join(lines))
     blocks.append(":::")
