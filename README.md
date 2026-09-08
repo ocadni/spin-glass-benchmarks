@@ -33,8 +33,7 @@ advantage of machine learning–enhanced Monte Carlo for combinatorial
 optimization." *Proceedings of the National Academy of Sciences* 123.19
 (2026): e2534768123. As with SK, only 5 per size are committed to the repo
 (N=1000, N=2744); the rest are distributed via the same Hugging Face dataset
-(see Downloading Instances below). Only N=1000 and N=2744 are populated so
-far — N=512 and N=1728 are planned.
+(see Downloading Instances below). Only N=1000 and N=2744 are populated (additional N values are planned).
 
 ### Instance File Format
 
