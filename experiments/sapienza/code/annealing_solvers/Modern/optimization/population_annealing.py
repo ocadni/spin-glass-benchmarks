@@ -39,37 +39,32 @@ def systematic_resampling(probabilities: torch.Tensor, num_samples: int) -> torc
     
     return indices
 
-def population_annealing(L, J, pop_size, num_steps_MC, Tstart, Tend, Observables, 
-                                schedule = "Cv_beta", num_temps_determiner = 0.5, 
-                                high_temp_thermalization_steps = 200, dimension = "3d",
-                                reweight_mode = "multinomial"):
-    #num_temps_determiner is either Cv_factor or the number of temperatures depending on the schedule
+def population_annealing(J, pop_size, num_steps_MC, Tstart, Tend, Observables,
+                                schedule="linearBeta", num_temps=100,
+                                high_temp_thermalization_steps=200,
+                                reweight_mode="multinomial", fields=None):
 
     device = J.device
 
-    #get the indices (needed for the checkerboard update)
-    if dimension == "3d":
-        even_indices, odd_indices = get_indices(L, device=device)
-        N = L*L*L
-    elif dimension == "2d":
-        even_indices, odd_indices = get_indices_2D(L, device=device)
-        N = L*L
-    else:
-        raise ValueError("dimension must be either 3d or 2d")
+    # The coupling graph determines both the number of spins and whether a
+    # checkerboard update is valid.
+    N = get_num_spins(J)
+    energy_function, fields = select_energy_function(J, fields)
+    mc_update, even_indices, odd_indices = select_monte_carlo_update(J, fields)
     
     #set the temperature schedule
-    temperatures = schedule_temperatures(Tstart, Tend, num_temps_determiner, schedule, N)
+    temperatures = schedule_temperatures(Tstart, Tend, num_temps, schedule)
 
     #initialize the population
     population = torch.randint(0, 2, (pop_size,N), device=device).float() * 2 - 1
     
     #initialize the observables
-    observ = Observables(J, N)
+    observ = Observables(J, N, energy_function=energy_function)
 
     # Thermalize the high temperature population
     oldT = temperatures[0]
     for i in range(high_temp_thermalization_steps):
-        population = monte_carlo_update_fast(population, J, beta=1/oldT, even_indices=even_indices, odd_indices=odd_indices)
+        population = mc_update(population, J, beta=1/oldT, even_indices=even_indices, odd_indices=odd_indices)
     observ.update(population) #save the minimum and mean energies
 
 
@@ -80,7 +75,7 @@ def population_annealing(L, J, pop_size, num_steps_MC, Tstart, Tend, Observables
 
         # Perform the lowering themperature step
         DeltaB = 1/T - 1/oldT
-        energies = compute_energy(population, J)
+        energies = energy_function(population, J)
         energies = energies - torch.min(energies)
         #weights = torch.exp(-energies*DeltaB)
         probabilities = torch.softmax(-energies * DeltaB, dim=0)
@@ -95,7 +90,7 @@ def population_annealing(L, J, pop_size, num_steps_MC, Tstart, Tend, Observables
 
         # Monte Carlo updates
         for i in range(num_steps_MC):
-            population = monte_carlo_update_fast(population, J, beta=1/T, even_indices=even_indices, odd_indices=odd_indices)
+            population = mc_update(population, J, beta=1/T, even_indices=even_indices, odd_indices=odd_indices)
         observ.update(population)
     
         # Set T as oldT

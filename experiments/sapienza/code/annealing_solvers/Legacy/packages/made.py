@@ -39,15 +39,17 @@ class AutoregressiveMasking(object):
 # Build the autoregressive model
 class made(nn.Module):
     """Autoregressive MADE (Masked Autoencoder for Distribution Estimation)."""
-    def __init__(self, input_size):
+    def __init__(self, input_size, bias=False):
         """
         Constructor for the MADE model.
 
         Parameters:
         - input_size (int): Size of the input features.
+        - bias (bool): Whether to learn per-spin logits independent of the
+          preceding spins.  This is needed for nonzero external fields.
         """
         super(made, self).__init__()
-        self.layer = nn.Linear(input_size, input_size, bias=False)
+        self.layer = nn.Linear(input_size, input_size, bias=bias)
         # self.constraint = AutoregressiveConstraint()  # Commented out, not used in forward pass
         self.activation = nn.Sigmoid()
 
@@ -71,11 +73,13 @@ class made(nn.Module):
         # Get the n-th row of the weight matrix of the linear layer
         nth_row = self.layer.weight[n]
         x = torch.einsum("ij, j->i", input[:, :n], nth_row[:n])
+        if self.layer.bias is not None:
+            x = x + self.layer.bias[n]
         x = self.activation(2 * x)
         return x
 
 # Train the model
-def train_made(dataset, input_size, epochs=50, batch_size=256, learning_rate=1e-3):
+def train_made(dataset, input_size, epochs=50, batch_size=256, learning_rate=1e-3, bias=False):
     """
     Train the MADE architecture using data.
 
@@ -92,7 +96,7 @@ def train_made(dataset, input_size, epochs=50, batch_size=256, learning_rate=1e-
     global device
     device = get_device(dataset)
     data = torch.clone(dataset)
-    model = made(input_size)
+    model = made(input_size, bias=bias)
     model = model.to(device)
     model.train()
     clipper = AutoregressiveMasking()
@@ -121,7 +125,7 @@ def train_made(dataset, input_size, epochs=50, batch_size=256, learning_rate=1e-
 
     return model
 
-def train_made_improved(dataset, input_size, epochs=50, batch_size=256, patience = 10, learning_rate = 0.001, scheduler_time = 10):
+def train_made_improved(dataset, input_size, epochs=50, batch_size=256, patience = 10, learning_rate = 0.001, scheduler_time = 10, bias=False):
     """
     Train the MADE architecture using data.
 
@@ -138,7 +142,7 @@ def train_made_improved(dataset, input_size, epochs=50, batch_size=256, patience
     global device
     device = get_device(dataset)
     data = torch.clone(dataset)
-    model = made(input_size)
+    model = made(input_size, bias=bias)
     model = model.to(device)
     model.train()
     clipper = AutoregressiveMasking()
@@ -231,3 +235,23 @@ def retrain_made(model, dataset, epochs=50, batch_size=256, learning_rate = 0.00
             model.apply(clipper)
     
     return model
+
+
+def train_made_improved_zero_field(dataset, input_size, **kwargs):
+    """Train the original bias-free MADE used for zero-field instances."""
+    return train_made_improved(dataset, input_size, bias=False, **kwargs)
+
+
+def train_made_improved_with_fields(dataset, input_size, **kwargs):
+    """Train MADE with per-spin bias terms for external-field instances."""
+    return train_made_improved(dataset, input_size, bias=True, **kwargs)
+
+
+def retrain_made_zero_field(model, dataset, **kwargs):
+    """Retrain a bias-free zero-field MADE."""
+    return retrain_made(model, dataset, **kwargs)
+
+
+def retrain_made_with_fields(model, dataset, **kwargs):
+    """Retrain a field-aware MADE whose learned biases are retained."""
+    return retrain_made(model, dataset, **kwargs)
