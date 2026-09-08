@@ -24,6 +24,20 @@ the repo, as a quick-access sample — the full set lives on
 [Hugging Face](https://huggingface.co/datasets/Laplaxe/spin-glass-benchmarks)
 and is fetched with the download script below.
 
+### Instance File Format
+
+Instances are plain-text files. The first line is a `#`-prefixed metadata
+header (for example, `model`, `N`, `seed`, `distribution`, `num_fields`, and
+`num_couplings`). It is followed by `num_fields` rows of the form `i h_i`,
+giving the external field on each zero-based spin index, and then by
+`num_couplings` rows of the form `i j J_ij`, giving the coupling between spins
+`i` and `j`. The SK instances have zero external fields and list every pair of
+spins.
+
+See the [instance file-format specification](https://ocadni.github.io/spin-glass-benchmarks/file_format.html)
+for the complete schema, and the [Problems page](https://ocadni.github.io/spin-glass-benchmarks/problem_definition.html)
+for the mathematical definitions of the benchmark problem families.
+
 ### Downloading Instances
 
 The 5-per-size sample committed to the repo is enough to try things out, but

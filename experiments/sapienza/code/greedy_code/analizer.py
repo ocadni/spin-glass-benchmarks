@@ -261,8 +261,8 @@ def compute_tts(
 
 
 def format_probability(value: float) -> str:
-    """Format a probability with at most 5 decimal places, trailing zeros trimmed."""
-    text = f"{value:.5f}".rstrip("0").rstrip(".")
+    """Format a probability to the 1-in-1,000 experimental resolution."""
+    text = f"{value:.3f}".rstrip("0").rstrip(".")
     return text if text else "0"
 
 
