@@ -158,8 +158,10 @@ def run_solver(args: argparse.Namespace) -> dict[str, object]:
         "num_temperatures": len(temperatures),
         "t_start": float(temperatures[0]),
         "t_end": float(temperatures[-1]),
-        "final_min_energy_per_spin": history["min_energy"][-1],
-        "best_min_energy_per_spin": min(history["min_energy"]),
+        # Rounded to 6 decimals: below float32's noise floor (~1e-7 per accumulated op),
+        # more digits would just report device/kernel-order rounding noise as if it were signal.
+        "final_min_energy_per_spin": round(history["min_energy"][-1], 6),
+        "best_min_energy_per_spin": round(min(history["min_energy"]), 6),
         **timings,
     }
 
@@ -174,8 +176,8 @@ def print_summary(summary: dict[str, object], as_json: bool) -> None:
     print(f"spins: {summary['num_spins']}")
     print(f"external fields: {'nonzero' if summary['has_external_fields'] else 'zero'}")
     print(f"temperatures: {summary['num_temperatures']} ({summary['t_start']} -> {summary['t_end']})")
-    print(f"final minimum energy/spin: {summary['final_min_energy_per_spin']:.8f}")
-    print(f"best minimum energy/spin: {summary['best_min_energy_per_spin']:.8f}")
+    print(f"final minimum energy/spin: {summary['final_min_energy_per_spin']:.6f}")
+    print(f"best minimum energy/spin: {summary['best_min_energy_per_spin']:.6f}")
     if "training_seconds" in summary:
         print(f"training time: {summary['training_seconds']:.3f} s")
         print(f"annealing time: {summary['annealing_seconds']:.3f} s")

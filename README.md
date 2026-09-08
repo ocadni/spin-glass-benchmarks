@@ -91,6 +91,79 @@ python instances/upload_instances.py --type ea3d
 
 ---
 
+## Benchmark Annealing Solvers
+
+Reference annealing solvers are included in the Sapienza submission under
+[`experiments/sapienza/code/annealing_solvers/`](experiments/sapienza/code/annealing_solvers/).
+The easiest entry point is the Modern command-line wrapper:
+[`experiments/sapienza/code/annealing_solvers/Modern/optimization/solver.py`](experiments/sapienza/code/annealing_solvers/Modern/optimization/solver.py).
+It supports simulated annealing (`sa`), population annealing (`pa`), and
+ML-enhanced global annealing (`ga`).
+
+Set up one of the solver environments first:
+
+```bash
+# CPU
+conda env create -f environments/solvers-core-cpu.yml
+conda activate sgbench-solvers-core
+
+# NVIDIA GPU
+conda env create -f environments/solvers-core-gpu.yml
+conda activate sgbench-solvers-gpu
+
+# Apple Silicon / Metal
+conda env create -f environments/solvers-core-mac-gpu.yml
+conda activate sgbench-solvers-mac-gpu
+```
+
+Run a solver on any downloaded or committed instance file:
+
+```bash
+# Simulated annealing
+python experiments/sapienza/code/annealing_solvers/Modern/optimization/solver.py \
+  instances/ea3d/N1000/ea3d_couplings_N1000_J0_seed418527.txt sa \
+  --population-size 256 --num-steps-mc 10 --num-temps 100
+
+# Population annealing
+python experiments/sapienza/code/annealing_solvers/Modern/optimization/solver.py \
+  instances/ea3d/N1000/ea3d_couplings_N1000_J0_seed418527.txt pa \
+  --population-size 256 --num-steps-mc 10 --num-temps 100 \
+  --reweight-mode systematic
+
+# ML-enhanced global annealing
+python experiments/sapienza/code/annealing_solvers/Modern/optimization/solver.py \
+  instances/ea3d/N1000/ea3d_couplings_N1000_J0_seed418527.txt ga \
+  --population-size 256 --num-steps-mc 10 --num-temps 100 \
+  --swap-step 1 --batch-size 256
+```
+
+Common options include `--t-start`, `--t-end`, `--schedule`
+(`linearT`, `linearBeta`, or `logT`), `--thermalization-steps`, `--device`
+(`auto`, `cpu`, `cuda`, or `mps`), and `--seed`. Add `--json` for
+machine-readable output.
+
+By default the wrapper prints a short run summary:
+
+```text
+annealer: sa
+instance: instances/ea3d/N1000/ea3d_couplings_N1000_J0_seed418527.txt
+device: cpu
+spins: 1000
+external fields: zero
+temperatures: 100 (3.0 -> 0.2)
+final minimum energy/spin: -1.234567
+best minimum energy/spin: -1.234567
+total elapsed time: 12.345 s
+```
+
+For `ga`, the output also separates `training time` and `annealing time`.
+With `--json`, the same information is emitted as JSON fields such as
+`annealer`, `instance`, `device`, `num_spins`, `has_external_fields`,
+`num_temperatures`, `final_min_energy_per_spin`,
+`best_min_energy_per_spin`, and `elapsed_seconds`.
+
+---
+
 ## Submitting Results
 
 `experiments/<group_name>/` is where each participating group submits their
