@@ -5,3 +5,7 @@
 !biazzin/sk_ga_initial/
 !biazzin/sk_ga_initial/**/*.json
 biazzin/sk_ga_initial/**/runs/
+
+results_greedy.txt
+results_reluctant.txt
+results_random.txt
