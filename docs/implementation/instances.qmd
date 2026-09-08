@@ -29,7 +29,7 @@ The repository contains **190 pre-generated, deterministic benchmark instances**
 |--------|------|-------|----------------|-------|
 | **SK** | Fully connected | 5 sizes | 10 | **50** |
 | **EA2D** | 2D lattice | 4 sizes | 10 | **40** |
-| **EA3D** | 3D lattice | 2 of 4 planned sizes generated | 12–200 | **212** |
+| **EA3D** | 3D lattice | 2 of 4 planned sizes generated | 10–200 | **210** |
 | **RRG** | Sparse graph | 5 sizes | 10 | **50** |
 | **XOR-SAT** | SAT constraints | — | — | **0** (planned) |
 
@@ -113,7 +113,7 @@ The repository contains **190 pre-generated, deterministic benchmark instances**
 | Size | Lattice | Spins | Couplings | Instances |
 |------|---------|-------|-----------|-----------|
 | N=1000 | 10×10×10 | 1,000 | 3,000 | 200 |
-| N=2744 | 14×14×14 | 2,744 | 8,232 | 12 |
+| N=2744 | 14×14×14 | 2,744 | 8,232 | 10 |
 | N=512 (planned) | 8×8×8 | 512 | 1,536 | — |
 | N=1728 (planned) | 12×12×12 | 1,728 | 5,184 | — |
 

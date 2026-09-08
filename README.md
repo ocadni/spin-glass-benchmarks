@@ -10,7 +10,7 @@
 ## What's Inside
 
 - **1,200 SK benchmark instances** (12 sizes × 100 seeds each), full sets on [Hugging Face](https://huggingface.co/datasets/Laplaxe/spin-glass-benchmarks), a 5-per-size sample committed to the repo → [Details](#available-instances)
-- **212 EA3D (3D Edwards-Anderson) benchmark instances** (N=1000 and N=2744), taken from [Del Bono, Ricci-Tersenghi & Zamponi, PNAS 2026](https://doi.org/10.1073/pnas.2534768123), full sets on [Hugging Face](https://huggingface.co/datasets/Laplaxe/spin-glass-benchmarks), a 5-per-size sample committed to the repo → [Details](#available-instances)
+- **210 EA3D (3D Edwards-Anderson) benchmark instances** (N=1000 and N=2744), taken from [Del Bono, Ricci-Tersenghi & Zamponi, PNAS 2026](https://doi.org/10.1073/pnas.2534768123), full sets on [Hugging Face](https://huggingface.co/datasets/Laplaxe/spin-glass-benchmarks), a 5-per-size sample committed to the repo → [Details](#available-instances)
 - **Group submissions**: solver code + benchmark results per group → [Guide](experiments/QUICKSTART.md)
 ---
 
@@ -26,8 +26,8 @@ the repo, as a quick-access sample — the full set lives on
 [Hugging Face](https://huggingface.co/datasets/Laplaxe/spin-glass-benchmarks)
 and is fetched with the download script below.
 
-**EA3D**: 212 instances total (N=1000: 200 instances, all with exactly known
-ground-state energies; N=2744: 12 instances), taken from Del Bono, Luca
+**EA3D**: 210 instances total (N=1000: 200 instances, all with exactly known
+ground-state energies; N=2744: 10 instances), taken from Del Bono, Luca
 Maria, Federico Ricci-Tersenghi, and Francesco Zamponi. "Demonstrating real
 advantage of machine learning–enhanced Monte Carlo for combinatorial
 optimization." *Proceedings of the National Academy of Sciences* 123.19
