@@ -1292,6 +1292,10 @@ shows "—", since no algorithm can be credited with having solved it.
 
 ## Edwards-Anderson 3D (EA3D)
 
+The N = 1000 instances are taken from Del Bono, Ricci-Tersenghi, and Zamponi
+(PNAS 2026) [@delbono2026], which also provides their exact ground-state
+energies — see the Reference Energy column below.
+
 <!-- BEGIN AUTO-GENERATED: ea3d -->
 ::: {.panel-tabset}
 

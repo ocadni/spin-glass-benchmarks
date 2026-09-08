@@ -10,6 +10,7 @@
 ## What's Inside
 
 - **1,200 SK benchmark instances** (12 sizes × 100 seeds each), full sets on [Hugging Face](https://huggingface.co/datasets/Laplaxe/spin-glass-benchmarks), a 5-per-size sample committed to the repo → [Details](#available-instances)
+- **212 EA3D (3D Edwards-Anderson) benchmark instances** (N=1000 and N=2744), taken from [Del Bono, Ricci-Tersenghi & Zamponi, PNAS 2026](https://doi.org/10.1073/pnas.2534768123) → [Details](#available-instances)
 - **Group submissions**: solver code + benchmark results per group → [Guide](experiments/QUICKSTART.md)
 ---
 
@@ -18,11 +19,20 @@
 | Family | Description | Sizes | Seeds per size | Location |
 |--------|-------------|-------|-----------------|----------|
 | **SK** | Sherrington-Kirkpatrick (fully connected) | 50, 100, 200, 300, 400, 600, 800, 1000, 1200, 1400, 1600, 2000 | 100 | `instances/sk/` |
+| **EA3D** | Edwards-Anderson, 3D cubic lattice, periodic boundaries | 1000, 2744 | 200, 12 | `instances/EA3D/` |
 
 **Total**: 1,200 SK instances. Only 5 per size (60 files) are committed to
 the repo, as a quick-access sample — the full set lives on
 [Hugging Face](https://huggingface.co/datasets/Laplaxe/spin-glass-benchmarks)
 and is fetched with the download script below.
+
+**EA3D**: 212 instances (N=1000: 200 instances, all with exactly known
+ground-state energies; N=2744: 12 instances), taken from Del Bono, Luca
+Maria, Federico Ricci-Tersenghi, and Francesco Zamponi. "Demonstrating real
+advantage of machine learning–enhanced Monte Carlo for combinatorial
+optimization." *Proceedings of the National Academy of Sciences* 123.19
+(2026): e2534768123. Only N=1000 and N=2744 are populated so far; N=512 and
+N=1728 are planned.
 
 ### Instance File Format
 
@@ -64,8 +74,10 @@ python instances/download_instances.py --info
 ```
 
 Downloaded files land directly under `instances/<family>/N<N>/`, alongside
-the committed sample. `--type ea2d`/`ea3d` are recognized but not yet
-available for download (no instances exist yet — see above).
+the committed sample. `--type ea2d`/`ea3d` are recognized by the CLI, but the
+download script does not yet fetch them from Hugging Face — EA3D instances
+(N=1000, N=2744) currently live only under `instances/EA3D/` in this
+repository (see above). `--type ea2d` still has no instances at all.
 
 ---
 

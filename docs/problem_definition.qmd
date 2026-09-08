@@ -158,7 +158,7 @@ sparse hardware, one must distinguish algorithmic difficulty from the overhead o
 embedding a dense graph into a sparse device topology.
 
 <div style="color: #c1121f; font-weight: 600; margin: 1rem 0;">
-For now, only SK has been added. EA, random graph, and XORSAT problems will be added in the future.
+For now, SK and three-dimensional EA (EA3D) have been added. 2D EA, random graph, and XORSAT problems will be added in the future.
 </div>
 
 ## Edwards--Anderson model {#sec-ea}
@@ -201,6 +201,10 @@ tractable, and the ground-state problem becomes NP-hard [@barahona1982]. The 3D
 model is therefore a natural finite-dimensional hard benchmark: it preserves
 local interactions and geometric structure, but it is no longer an exactly
 solvable validation case.
+
+The 3D EA (EA3D) instances currently in the benchmark, for $N=1000$ and
+$N=2744$, are taken from [@delbono2026]; the $N=1000$ set additionally has
+exactly known ground-state energies for every instance.
 
 ### Why it is included
 

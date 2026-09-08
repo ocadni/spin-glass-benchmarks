@@ -1,6 +1,6 @@
 ---
 title: "Spin-Glass and XORSAT Benchmarks"
-subtitle: "Current SK benchmark definitions and solver results, with additional problem families planned."
+subtitle: "Current SK and EA3D benchmark definitions and solver results, with additional problem families planned."
 page-layout: full
 toc: false
 ---
@@ -9,7 +9,7 @@ toc: false
 ::: {.hero-copy}
 # Spin-Glass and XORSAT Benchmarks
 
-This site currently documents the Sherrington--Kirkpatrick (SK) benchmark family and reports the available SK solver results. Edwards--Anderson models, sparse random graph spin glasses, and XORSAT problems are planned for future additions.
+This site currently documents the Sherrington--Kirkpatrick (SK) and three-dimensional Edwards--Anderson (EA3D) benchmark families and reports the available solver results. The EA3D instances are taken from Del Bono, Ricci-Tersenghi, and Zamponi (PNAS 2026) [@delbono2026]. Two-dimensional EA, sparse random graph spin glasses, and XORSAT problems are planned for future additions.
 
 [Problem definition](problem_definition.qmd){.btn .btn-primary .btn-lg}
 [Results](results.qmd){.btn .btn-outline-primary .btn-lg}
