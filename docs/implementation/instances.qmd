@@ -104,7 +104,7 @@ The repository contains **190 pre-generated, deterministic benchmark instances**
 
 ### Edwards-Anderson 3D (EA3D)
 
-**Location**: `instances/EA3D/`
+**Location**: `instances/ea3d/`
 
 **Topology**: Cubic lattice with nearest-neighbor interactions, periodic boundary conditions
 
@@ -213,7 +213,7 @@ separately from the instance files themselves.
 **Layout**: mirrors `instances/<family>/N<size>/`, with one CSV per size:
 
 ```text
-instances/verified_gs/<FAMILY>/N<size>/energies.csv
+instances/verified_gs/<family>/N<size>/energies.csv
 ```
 
 Each `energies.csv` has two columns, one row per verified instance:
@@ -227,9 +227,9 @@ Not every instance has a verified ground state — only the ones for which it
 has been proven exactly. Absence from `energies.csv` just means the true
 minimum is still unknown.
 
-**Used by**: the [Leaderboard](../results.qmd) marks any seed with a known
-exact ground state with a dagger (†) and reports it in a Reference Energy
-column, so readers can see how close (or whether) submitted solver runs
+**Used by**: the [Leaderboard](../results.qmd) reports any known exact ground
+state in a Reference Energy column, marked with a superscript dagger
+($^\dagger$), so readers can see how close (or whether) submitted solver runs
 actually reached the true optimum.
 
 ---

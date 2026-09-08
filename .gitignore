@@ -90,6 +90,16 @@ instances/**/*.txt
 !instances/sk/N2000/sk_couplings_N2000_J0_seed3001738.txt
 !instances/sk/N2000/sk_couplings_N2000_J0_seed3001741.txt
 !instances/sk/N2000/sk_couplings_N2000_J0_seed3001744.txt
+!instances/ea3d/N1000/ea3d_couplings_N1000_J0_seed110046.txt
+!instances/ea3d/N1000/ea3d_couplings_N1000_J0_seed228274.txt
+!instances/ea3d/N1000/ea3d_couplings_N1000_J0_seed369954.txt
+!instances/ea3d/N1000/ea3d_couplings_N1000_J0_seed418527.txt
+!instances/ea3d/N1000/ea3d_couplings_N1000_J0_seed492757.txt
+!instances/ea3d/N2744/ea3d_couplings_N2744_J0_seed502033.txt
+!instances/ea3d/N2744/ea3d_couplings_N2744_J0_seed3210623.txt
+!instances/ea3d/N2744/ea3d_couplings_N2744_J0_seed4063355.txt
+!instances/ea3d/N2744/ea3d_couplings_N2744_J0_seed5105474.txt
+!instances/ea3d/N2744/ea3d_couplings_N2744_J0_seed7711527.txt
 
 *results_part*
 *logs_parts*

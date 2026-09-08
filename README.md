@@ -10,7 +10,7 @@
 ## What's Inside
 
 - **1,200 SK benchmark instances** (12 sizes × 100 seeds each), full sets on [Hugging Face](https://huggingface.co/datasets/Laplaxe/spin-glass-benchmarks), a 5-per-size sample committed to the repo → [Details](#available-instances)
-- **212 EA3D (3D Edwards-Anderson) benchmark instances** (N=1000 and N=2744), taken from [Del Bono, Ricci-Tersenghi & Zamponi, PNAS 2026](https://doi.org/10.1073/pnas.2534768123) → [Details](#available-instances)
+- **212 EA3D (3D Edwards-Anderson) benchmark instances** (N=1000 and N=2744), taken from [Del Bono, Ricci-Tersenghi & Zamponi, PNAS 2026](https://doi.org/10.1073/pnas.2534768123), full sets on [Hugging Face](https://huggingface.co/datasets/Laplaxe/spin-glass-benchmarks), a 5-per-size sample committed to the repo → [Details](#available-instances)
 - **Group submissions**: solver code + benchmark results per group → [Guide](experiments/QUICKSTART.md)
 ---
 
@@ -19,20 +19,22 @@
 | Family | Description | Sizes | Seeds per size | Location |
 |--------|-------------|-------|-----------------|----------|
 | **SK** | Sherrington-Kirkpatrick (fully connected) | 50, 100, 200, 300, 400, 600, 800, 1000, 1200, 1400, 1600, 2000 | 100 | `instances/sk/` |
-| **EA3D** | Edwards-Anderson, 3D cubic lattice, periodic boundaries | 1000, 2744 | 200, 12 | `instances/EA3D/` |
+| **EA3D** | Edwards-Anderson, 3D cubic lattice, periodic boundaries | 1000, 2744 | 200, 12 | `instances/ea3d/` |
 
-**Total**: 1,200 SK instances. Only 5 per size (60 files) are committed to
+**SK**: 1,200 instances total. Only 5 per size (60 files) are committed to
 the repo, as a quick-access sample — the full set lives on
 [Hugging Face](https://huggingface.co/datasets/Laplaxe/spin-glass-benchmarks)
 and is fetched with the download script below.
 
-**EA3D**: 212 instances (N=1000: 200 instances, all with exactly known
+**EA3D**: 212 instances total (N=1000: 200 instances, all with exactly known
 ground-state energies; N=2744: 12 instances), taken from Del Bono, Luca
 Maria, Federico Ricci-Tersenghi, and Francesco Zamponi. "Demonstrating real
 advantage of machine learning–enhanced Monte Carlo for combinatorial
 optimization." *Proceedings of the National Academy of Sciences* 123.19
-(2026): e2534768123. Only N=1000 and N=2744 are populated so far; N=512 and
-N=1728 are planned.
+(2026): e2534768123. As with SK, only 5 per size are committed to the repo
+(N=1000, N=2744); the rest are distributed via the same Hugging Face dataset
+(see Downloading Instances below). Only N=1000 and N=2744 are populated so
+far — N=512 and N=1728 are planned.
 
 ### Instance File Format
 
@@ -51,20 +53,22 @@ for the mathematical definitions of the benchmark problem families.
 ### Downloading Instances
 
 The 5-per-size sample committed to the repo is enough to try things out, but
-for the full 1,200-instance SK set (or any subset of it), use
+for the full SK or EA3D sets (or any subset), use
 [`instances/download_instances.py`](instances/download_instances.py):
 
 ```bash
 pip install huggingface_hub
 
-# Everything available (currently: all SK instances)
+# Everything available (SK + EA3D)
 python instances/download_instances.py --type all
 
 # One family
 python instances/download_instances.py --type sk
+python instances/download_instances.py --type ea3d
 
-# One size (all 100 seeds)
+# One size (all seeds)
 python instances/download_instances.py --type sk --N 1000
+python instances/download_instances.py --type ea3d --N 2744
 
 # One specific instance
 python instances/download_instances.py --type sk --N 1000 --seed 2001732
@@ -74,10 +78,17 @@ python instances/download_instances.py --info
 ```
 
 Downloaded files land directly under `instances/<family>/N<N>/`, alongside
-the committed sample. `--type ea2d`/`ea3d` are recognized by the CLI, but the
-download script does not yet fetch them from Hugging Face — EA3D instances
-(N=1000, N=2744) currently live only under `instances/EA3D/` in this
-repository (see above). `--type ea2d` still has no instances at all.
+the committed sample. `--type ea2d` is recognized by the CLI but has no
+instances yet, on the Hub or otherwise.
+
+Maintainers adding new instance files to `instances/sk/` or `instances/ea3d/`
+should push the full set to the Hub with
+[`instances/upload_instances.py`](instances/upload_instances.py) (same
+dependency, requires write access to the dataset repo):
+
+```bash
+python instances/upload_instances.py --type ea3d
+```
 
 ---
 

@@ -229,19 +229,17 @@ def render_table(family: str, rows: list[Row], verified: dict[tuple[str, int, in
             reference_energy = verified_for_family.get((n, seed))
             if best is None:
                 # Verified ground state with no submitted solver run yet.
-                lines.append(f"| {seed}† | — | — | — | {reference_energy:.7g} | — |")
+                lines.append(f"| {seed} | — | — | — | {reference_energy:.7g}$^\\dagger$ | — |")
                 continue
             if reference_energy is None:
-                seed_cell = str(best.seed)
                 reference_cell = "—"
                 algorithm_cell = best.program_name
             else:
-                seed_cell = f"{best.seed}†"
-                reference_cell = f"{reference_energy:.7g}"
+                reference_cell = f"{reference_energy:.7g}$^\\dagger$"
                 matched = abs(best.min_energy - reference_energy) <= ENERGY_TOLERANCE
                 algorithm_cell = best.program_name if matched else "—"
             lines.append(
-                f"| {seed_cell} "
+                f"| {best.seed} "
                 f"| {algorithm_cell} | {best.hardware} "
                 f"| {best.min_energy:.7g} | {reference_cell} | {best.tts:.7g} |"
             )
@@ -348,7 +346,7 @@ def update_results_qmd(sections: dict[str, str]) -> None:
             print(f"warning: markers for {marker_name!r} not found in {RESULTS_QMD}", file=sys.stderr)
             continue
         replacement = f"{begin_marker}\n{content}\n{end_marker}"
-        text = pattern.sub(replacement, text)
+        text = pattern.sub(lambda _match, replacement=replacement: replacement, text)
     RESULTS_QMD.write_text(text, encoding="utf-8")
 
 

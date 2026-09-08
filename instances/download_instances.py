@@ -14,7 +14,7 @@ from huggingface_hub import HfApi, snapshot_download
 REPO_ID = "Laplaxe/spin-glass-benchmarks"  # TODO: set to your HF dataset repo id
 
 ALL_TYPES = {"sk", "ea2d", "ea3d"}
-IMPLEMENTED_TYPES = {"sk"}
+IMPLEMENTED_TYPES = {"sk", "ea3d"}
 
 INSTANCES_DIR = Path(__file__).resolve().parent
 
