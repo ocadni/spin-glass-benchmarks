@@ -191,6 +191,40 @@ The repository contains **190 pre-generated, deterministic benchmark instances**
 
 ---
 
+## Verified Ground States
+
+**Location**: `instances/verified_gs/`
+
+Some benchmark instances are small or structured enough that their exact
+ground-state energy is known — proven optimal (e.g. via exhaustive or
+branch-and-bound solvers), rather than merely the best value any heuristic
+has found so far. `instances/verified_gs/` collects those exact energies,
+separately from the instance files themselves.
+
+**Layout**: mirrors `instances/<family>/N<size>/`, with one CSV per size:
+
+```text
+instances/verified_gs/<FAMILY>/N<size>/energies.csv
+```
+
+Each `energies.csv` has two columns, one row per verified instance:
+
+```text
+seed,energy
+492757,-0.71301
+```
+
+Not every instance has a verified ground state — only the ones for which it
+has been proven exactly. Absence from `energies.csv` just means the true
+minimum is still unknown.
+
+**Used by**: the [Leaderboard](../results.qmd) marks any seed with a known
+exact ground state with a dagger (†) and reports it in a Reference Energy
+column, so readers can see how close (or whether) submitted solver runs
+actually reached the true optimum.
+
+---
+
 ## File Format
 
 All instances use a standardized text format. See [File Format Documentation](../file_format.qmd) for full specification.

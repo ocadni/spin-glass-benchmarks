@@ -33,6 +33,8 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 EXPERIMENTS_DIR = REPO_ROOT / "experiments"
+INSTANCES_DIR = REPO_ROOT / "instances"
+VERIFIED_GS_DIR = INSTANCES_DIR / "verified_gs"
 RESULTS_QMD = REPO_ROOT / "docs" / "results.qmd"
 
 KNOWN_FAMILIES = {"sk", "ea2d", "ea3d", "rrg"}
@@ -142,42 +144,106 @@ def collect_rows_by_family() -> dict[str, list[Row]]:
     return rows_by_family
 
 
-def render_table(rows: list[Row]) -> str:
-    if not rows:
+def load_verified_gs() -> dict[tuple[str, int, int], float]:
+    """Map (family, N, seed) -> exact ground-state energy.
+
+    Reads instances/verified_gs/<FAMILY>/N<size>/energies.csv (columns:
+    seed, energy), one file per family/size directory, mirroring the
+    corresponding instances/<family>/N<size>/ layout. The family directory
+    name's casing follows instances/ (e.g. "EA3D"), so matching against the
+    lowercase KNOWN_FAMILIES keys is case-insensitive.
+    """
+    verified: dict[tuple[str, int, int], float] = {}
+    if not VERIFIED_GS_DIR.is_dir():
+        return verified
+    for family_dir in sorted(VERIFIED_GS_DIR.iterdir()):
+        if not family_dir.is_dir():
+            continue
+        family = family_dir.name.lower()
+        if family not in KNOWN_FAMILIES:
+            print(f"warning: skipping {family_dir} (unrecognized family {family_dir.name!r})", file=sys.stderr)
+            continue
+        for size_dir in sorted(family_dir.iterdir()):
+            match = re.fullmatch(r"N(\d+)", size_dir.name)
+            if not match:
+                continue
+            n = int(match.group(1))
+            csv_path = size_dir / "energies.csv"
+            if not csv_path.is_file():
+                continue
+            with csv_path.open(newline="", encoding="utf-8") as handle:
+                reader = csv.DictReader(handle)
+                if reader.fieldnames is None or not {"seed", "energy"}.issubset(reader.fieldnames):
+                    print(
+                        f"warning: {csv_path}: expected fields {{'seed', 'energy'}}, got {reader.fieldnames}",
+                        file=sys.stderr,
+                    )
+                    continue
+                for line_num, record in enumerate(reader, start=2):
+                    try:
+                        verified[(family, n, int(record["seed"]))] = float(record["energy"])
+                    except (ValueError, TypeError) as exc:
+                        print(f"warning: {csv_path}:{line_num}: {exc}", file=sys.stderr)
+    return verified
+
+
+def render_table(family: str, rows: list[Row], verified: dict[tuple[str, int, int], float]) -> str:
+    verified_for_family = {
+        (n, seed): energy for (f, n, seed), energy in verified.items() if f == family
+    }
+
+    if not rows and not verified_for_family:
         return (
             "TODO: populate from experiments.\n\n"
-            "| N | Seed | Best Algorithm | Hardware | Energy | TTS (s) |\n"
-            "|---|------|-----------------|----------|--------|-----|\n"
-            "| TODO | | | | | |"
+            "| N | Seed | Best Algorithm | Hardware | Energy | Reference Energy | TTS (s) |\n"
+            "|---|------|-----------------|----------|--------|-------------------|-----|\n"
+            "| TODO | | | | | | |"
         )
 
     by_instance: dict[tuple[int, int], list[Row]] = {}
     for row in rows:
         by_instance.setdefault((row.n, row.seed), []).append(row)
 
-    best_by_n: dict[int, list[Row]] = {}
-    for (n, _seed) in sorted(by_instance):
-        instance_rows = by_instance[(n, _seed)]
+    best_by_key: dict[tuple[int, int], Row] = {}
+    for key, instance_rows in by_instance.items():
         minimum_energy = min(r.min_energy for r in instance_rows)
         tied_rows = [
             r for r in instance_rows
             if r.min_energy - minimum_energy <= ENERGY_TOLERANCE
         ]
-        best = min(tied_rows, key=lambda r: (r.tts, r.program_name, r.hardware))
-        best_by_n.setdefault(n, []).append(best)
+        best_by_key[key] = min(tied_rows, key=lambda r: (r.tts, r.program_name, r.hardware))
+
+    keys_by_n: dict[int, list[int]] = {}
+    for (n, seed) in set(best_by_key) | set(verified_for_family):
+        keys_by_n.setdefault(n, []).append(seed)
 
     blocks = ["::: {.panel-tabset}"]
-    for n in sorted(best_by_n):
+    for n in sorted(keys_by_n):
         lines = [
             f"\n### N = {n}\n",
-            "| Seed | Best Algorithm | Hardware | Energy | TTS (s) |",
-            "|------|----------------|----------|--------|---------|",
+            "| Seed | Best Algorithm | Hardware | Energy | Reference Energy | TTS (s) |",
+            "|------|----------------|----------|--------|-------------------|---------|",
         ]
-        for best in sorted(best_by_n[n], key=lambda r: r.seed):
+        for seed in sorted(keys_by_n[n]):
+            best = best_by_key.get((n, seed))
+            reference_energy = verified_for_family.get((n, seed))
+            if best is None:
+                # Verified ground state with no submitted solver run yet.
+                lines.append(f"| {seed}† | — | — | — | {reference_energy:.7g} | — |")
+                continue
+            if reference_energy is None:
+                seed_cell = str(best.seed)
+                reference_cell = "—"
+                algorithm_cell = best.program_name
+            else:
+                seed_cell = f"{best.seed}†"
+                reference_cell = f"{reference_energy:.7g}"
+                matched = abs(best.min_energy - reference_energy) <= ENERGY_TOLERANCE
+                algorithm_cell = best.program_name if matched else "—"
             lines.append(
-                f"| {best.seed} "
-                f"| {best.program_name} | {best.hardware} "
-                f"| {best.min_energy:.7g} | {best.tts:.7g} |"
+                f"| {seed_cell} "
+                f"| {algorithm_cell} | {best.hardware} "
+                f"| {best.min_energy:.7g} | {reference_cell} | {best.tts:.7g} |"
             )
         blocks.append("\n".join(lines))
     blocks.append(":::")
@@ -288,8 +354,12 @@ def update_results_qmd(sections: dict[str, str]) -> None:
 
 def main() -> None:
     rows_by_family = collect_rows_by_family()
+    verified = load_verified_gs()
 
-    sections = {family: render_table(rows) for family, rows in rows_by_family.items()}
+    sections = {
+        family: render_table(family, rows, verified)
+        for family, rows in rows_by_family.items()
+    }
     sections["all"] = render_all_section(rows_by_family)
     update_results_qmd(sections)
 
