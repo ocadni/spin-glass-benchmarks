@@ -197,9 +197,9 @@ def render_table(family: str, rows: list[Row], verified: dict[tuple[str, int, in
     if not rows and not verified_for_family:
         return (
             "TODO: populate from experiments.\n\n"
-            "| N | Seed | Best Algorithm | Hardware | Energy | Reference Energy | TTS (s) |\n"
-            "|---|------|-----------------|----------|--------|-------------------|-----|\n"
-            "| TODO | | | | | | |"
+            "| N | Seed | Best Algorithm | Hardware | Energy | TTS (s) |\n"
+            "|---|------|-----------------|----------|--------|-----|\n"
+            "| TODO | | | | | |"
         )
 
     by_instance: dict[tuple[int, int], list[Row]] = {}
@@ -223,27 +223,27 @@ def render_table(family: str, rows: list[Row], verified: dict[tuple[str, int, in
     for n in sorted(keys_by_n):
         lines = [
             f"\n### N = {n}\n",
-            "| Seed | Best Algorithm | Hardware | Energy | Reference Energy | TTS (s) |",
-            "|------|----------------|----------|--------|-------------------|---------|",
+            "| Seed | Best Algorithm | Hardware | Energy | TTS (s) |",
+            "|------|----------------|----------|--------|---------|",
         ]
         for seed in sorted(keys_by_n[n]):
             best = best_by_key.get((n, seed))
             reference_energy = verified_for_family.get((n, seed))
             if best is None:
                 # Verified ground state with no submitted solver run yet.
-                lines.append(f"| {seed} | — | — | — | {reference_energy:.7g}$^\\dagger$ | — |")
+                lines.append(f"| {seed} | — | — | {reference_energy:.7g}$^\\dagger$ | — |")
                 continue
             if reference_energy is None:
-                reference_cell = "—"
+                energy_cell = f"{best.min_energy:.7g}"
                 algorithm_cell = best.program_name
             else:
-                reference_cell = f"{reference_energy:.7g}$^\\dagger$"
                 matched = abs(best.min_energy - reference_energy) <= ENERGY_TOLERANCE
+                energy_cell = f"{best.min_energy:.7g}" + ("$^\\dagger$" if matched else "")
                 algorithm_cell = best.program_name if matched else "—"
             lines.append(
                 f"| {best.seed} "
                 f"| {algorithm_cell} | {best.hardware} "
-                f"| {best.min_energy:.7g} | {reference_cell} | {best.tts:.7g} |"
+                f"| {energy_cell} | {best.tts:.7g} |"
             )
         blocks.append("\n".join(lines))
     blocks.append(":::")

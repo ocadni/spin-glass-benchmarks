@@ -10,20 +10,23 @@ to experiments/sapienza/results/ea3d/summary.csv:
     N, seed, min_energy, average_time, success_probability, TTS, hardware,
     program_name, average_steps, parameters
 
-N is fixed at 1000 (these previous_data instances are EA3D, linear size
-L=10). average_steps is left blank (not tracked by these solvers).
+N is derived from the data directory's name, "multiple_instances_L<L>" (these
+previous_data instances are EA3D, linear size L, so N = L**3); pass --n to
+override. average_steps is left blank (not tracked by these solvers).
 parameters is a free-text rendering of the winning parameter set, shown only
 in the website's "All" section (the Leaderboard ignores it).
 
 This script only ever appends; re-running it after the target already
 contains these rows will duplicate them. Usage:
-    python3 publish_to_website_summary.py
+    python3 publish_to_website_summary.py [--data-dir DIR] [--n N]
 """
 
 from __future__ import annotations
 
+import argparse
 import csv
 import math
+import re
 import sys
 import tempfile
 from pathlib import Path
@@ -32,7 +35,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parents[3]
 TARGET_SUMMARY_CSV = REPO_ROOT / "experiments" / "sapienza" / "results" / "ea3d" / "summary.csv"
 
-N = 1000
+DATA_DIR_RE = re.compile(r"multiple_instances_L(\d+)$")
 HARDWARE = "NVIDIA Tesla V100-SXM2-32G"
 
 PROGRAM_NAMES = {
@@ -61,7 +64,21 @@ def format_parameters(row: dict[str, str], param_columns: list[str]) -> str:
     return ", ".join(f"{name}={row[name]}" for name in param_columns)
 
 
-def load_website_rows(best_summary_path: Path, program_name: str) -> list[dict[str, str]]:
+def derive_n(data_dir: Path) -> int:
+    match = DATA_DIR_RE.search(data_dir.name)
+
+    if match is None:
+        raise ValueError(
+            f"cannot derive N from directory name {data_dir.name!r}; pass --n explicitly"
+        )
+
+    linear_size = int(match.group(1))
+    return linear_size**3
+
+
+def load_website_rows(
+    best_summary_path: Path, program_name: str, n: int
+) -> list[dict[str, str]]:
     with best_summary_path.open(newline="", encoding="utf-8") as handle:
         reader = csv.DictReader(handle)
         fieldnames = reader.fieldnames or []
@@ -75,7 +92,7 @@ def load_website_rows(best_summary_path: Path, program_name: str) -> list[dict[s
         tts = float(row[tts_column])
         website_rows.append(
             {
-                "N": N,
+                "N": n,
                 "seed": row["seed"],
                 "min_energy": row["best_energy"],
                 "average_time": row["average_time"],
@@ -129,7 +146,29 @@ def append_rows(path: Path, rows: list[dict[str, str]], fieldnames: list[str]) -
         writer.writerows(rows)
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Append GA_alternative/PA_alternative best-per-seed results to the website summary.csv."
+    )
+    parser.add_argument(
+        "--data-dir",
+        type=Path,
+        default=SCRIPT_DIR,
+        help=f"directory containing the *_best_summary.csv files (default: {SCRIPT_DIR})",
+    )
+    parser.add_argument(
+        "--n",
+        type=int,
+        default=None,
+        help="number of spins N (default: derived from the data directory's name, multiple_instances_L<L>, as L**3)",
+    )
+    return parser.parse_args()
+
+
 def main() -> int:
+    args = parse_args()
+    n = args.n if args.n is not None else derive_n(args.data_dir)
+
     if not TARGET_SUMMARY_CSV.exists():
         print(f"error: target summary.csv not found: {TARGET_SUMMARY_CSV}", file=sys.stderr)
         return 1
@@ -138,15 +177,15 @@ def main() -> int:
 
     all_rows: list[dict[str, str]] = []
     for algorithm, program_name in PROGRAM_NAMES.items():
-        best_summary_path = SCRIPT_DIR / f"{algorithm}_best_summary.csv"
+        best_summary_path = args.data_dir / f"{algorithm}_best_summary.csv"
 
         if not best_summary_path.exists():
             print(f"error: best summary not found: {best_summary_path}", file=sys.stderr)
             return 1
 
-        rows = load_website_rows(best_summary_path, program_name)
+        rows = load_website_rows(best_summary_path, program_name, n)
         all_rows.extend(rows)
-        print(f"prepared {len(rows)} rows for {program_name}")
+        print(f"prepared {len(rows)} rows for {program_name} (N={n})")
 
     append_rows(TARGET_SUMMARY_CSV, all_rows, fieldnames)
     print(f"appended {len(all_rows)} rows to {TARGET_SUMMARY_CSV}")

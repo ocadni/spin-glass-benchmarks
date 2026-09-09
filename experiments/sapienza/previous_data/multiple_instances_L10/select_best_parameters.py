@@ -11,13 +11,14 @@ are still included, using the same tie-break rule, so every seed present in
 the input appears exactly once in the output.
 
 Usage:
-    python3 select_best_parameters.py
+    python3 select_best_parameters.py [--data-dir DIR]
 Writes GA_alternative_best_summary.csv and PA_alternative_best_summary.csv
-next to this script.
+into --data-dir (default: this script's own directory).
 """
 
 from __future__ import annotations
 
+import argparse
 import csv
 import math
 import sys
@@ -88,11 +89,25 @@ def write_best_summary(path: Path, rows: list[dict[str, str]], fieldnames: list[
         writer.writerows(rows)
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Reduce GA_alternative/PA_alternative summaries to each seed's best TTS row."
+    )
+    parser.add_argument(
+        "--data-dir",
+        type=Path,
+        default=SCRIPT_DIR,
+        help=f"directory containing the *_summary.csv files (default: {SCRIPT_DIR})",
+    )
+    return parser.parse_args()
+
+
 def main() -> int:
+    args = parse_args()
     exit_code = 0
 
     for algorithm in ALGORITHMS:
-        summary_path = SCRIPT_DIR / f"{algorithm}_summary.csv"
+        summary_path = args.data_dir / f"{algorithm}_summary.csv"
 
         if not summary_path.exists():
             print(f"error: summary file not found: {summary_path}", file=sys.stderr)
@@ -101,7 +116,7 @@ def main() -> int:
 
         best_rows, fieldnames = select_best_rows(summary_path)
 
-        output_path = SCRIPT_DIR / f"{algorithm}_best_summary.csv"
+        output_path = args.data_dir / f"{algorithm}_best_summary.csv"
         write_best_summary(output_path, best_rows, fieldnames)
 
         unsolved = sum(1 for row in best_rows if not math.isfinite(float(row[find_tts_column(fieldnames)])))

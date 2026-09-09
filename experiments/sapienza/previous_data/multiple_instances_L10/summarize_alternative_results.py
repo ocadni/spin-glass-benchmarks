@@ -7,10 +7,20 @@ PA_alternative) followed by three fixed columns:
     <params...> best_energy_found final_energy elapsed_time
 
 best_energies.txt (seed, best_energy) gives the reference ground-truth minimum
-energy for each seed. This script groups runs by (seed, parameter set) and, for
-each group, reports the number of runs, the success rate (fraction of runs whose
-best_energy_found matches the reference within --success-tolerance), the average
-elapsed time, and the standard TTS_p time-to-solution (Ronnow et al. 2014):
+energy for each seed. If a data directory has no best_energies.txt (some
+instance sets were never independently verified), the reference energy for
+each seed is instead derived as the lowest best_energy_found across that
+seed's GA/results_<seed>.txt file (the plain GA solver, not GA_alternative,
+run long enough to be trusted as a proxy ground truth), and the result is
+written out as best_energies.txt for future runs and inspection.
+
+Lines starting with '#' in any results_*.txt file are comments (e.g. stale,
+superseded runs) and are skipped.
+
+This script groups runs by (seed, parameter set) and, for each group, reports
+the number of runs, the success rate (fraction of runs whose best_energy_found
+matches the reference within --success-tolerance), the average elapsed time,
+and the standard TTS_p time-to-solution (Ronnow et al. 2014):
 
     TTS_p = mean_run_time * log(1 - p) / log(1 - success_rate)
 
@@ -149,6 +159,26 @@ def load_best_energies(path: Path) -> dict[int, float]:
     return best_energies
 
 
+def write_best_energies(path: Path, best_energies: dict[int, float]) -> None:
+    with path.open("w", encoding="utf-8") as handle:
+        for seed in sorted(best_energies):
+            handle.write(f"{seed}\t{best_energies[seed]:.5f}\n")
+
+
+def derive_best_energies_from_ga(ga_dir: Path) -> tuple[dict[int, float], list[str]]:
+    """Proxy reference energies: the lowest energy GA (not GA_alternative)
+    found for each seed, across every run in that seed's results file."""
+    runs, warnings = parse_algorithm_dir(ga_dir)
+
+    best_energies: dict[int, float] = {}
+    for run in runs:
+        current = best_energies.get(run.seed)
+        if current is None or run.best_energy_found < current:
+            best_energies[run.seed] = run.best_energy_found
+
+    return best_energies, warnings
+
+
 def coerce_param(value: str) -> int | str:
     try:
         return int(value)
@@ -173,7 +203,7 @@ def parse_algorithm_dir(path: Path) -> tuple[list[Run], list[str]]:
             for line_number, raw_line in enumerate(handle, start=1):
                 line = raw_line.strip()
 
-                if not line:
+                if not line or line.startswith("#"):
                     continue
 
                 parts = line.split()
@@ -337,11 +367,29 @@ def main() -> int:
 
     best_energies_path = args.data_dir / "best_energies.txt"
 
-    if not best_energies_path.exists():
-        print(f"error: best energies file not found: {best_energies_path}", file=sys.stderr)
-        return 1
+    if best_energies_path.exists():
+        best_energies = load_best_energies(best_energies_path)
+    else:
+        ga_dir = args.data_dir / "GA"
 
-    best_energies = load_best_energies(best_energies_path)
+        if not ga_dir.is_dir():
+            print(
+                f"error: neither {best_energies_path} nor a GA directory "
+                f"were found under {args.data_dir}",
+                file=sys.stderr,
+            )
+            return 1
+
+        best_energies, ga_warnings = derive_best_energies_from_ga(ga_dir)
+
+        for warning in ga_warnings:
+            print(f"warning: {warning}", file=sys.stderr)
+
+        write_best_energies(best_energies_path, best_energies)
+        print(
+            f"derived {len(best_energies)} reference best energies from "
+            f"{ga_dir}, wrote {best_energies_path}"
+        )
 
     exit_code = 0
 
