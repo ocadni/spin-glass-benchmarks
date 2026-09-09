@@ -52,7 +52,7 @@ DEFAULT_OUTPUT = (
     / "experiments"
     / "sapienza"
     / "results"
-    / "sk"
+    / "ea3d"
     / "summary.csv"
 )
 

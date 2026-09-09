@@ -3,9 +3,9 @@
 
 Scans experiments/<researcher>/results/<family>/summary.csv for rows with
 columns (any order): N, seed, min_energy, average_time, success_probability,
-TTS, hardware, program_name, plus optional average_steps. Missing step
-measurements are displayed as an em dash in the All section's table (the
-Leaderboard does not show steps at all).
+TTS, hardware, program_name, plus optional average_steps and parameters.
+Missing step measurements or parameters are displayed as an em dash in the
+All section's table (the Leaderboard shows neither: only energy and TTS).
 
 The family (sk/ea2d/ea3d/rrg) is inferred from the name of the directory a
 summary.csv lives in, and the researcher from the path component right after
@@ -15,10 +15,10 @@ ranked first by lowest min_energy, energies within 1e-6 of the minimum
 treated as tied, ties broken by lowest TTS (and, in the
 vanishingly unlikely case both are equal too, by program_name then hardware,
 for a fully deterministic result regardless of file/row order). The All
-section instead lists every run (with runtime, success probability, and
-average steps, none of which the Leaderboard shows), grouped by algorithm
-then family, with each researcher's notes.md (if present and non-empty)
-shown as a collapsible toggle.
+section instead lists every run (with runtime, success probability, average
+steps, and the run's parameters as a free-text column, none of which the
+Leaderboard shows), grouped by algorithm then family, with each researcher's
+notes.md (if present and non-empty) shown as a collapsible toggle.
 
 Usage: python scripts/generate_results_tables.py
 """
@@ -58,7 +58,7 @@ FAMILY_LABELS = {
 
 # Families shown in the "All" section's per-algorithm tabs. Keep in sync with
 # which "Best" sections are un-hidden (.content-hidden) in docs/results.qmd.
-VISIBLE_FAMILIES = ("sk",)
+VISIBLE_FAMILIES = ("sk", "ea3d")
 
 # Algorithm tabs shown in the "All" section, even before every algorithm has
 # uploaded results. Extra algorithm names found in summary.csv are appended.
@@ -81,6 +81,7 @@ class Row:
     program_name: str
     researcher: str
     average_steps: float | None = None
+    parameters: str | None = None
 
 
 def find_summary_files() -> list[Path]:
@@ -127,6 +128,7 @@ def parse_summary_file(path: Path) -> list[Row]:
                             float(record["average_steps"])
                             if (record.get("average_steps") or "").strip() else None
                         ),
+                        parameters=(record.get("parameters") or "").strip() or None,
                     )
                 )
             except (ValueError, TypeError) as exc:
@@ -252,6 +254,10 @@ def format_steps(row: Row) -> str:
     return f"{row.average_steps:.7g}" if row.average_steps is not None else "—"
 
 
+def format_parameters(row: Row) -> str:
+    return row.parameters if row.parameters is not None else "—"
+
+
 def format_probability(value: float) -> str:
     """Format a probability with at most 5 decimal places, trailing zeros trimmed."""
     text = f"{value:.5f}".rstrip("0").rstrip(".")
@@ -267,14 +273,15 @@ def render_raw_table(rows: list[Row]) -> str:
     for n in sorted(rows_by_n):
         lines = [
             f"\n#### N = {n}\n",
-            "| Seed | Energy | Runtime (s) | Average steps | Success Probability | Hardware |",
-            "|------|--------|-------------|---------------|----------------------|----------|",
+            "| Seed | Energy | Runtime (s) | Average steps | Success Probability | Hardware | Parameters |",
+            "|------|--------|-------------|---------------|----------------------|----------|------------|",
         ]
         for row in sorted(rows_by_n[n], key=lambda r: (r.seed, r.hardware, r.tts)):
             lines.append(
                 f"| {row.seed} | {row.min_energy:.7g} | {row.average_time:.7g} "
                 f"| {format_steps(row)} "
-                f"| {format_probability(row.success_probability)} | {row.hardware} |"
+                f"| {format_probability(row.success_probability)} | {row.hardware} "
+                f"| {format_parameters(row)} |"
             )
         blocks.append("\n".join(lines))
     blocks.append(":::")
