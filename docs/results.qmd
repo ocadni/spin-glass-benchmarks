@@ -6382,221 +6382,221 @@ TODO: populate from experiments.
 
 | Seed | Energy | Runtime (s) | Average steps | Success Probability | Hardware | Parameters |
 |------|--------|-------------|---------------|----------------------|----------|------------|
-| 110046 | -1.65216 | 80.64258 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=9, schedule=logT |
-| 228274 | -1.64456 | 95.85553 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 369954 | -1.7295 | 103.6024 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 418527 | -1.68276 | 126.2136 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=15, schedule=logT |
-| 492757 | -1.66257 | 142.2515 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=17, schedule=logT |
-| 554682 | -1.70255 | 111.2155 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 624355 | -1.72807 | 118.563 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 631654 | -1.69768 | 179.9745 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=22, schedule=logT |
-| 654105 | -1.66439 | 110.9725 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 658180 | -1.72803 | 103.5277 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 983552 | -1.73856 | 88.15294 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=10, schedule=logT |
-| 984673 | -1.70021 | 126.657 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=15, schedule=logT |
-| 1010826 | -1.70137 | 149.0962 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=18, schedule=logT |
-| 1051560 | -1.63919 | 118.5582 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 1086364 | -1.70278 | 95.86665 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 1153328 | -1.68096 | 118.4791 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 1251908 | -1.73153 | 88.35774 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=10, schedule=logT |
-| 1430748 | -1.69098 | 315.4569 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=40, schedule=logT |
-| 1494266 | -1.71234 | 186.7756 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=23, schedule=logT |
-| 1526610 | -1.69344 | 103.4454 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 1575578 | -1.68794 | 103.4997 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 1631660 | -1.68455 | 95.96804 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 1730477 | -1.64773 | 126.1126 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=15, schedule=logT |
-| 1769991 | -1.72066 | 97.72275 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 1791529 | -1.70447 | 103.4678 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 1914710 | -1.67759 | 111.0999 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 1958910 | -1.72736 | 119.2949 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 2094269 | -1.68269 | 110.9431 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 2103206 | -1.73526 | 111.0922 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 2254005 | -1.68656 | 95.70777 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 2261070 | -1.67718 | 103.4394 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 2330819 | -1.71491 | 97.16108 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 2471202 | -1.6528 | 179.2496 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=22, schedule=logT |
-| 2475263 | -1.69088 | 103.3928 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 2494091 | -1.69335 | 103.2364 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 2575023 | -1.70921 | 88.22839 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=10, schedule=logT |
-| 2622727 | -1.68713 | 88.06476 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=10, schedule=logT |
-| 2629801 | -1.6916 | 111.0213 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 2633193 | -1.69039 | 195.2519 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=24, schedule=logT |
-| 2702397 | -1.72828 | 111.193 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 2892506 | -1.71593 | 103.3748 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 3139424 | -1.67747 | 119.2599 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 3212296 | -1.72928 | 88.26259 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=10, schedule=logT |
-| 3240710 | -1.69005 | 118.4079 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 3259621 | -1.69826 | 95.7276 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 3328448 | -1.69081 | 111.3507 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 3396452 | -1.70352 | 95.71312 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 3603850 | -1.68343 | 103.3202 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 3633003 | -1.67308 | 126.2148 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=15, schedule=logT |
-| 3713812 | -1.73963 | 103.4964 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 3727510 | -1.69772 | 96.94841 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 3730240 | -1.70893 | 103.334 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 3883519 | -1.68642 | 111.2485 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 3996225 | -1.71324 | 103.5779 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 4030608 | -1.70571 | 133.7378 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=16, schedule=logT |
-| 4043709 | -1.67275 | 88.26281 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=10, schedule=logT |
-| 4068529 | -1.66537 | 118.4551 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 4087272 | -1.73407 | 88.23709 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=10, schedule=logT |
-| 4187807 | -1.72066 | 111.0774 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 4197361 | -1.68945 | 141.5502 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=17, schedule=logT |
-| 4490197 | -1.7264 | 96.98781 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 4621654 | -1.69278 | 111.0979 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 4911238 | -1.73575 | 103.3004 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 4931967 | -1.71426 | 97.59659 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 4955389 | -1.6801 | 103.2176 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 4960753 | -1.67041 | 95.78912 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 5049071 | -1.69004 | 103.4538 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 5105258 | -1.74864 | 141.872 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=17, schedule=logT |
-| 5314052 | -1.71041 | 95.91079 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 5406329 | -1.71337 | 118.496 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 5550256 | -1.7049 | 95.87567 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 5551067 | -1.67663 | 95.85884 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 5672028 | -1.68293 | 88.17599 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=10, schedule=logT |
-| 5719349 | -1.66567 | 270.8042 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=34, schedule=logT |
-| 5913160 | -1.67523 | 110.8388 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 5918224 | -1.6477 | 118.6579 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 5920270 | -1.71192 | 105.3167 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 6007986 | -1.67094 | 103.2567 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 6145844 | -1.66589 | 126.2246 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=15, schedule=logT |
-| 6163735 | -1.69796 | 104.1535 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 6391497 | -1.73133 | 80.47468 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=9, schedule=logT |
-| 6397791 | -1.72007 | 111.0433 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 6582535 | -1.7002 | 95.72438 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 6616820 | -1.68809 | 104.4577 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 6667235 | -1.73309 | 110.9605 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 6774234 | -1.69408 | 110.9407 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 6857733 | -1.70857 | 88.22393 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=10, schedule=logT |
-| 6893474 | -1.71062 | 103.2874 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 6998119 | -1.71608 | 95.87256 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 7165636 | -1.65415 | 126.219 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=15, schedule=logT |
-| 7276912 | -1.68996 | 111.0667 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 7296639 | -1.67606 | 111.0155 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 7308676 | -1.70904 | 80.55254 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=9, schedule=logT |
-| 7388150 | -1.71376 | 133.7889 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=16, schedule=logT |
-| 7408152 | -1.70551 | 103.3304 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 7429274 | -1.70107 | 88.37388 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=10, schedule=logT |
-| 7778359 | -1.73538 | 95.80327 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 7923692 | -1.65815 | 95.75193 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 7981098 | -1.73222 | 126.1025 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=15, schedule=logT |
-| 8085727 | -1.70976 | 103.2805 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 8111176 | -1.69573 | 118.4181 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 8397304 | -1.71318 | 95.85281 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 8421935 | -1.67507 | 133.9212 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=16, schedule=logT |
-| 8453239 | -1.68031 | 110.9584 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 8453439 | -1.7135 | 103.4007 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 8458710 | -1.67951 | 126.2858 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=15, schedule=logT |
-| 8598692 | -1.65938 | 110.9067 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 8767273 | -1.693 | 141.5088 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=17, schedule=logT |
-| 8924713 | -1.66932 | 95.7276 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 8991508 | -1.66604 | 80.62696 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=9, schedule=logT |
-| 9015879 | -1.71764 | 95.98009 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 9067352 | -1.67964 | 120.0592 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 9175173 | -1.67111 | 110.7208 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 9181537 | -1.66824 | 126.6956 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=15, schedule=logT |
-| 9182308 | -1.69881 | 88.14978 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=10, schedule=logT |
-| 9335413 | -1.69022 | 118.6665 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 9469999 | -1.70814 | 103.3529 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 9510406 | -1.70199 | 95.63783 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 9516964 | -1.66673 | 103.5497 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 9692062 | -1.72398 | 110.9904 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 9721192 | -1.70144 | 95.8599 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 9732497 | -1.72027 | 80.67107 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=9, schedule=logT |
-| 9807541 | -1.68575 | 118.752 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 10016117 | -1.66535 | 110.9275 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 10289415 | -1.68948 | 103.3987 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 10303962 | -1.69095 | 118.5362 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 10321011 | -1.76596 | 80.87725 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=9, schedule=logT |
-| 10492586 | -1.68098 | 112.6272 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 10617787 | -1.6683 | 133.7412 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=16, schedule=logT |
-| 10680741 | -1.65512 | 103.5847 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 10752963 | -1.74174 | 118.8036 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 10759243 | -1.69761 | 103.478 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 10785990 | -1.69339 | 118.6029 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 10873220 | -1.65267 | 118.3698 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 11037872 | -1.69444 | 110.978 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 11146941 | -1.65302 | 133.9236 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=16, schedule=logT |
-| 11182766 | -1.68636 | 103.3123 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 11251697 | -1.7161 | 103.4046 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 11371769 | -1.69505 | 126.4779 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=15, schedule=logT |
-| 11402525 | -1.70928 | 118.4081 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 11412292 | -1.70872 | 119.8787 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 11503114 | -1.69167 | 111.1504 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 11534681 | -1.71107 | 88.40555 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=10, schedule=logT |
-| 11605451 | -1.68312 | 118.6332 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 11679033 | -1.66707 | 119.391 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 11777311 | -1.6965 | 111.1048 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 11802495 | -1.6898 | 133.6581 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=16, schedule=logT |
-| 11915411 | -1.68097 | 110.955 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 11960737 | -1.6913 | 95.92103 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 12088959 | -1.69584 | 118.5622 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 12238274 | -1.66623 | 111.0934 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 12476934 | -1.71499 | 80.64555 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=9, schedule=logT |
-| 12520071 | -1.68949 | 118.5662 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 12531925 | -1.68796 | 118.932 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 12600313 | -1.70384 | 96.97278 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 12876033 | -1.69459 | 126.1295 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=15, schedule=logT |
-| 12948253 | -1.6636 | 141.2586 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=17, schedule=logT |
-| 13046662 | -1.73876 | 103.3359 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 13183385 | -1.66908 | 103.2466 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 13232651 | -1.65347 | 111.0182 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 13392517 | -1.69585 | 118.5984 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 13414790 | -1.72062 | 103.3716 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 13551483 | -1.67897 | 95.82324 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 13753649 | -1.69922 | 103.5037 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 13928994 | -1.68737 | 88.16426 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=10, schedule=logT |
-| 14030140 | -1.67294 | 111.3099 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 14066739 | -1.67601 | 118.5717 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 14106527 | -1.71267 | 148.8423 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=18, schedule=logT |
-| 14207659 | -1.6417 | 133.6427 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=16, schedule=logT |
-| 14230092 | -1.68828 | 111.03 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 14265803 | -1.65969 | 118.6505 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 14280208 | -1.69269 | 88.28656 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=10, schedule=logT |
-| 14441004 | -1.69695 | 134.0139 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=16, schedule=logT |
-| 14542852 | -1.69856 | 143.0092 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=17, schedule=logT |
-| 14547212 | -1.67492 | 103.4286 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 14550708 | -1.68647 | 88.15312 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=10, schedule=logT |
-| 14772102 | -1.725 | 103.2957 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 15011482 | -1.73888 | 88.58712 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=10, schedule=logT |
-| 15037000 | -1.70124 | 133.6883 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=16, schedule=logT |
-| 15345480 | -1.74859 | 95.9006 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 15446758 | -1.70623 | 119.2156 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=14, schedule=logT |
-| 15509635 | -1.64976 | 88.29116 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=10, schedule=logT |
-| 15570002 | -1.67317 | 111.527 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 15709809 | -1.66647 | 95.6747 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 15755754 | -1.69615 | 95.9388 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=11, schedule=logT |
-| 15763085 | -1.65829 | 88.41127 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=10, schedule=logT |
-| 15924209 | -1.71158 | 103.4517 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 15981934 | -1.67195 | 141.924 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=17, schedule=logT |
-| 16164239 | -1.69433 | 88.27814 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=10, schedule=logT |
-| 16173523 | -1.70529 | 110.9471 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 16248991 | -1.67747 | 111.1225 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 16319112 | -1.71467 | 103.5404 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 16350340 | -1.70231 | 133.5213 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=16, schedule=logT |
-| 16516882 | -1.69499 | 110.9057 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=13, schedule=logT |
-| 16577430 | -1.69605 | 103.3985 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 16600400 | -1.6835 | 103.2265 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 16609733 | -1.71667 | 103.5838 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 16657501 | -1.69571 | 133.6703 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=16, schedule=logT |
-| 16678332 | -1.70272 | 103.5359 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=12, schedule=logT |
-| 16695257 | -1.70229 | 88.2137 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=10, schedule=logT |
+| 110046 | -1.65216 | 80.64258 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=9, Schedule=logT |
+| 228274 | -1.64456 | 95.85553 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 369954 | -1.7295 | 103.6024 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 418527 | -1.68276 | 126.2136 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=15, Schedule=logT |
+| 492757 | -1.66257 | 142.2515 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=17, Schedule=logT |
+| 554682 | -1.70255 | 111.2155 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 624355 | -1.72807 | 118.563 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 631654 | -1.69768 | 179.9745 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=22, Schedule=logT |
+| 654105 | -1.66439 | 110.9725 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 658180 | -1.72803 | 103.5277 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 983552 | -1.73856 | 88.15294 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=10, Schedule=logT |
+| 984673 | -1.70021 | 126.657 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=15, Schedule=logT |
+| 1010826 | -1.70137 | 149.0962 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=18, Schedule=logT |
+| 1051560 | -1.63919 | 118.5582 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 1086364 | -1.70278 | 95.86665 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 1153328 | -1.68096 | 118.4791 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 1251908 | -1.73153 | 88.35774 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=10, Schedule=logT |
+| 1430748 | -1.69098 | 315.4569 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=40, Schedule=logT |
+| 1494266 | -1.71234 | 186.7756 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=23, Schedule=logT |
+| 1526610 | -1.69344 | 103.4454 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 1575578 | -1.68794 | 103.4997 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 1631660 | -1.68455 | 95.96804 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 1730477 | -1.64773 | 126.1126 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=15, Schedule=logT |
+| 1769991 | -1.72066 | 97.72275 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 1791529 | -1.70447 | 103.4678 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 1914710 | -1.67759 | 111.0999 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 1958910 | -1.72736 | 119.2949 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 2094269 | -1.68269 | 110.9431 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 2103206 | -1.73526 | 111.0922 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 2254005 | -1.68656 | 95.70777 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 2261070 | -1.67718 | 103.4394 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 2330819 | -1.71491 | 97.16108 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 2471202 | -1.6528 | 179.2496 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=22, Schedule=logT |
+| 2475263 | -1.69088 | 103.3928 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 2494091 | -1.69335 | 103.2364 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 2575023 | -1.70921 | 88.22839 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=10, Schedule=logT |
+| 2622727 | -1.68713 | 88.06476 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=10, Schedule=logT |
+| 2629801 | -1.6916 | 111.0213 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 2633193 | -1.69039 | 195.2519 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=24, Schedule=logT |
+| 2702397 | -1.72828 | 111.193 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 2892506 | -1.71593 | 103.3748 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 3139424 | -1.67747 | 119.2599 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 3212296 | -1.72928 | 88.26259 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=10, Schedule=logT |
+| 3240710 | -1.69005 | 118.4079 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 3259621 | -1.69826 | 95.7276 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 3328448 | -1.69081 | 111.3507 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 3396452 | -1.70352 | 95.71312 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 3603850 | -1.68343 | 103.3202 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 3633003 | -1.67308 | 126.2148 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=15, Schedule=logT |
+| 3713812 | -1.73963 | 103.4964 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 3727510 | -1.69772 | 96.94841 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 3730240 | -1.70893 | 103.334 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 3883519 | -1.68642 | 111.2485 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 3996225 | -1.71324 | 103.5779 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 4030608 | -1.70571 | 133.7378 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=16, Schedule=logT |
+| 4043709 | -1.67275 | 88.26281 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=10, Schedule=logT |
+| 4068529 | -1.66537 | 118.4551 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 4087272 | -1.73407 | 88.23709 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=10, Schedule=logT |
+| 4187807 | -1.72066 | 111.0774 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 4197361 | -1.68945 | 141.5502 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=17, Schedule=logT |
+| 4490197 | -1.7264 | 96.98781 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 4621654 | -1.69278 | 111.0979 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 4911238 | -1.73575 | 103.3004 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 4931967 | -1.71426 | 97.59659 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 4955389 | -1.6801 | 103.2176 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 4960753 | -1.67041 | 95.78912 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 5049071 | -1.69004 | 103.4538 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 5105258 | -1.74864 | 141.872 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=17, Schedule=logT |
+| 5314052 | -1.71041 | 95.91079 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 5406329 | -1.71337 | 118.496 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 5550256 | -1.7049 | 95.87567 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 5551067 | -1.67663 | 95.85884 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 5672028 | -1.68293 | 88.17599 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=10, Schedule=logT |
+| 5719349 | -1.66567 | 270.8042 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=34, Schedule=logT |
+| 5913160 | -1.67523 | 110.8388 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 5918224 | -1.6477 | 118.6579 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 5920270 | -1.71192 | 105.3167 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 6007986 | -1.67094 | 103.2567 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 6145844 | -1.66589 | 126.2246 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=15, Schedule=logT |
+| 6163735 | -1.69796 | 104.1535 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 6391497 | -1.73133 | 80.47468 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=9, Schedule=logT |
+| 6397791 | -1.72007 | 111.0433 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 6582535 | -1.7002 | 95.72438 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 6616820 | -1.68809 | 104.4577 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 6667235 | -1.73309 | 110.9605 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 6774234 | -1.69408 | 110.9407 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 6857733 | -1.70857 | 88.22393 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=10, Schedule=logT |
+| 6893474 | -1.71062 | 103.2874 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 6998119 | -1.71608 | 95.87256 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 7165636 | -1.65415 | 126.219 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=15, Schedule=logT |
+| 7276912 | -1.68996 | 111.0667 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 7296639 | -1.67606 | 111.0155 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 7308676 | -1.70904 | 80.55254 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=9, Schedule=logT |
+| 7388150 | -1.71376 | 133.7889 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=16, Schedule=logT |
+| 7408152 | -1.70551 | 103.3304 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 7429274 | -1.70107 | 88.37388 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=10, Schedule=logT |
+| 7778359 | -1.73538 | 95.80327 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 7923692 | -1.65815 | 95.75193 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 7981098 | -1.73222 | 126.1025 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=15, Schedule=logT |
+| 8085727 | -1.70976 | 103.2805 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 8111176 | -1.69573 | 118.4181 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 8397304 | -1.71318 | 95.85281 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 8421935 | -1.67507 | 133.9212 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=16, Schedule=logT |
+| 8453239 | -1.68031 | 110.9584 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 8453439 | -1.7135 | 103.4007 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 8458710 | -1.67951 | 126.2858 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=15, Schedule=logT |
+| 8598692 | -1.65938 | 110.9067 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 8767273 | -1.693 | 141.5088 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=17, Schedule=logT |
+| 8924713 | -1.66932 | 95.7276 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 8991508 | -1.66604 | 80.62696 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=9, Schedule=logT |
+| 9015879 | -1.71764 | 95.98009 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 9067352 | -1.67964 | 120.0592 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 9175173 | -1.67111 | 110.7208 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 9181537 | -1.66824 | 126.6956 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=15, Schedule=logT |
+| 9182308 | -1.69881 | 88.14978 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=10, Schedule=logT |
+| 9335413 | -1.69022 | 118.6665 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 9469999 | -1.70814 | 103.3529 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 9510406 | -1.70199 | 95.63783 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 9516964 | -1.66673 | 103.5497 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 9692062 | -1.72398 | 110.9904 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 9721192 | -1.70144 | 95.8599 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 9732497 | -1.72027 | 80.67107 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=9, Schedule=logT |
+| 9807541 | -1.68575 | 118.752 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 10016117 | -1.66535 | 110.9275 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 10289415 | -1.68948 | 103.3987 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 10303962 | -1.69095 | 118.5362 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 10321011 | -1.76596 | 80.87725 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=9, Schedule=logT |
+| 10492586 | -1.68098 | 112.6272 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 10617787 | -1.6683 | 133.7412 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=16, Schedule=logT |
+| 10680741 | -1.65512 | 103.5847 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 10752963 | -1.74174 | 118.8036 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 10759243 | -1.69761 | 103.478 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 10785990 | -1.69339 | 118.6029 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 10873220 | -1.65267 | 118.3698 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 11037872 | -1.69444 | 110.978 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 11146941 | -1.65302 | 133.9236 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=16, Schedule=logT |
+| 11182766 | -1.68636 | 103.3123 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 11251697 | -1.7161 | 103.4046 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 11371769 | -1.69505 | 126.4779 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=15, Schedule=logT |
+| 11402525 | -1.70928 | 118.4081 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 11412292 | -1.70872 | 119.8787 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 11503114 | -1.69167 | 111.1504 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 11534681 | -1.71107 | 88.40555 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=10, Schedule=logT |
+| 11605451 | -1.68312 | 118.6332 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 11679033 | -1.66707 | 119.391 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 11777311 | -1.6965 | 111.1048 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 11802495 | -1.6898 | 133.6581 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=16, Schedule=logT |
+| 11915411 | -1.68097 | 110.955 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 11960737 | -1.6913 | 95.92103 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 12088959 | -1.69584 | 118.5622 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 12238274 | -1.66623 | 111.0934 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 12476934 | -1.71499 | 80.64555 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=9, Schedule=logT |
+| 12520071 | -1.68949 | 118.5662 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 12531925 | -1.68796 | 118.932 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 12600313 | -1.70384 | 96.97278 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 12876033 | -1.69459 | 126.1295 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=15, Schedule=logT |
+| 12948253 | -1.6636 | 141.2586 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=17, Schedule=logT |
+| 13046662 | -1.73876 | 103.3359 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 13183385 | -1.66908 | 103.2466 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 13232651 | -1.65347 | 111.0182 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 13392517 | -1.69585 | 118.5984 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 13414790 | -1.72062 | 103.3716 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 13551483 | -1.67897 | 95.82324 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 13753649 | -1.69922 | 103.5037 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 13928994 | -1.68737 | 88.16426 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=10, Schedule=logT |
+| 14030140 | -1.67294 | 111.3099 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 14066739 | -1.67601 | 118.5717 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 14106527 | -1.71267 | 148.8423 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=18, Schedule=logT |
+| 14207659 | -1.6417 | 133.6427 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=16, Schedule=logT |
+| 14230092 | -1.68828 | 111.03 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 14265803 | -1.65969 | 118.6505 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 14280208 | -1.69269 | 88.28656 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=10, Schedule=logT |
+| 14441004 | -1.69695 | 134.0139 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=16, Schedule=logT |
+| 14542852 | -1.69856 | 143.0092 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=17, Schedule=logT |
+| 14547212 | -1.67492 | 103.4286 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 14550708 | -1.68647 | 88.15312 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=10, Schedule=logT |
+| 14772102 | -1.725 | 103.2957 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 15011482 | -1.73888 | 88.58712 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=10, Schedule=logT |
+| 15037000 | -1.70124 | 133.6883 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=16, Schedule=logT |
+| 15345480 | -1.74859 | 95.9006 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 15446758 | -1.70623 | 119.2156 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=14, Schedule=logT |
+| 15509635 | -1.64976 | 88.29116 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=10, Schedule=logT |
+| 15570002 | -1.67317 | 111.527 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 15709809 | -1.66647 | 95.6747 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 15755754 | -1.69615 | 95.9388 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=11, Schedule=logT |
+| 15763085 | -1.65829 | 88.41127 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=10, Schedule=logT |
+| 15924209 | -1.71158 | 103.4517 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 15981934 | -1.67195 | 141.924 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=17, Schedule=logT |
+| 16164239 | -1.69433 | 88.27814 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=10, Schedule=logT |
+| 16173523 | -1.70529 | 110.9471 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 16248991 | -1.67747 | 111.1225 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 16319112 | -1.71467 | 103.5404 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 16350340 | -1.70231 | 133.5213 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=16, Schedule=logT |
+| 16516882 | -1.69499 | 110.9057 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=13, Schedule=logT |
+| 16577430 | -1.69605 | 103.3985 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 16600400 | -1.6835 | 103.2265 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 16609733 | -1.71667 | 103.5838 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 16657501 | -1.69571 | 133.6703 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=16, Schedule=logT |
+| 16678332 | -1.70272 | 103.5359 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=12, Schedule=logT |
+| 16695257 | -1.70229 | 88.2137 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=10, Schedule=logT |
 
 #### N = 2744
 
 | Seed | Energy | Runtime (s) | Average steps | Success Probability | Hardware | Parameters |
 |------|--------|-------------|---------------|----------------------|----------|------------|
-| 502033 | -1.69213 | 1999.33 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=49, schedule=logT |
-| 3210623 | -1.72202 | 2036.902 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=50, schedule=logT |
-| 4063355 | -1.70716 | 2283.946 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=56, schedule=logT |
-| 5105474 | -1.68596 | 1833.527 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=45, schedule=logT |
-| 7711527 | -1.7123 | 1756.955 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=43, schedule=logT |
-| 9551411 | -1.69631 | 2161.808 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=53, schedule=logT |
-| 9569658 | -1.70125 | 1839.251 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=45, schedule=logT |
-| 11086240 | -1.68613 | 2939.442 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=72, schedule=logT |
-| 14949383 | -1.67764 | 1832.12 | — | 1 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=45, schedule=logT |
-| 16095495 | -1.70227 | 2039.515 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | global_steps_per_temperature=5, MCS_per_global_steps=15, number_of_temperatures=50, schedule=logT |
+| 502033 | -1.69213 | 1999.33 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=49, Schedule=logT |
+| 3210623 | -1.72202 | 2036.902 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=50, Schedule=logT |
+| 4063355 | -1.70716 | 2283.946 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=56, Schedule=logT |
+| 5105474 | -1.68596 | 1833.527 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=45, Schedule=logT |
+| 7711527 | -1.7123 | 1756.955 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=43, Schedule=logT |
+| 9551411 | -1.69631 | 2161.808 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=53, Schedule=logT |
+| 9569658 | -1.70125 | 1839.251 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=45, Schedule=logT |
+| 11086240 | -1.68613 | 2939.442 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=72, Schedule=logT |
+| 14949383 | -1.67764 | 1832.12 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=45, Schedule=logT |
+| 16095495 | -1.70227 | 2039.515 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_g$=5, $\theta_l$=15, Num. temp.=50, Schedule=logT |
 :::
 :::
 
@@ -6612,221 +6612,221 @@ TODO: populate from experiments.
 
 | Seed | Energy | Runtime (s) | Average steps | Success Probability | Hardware | Parameters |
 |------|--------|-------------|---------------|----------------------|----------|------------|
-| 110046 | -1.65216 | 21.66197 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=40, schedule=logT |
-| 228274 | -1.64456 | 13.34186 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 369954 | -1.7295 | 21.68201 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=40, schedule=logT |
-| 418527 | -1.68276 | 29.9979 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=55, schedule=logT |
-| 492757 | -1.66257 | 160.4464 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=290, schedule=logT |
-| 554682 | -1.70255 | 21.67269 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=40, schedule=logT |
-| 624355 | -1.72807 | 16.1103 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 631654 | -1.69768 | 32.78706 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=60, schedule=logT |
-| 654105 | -1.66439 | 43.9005 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=80, schedule=logT |
-| 658180 | -1.72803 | 16.11431 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 983552 | -1.73856 | 13.32475 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 984673 | -1.70021 | 21.6527 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=40, schedule=logT |
-| 1010826 | -1.70137 | 41.11479 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=75, schedule=logT |
-| 1051560 | -1.63919 | 24.42678 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=45, schedule=logT |
-| 1086364 | -1.70278 | 30.00575 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=55, schedule=logT |
-| 1153328 | -1.68096 | 18.90382 | — | 0.8 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 1251908 | -1.73153 | 13.33623 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 1430748 | -1.69098 | 54.96528 | — | 0.8 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=100, schedule=logT |
-| 1494266 | -1.71234 | 88.37365 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=160, schedule=logT |
-| 1526610 | -1.69344 | 32.79636 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=60, schedule=logT |
-| 1575578 | -1.68794 | 18.89246 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 1631660 | -1.68455 | 13.33352 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 1730477 | -1.64773 | 41.13364 | — | 0.8 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=75, schedule=logT |
-| 1769991 | -1.72066 | 13.33555 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 1791529 | -1.70447 | 24.46225 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=45, schedule=logT |
-| 1914710 | -1.67759 | 18.90088 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 1958910 | -1.72736 | 27.20392 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=50, schedule=logT |
-| 2094269 | -1.68269 | 16.09928 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 2103206 | -1.73526 | 24.44804 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=45, schedule=logT |
-| 2254005 | -1.68656 | 13.33501 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 2261070 | -1.67718 | 21.6775 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=40, schedule=logT |
-| 2330819 | -1.71491 | 18.87588 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 2471202 | -1.6528 | 35.58062 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=65, schedule=logT |
-| 2475263 | -1.69088 | 13.33376 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 2494091 | -1.69335 | 16.12151 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 2575023 | -1.70921 | 16.11005 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 2622727 | -1.68713 | 13.32421 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 2629801 | -1.6916 | 18.89223 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 2633193 | -1.69039 | 93.90179 | — | 0.7 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=170, schedule=logT |
-| 2702397 | -1.72828 | 18.89122 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 2892506 | -1.71593 | 27.24112 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=50, schedule=logT |
-| 3139424 | -1.67747 | 21.65302 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=40, schedule=logT |
-| 3212296 | -1.72928 | 13.34009 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 3240710 | -1.69005 | 18.88633 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 3259621 | -1.69826 | 21.66867 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=40, schedule=logT |
-| 3328448 | -1.69081 | 21.66868 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=40, schedule=logT |
-| 3396452 | -1.70352 | 18.90006 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 3603850 | -1.68343 | 21.66229 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=40, schedule=logT |
-| 3633003 | -1.67308 | 29.98063 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=55, schedule=logT |
-| 3713812 | -1.73963 | 38.35781 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=70, schedule=logT |
-| 3727510 | -1.69772 | 16.11922 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 3730240 | -1.70893 | 18.89008 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 3883519 | -1.68642 | 21.67167 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=40, schedule=logT |
-| 3996225 | -1.71324 | 21.66471 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=40, schedule=logT |
-| 4030608 | -1.70571 | 29.99642 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=55, schedule=logT |
-| 4043709 | -1.67275 | 10.54797 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=20, schedule=logT |
-| 4068529 | -1.66537 | 21.68022 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=40, schedule=logT |
-| 4087272 | -1.73407 | 13.34259 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 4187807 | -1.72066 | 13.32422 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 4197361 | -1.68945 | 24.44613 | — | 0.5 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=45, schedule=logT |
-| 4490197 | -1.7264 | 16.12221 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 4621654 | -1.69278 | 29.99896 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=55, schedule=logT |
-| 4911238 | -1.73575 | 16.09995 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 4931967 | -1.71426 | 13.33882 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 4955389 | -1.6801 | 16.1227 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 4960753 | -1.67041 | 10.56012 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=20, schedule=logT |
-| 5049071 | -1.69004 | 18.87654 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 5105258 | -1.74864 | 18.8969 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 5314052 | -1.71041 | 16.10698 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 5406329 | -1.71337 | 18.90137 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 5550256 | -1.7049 | 13.33425 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 5551067 | -1.67663 | 18.90215 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 5672028 | -1.68293 | 16.11056 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 5719349 | -1.66567 | 54.98709 | — | 0.5 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=100, schedule=logT |
-| 5913160 | -1.67523 | 24.42857 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=45, schedule=logT |
-| 5918224 | -1.6477 | 21.66974 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=40, schedule=logT |
-| 5920270 | -1.71192 | 13.3397 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 6007986 | -1.67094 | 24.45737 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=45, schedule=logT |
-| 6145844 | -1.66589 | 32.80169 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=60, schedule=logT |
-| 6163735 | -1.69796 | 18.89332 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 6391497 | -1.73133 | 10.55929 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=20, schedule=logT |
-| 6397791 | -1.72007 | 24.43995 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=45, schedule=logT |
-| 6582535 | -1.7002 | 16.12169 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 6616820 | -1.68809 | 13.32471 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 6667235 | -1.73309 | 24.45343 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=45, schedule=logT |
-| 6774234 | -1.69408 | 21.6708 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=40, schedule=logT |
-| 6857733 | -1.70857 | 16.1208 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 6893474 | -1.71062 | 18.88628 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 6998119 | -1.71608 | 13.32319 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 7165636 | -1.65415 | 18.89277 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 7276912 | -1.68996 | 13.34248 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 7296639 | -1.67606 | 16.11846 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 7308676 | -1.70904 | 10.56023 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=20, schedule=logT |
-| 7388150 | -1.71376 | 35.57296 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=65, schedule=logT |
-| 7408152 | -1.70551 | 21.67578 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=40, schedule=logT |
-| 7429274 | -1.70107 | 13.34513 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 7778359 | -1.73538 | 13.32386 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 7923692 | -1.65815 | 10.55365 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=20, schedule=logT |
-| 7981098 | -1.73222 | 24.46029 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=45, schedule=logT |
-| 8085727 | -1.70976 | 21.65251 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=40, schedule=logT |
-| 8111176 | -1.69573 | 54.98775 | — | 0.8 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=100, schedule=logT |
-| 8397304 | -1.71318 | 18.90474 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 8421935 | -1.67507 | 35.56046 | — | 0.6 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=65, schedule=logT |
-| 8453239 | -1.68031 | 16.10103 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 8453439 | -1.7135 | 38.3632 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=70, schedule=logT |
-| 8458710 | -1.67951 | 43.86256 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=80, schedule=logT |
-| 8598692 | -1.65938 | 10.54786 | — | 0.3 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=20, schedule=logT |
-| 8767273 | -1.693 | 38.35255 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=70, schedule=logT |
-| 8924713 | -1.66932 | 16.10992 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 8991508 | -1.66604 | 13.33607 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 9015879 | -1.71764 | 13.33798 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 9067352 | -1.67964 | 27.20527 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=50, schedule=logT |
-| 9175173 | -1.67111 | 16.10049 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 9181537 | -1.66824 | 46.69634 | — | 0.7 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=85, schedule=logT |
-| 9182308 | -1.69881 | 10.54819 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=20, schedule=logT |
-| 9335413 | -1.69022 | 18.89266 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 9469999 | -1.70814 | 21.6669 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=40, schedule=logT |
-| 9510406 | -1.70199 | 18.89885 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 9516964 | -1.66673 | 16.11771 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 9692062 | -1.72398 | 35.56694 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=65, schedule=logT |
-| 9721192 | -1.70144 | 13.34437 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 9732497 | -1.72027 | 13.33572 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 9807541 | -1.68575 | 43.907 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=80, schedule=logT |
-| 10016117 | -1.66535 | 18.87621 | — | 0.8 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 10289415 | -1.68948 | 18.9011 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 10303962 | -1.69095 | 27.23172 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=50, schedule=logT |
-| 10321011 | -1.76596 | 60.62406 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=110, schedule=logT |
-| 10492586 | -1.68098 | 18.90034 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 10617787 | -1.6683 | 46.65434 | — | 0.8 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=85, schedule=logT |
-| 10680741 | -1.65512 | 32.7968 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=60, schedule=logT |
-| 10752963 | -1.74174 | 16.11947 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 10759243 | -1.69761 | 24.42823 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=45, schedule=logT |
-| 10785990 | -1.69339 | 21.65314 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=40, schedule=logT |
-| 10873220 | -1.65267 | 30.018 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=55, schedule=logT |
-| 11037872 | -1.69444 | 16.09988 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 11146941 | -1.65302 | 43.8839 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=80, schedule=logT |
-| 11182766 | -1.68636 | 27.23523 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=50, schedule=logT |
-| 11251697 | -1.7161 | 16.11344 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 11371769 | -1.69505 | 41.12166 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=75, schedule=logT |
-| 11402525 | -1.70928 | 38.3356 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=70, schedule=logT |
-| 11412292 | -1.70872 | 27.20225 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=50, schedule=logT |
-| 11503114 | -1.69167 | 16.10761 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 11534681 | -1.71107 | 18.89941 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 11605451 | -1.68312 | 27.22755 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=50, schedule=logT |
-| 11679033 | -1.66707 | 21.67018 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=40, schedule=logT |
-| 11777311 | -1.6965 | 32.76686 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=60, schedule=logT |
-| 11802495 | -1.6898 | 27.21565 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=50, schedule=logT |
-| 11915411 | -1.68097 | 38.33533 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=70, schedule=logT |
-| 11960737 | -1.6913 | 16.1216 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 12088959 | -1.69584 | 27.23868 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=50, schedule=logT |
-| 12238274 | -1.66623 | 16.09985 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 12476934 | -1.71499 | 10.55819 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=20, schedule=logT |
-| 12520071 | -1.68949 | 24.46 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=45, schedule=logT |
-| 12531925 | -1.68796 | 18.88611 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 12600313 | -1.70384 | 13.34188 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 12876033 | -1.69459 | 66.06701 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=120, schedule=logT |
-| 12948253 | -1.6636 | 30.00018 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=55, schedule=logT |
-| 13046662 | -1.73876 | 24.42918 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=45, schedule=logT |
-| 13183385 | -1.66908 | 16.11235 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 13232651 | -1.65347 | 18.8963 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 13392517 | -1.69585 | 16.1228 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 13414790 | -1.72062 | 13.34046 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 13551483 | -1.67897 | 13.34095 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 13753649 | -1.69922 | 27.22548 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=50, schedule=logT |
-| 13928994 | -1.68737 | 13.33448 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 14030140 | -1.67294 | 24.46052 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=45, schedule=logT |
-| 14066739 | -1.67601 | 32.79804 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=60, schedule=logT |
-| 14106527 | -1.71267 | 35.57785 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=65, schedule=logT |
-| 14207659 | -1.6417 | 66.11718 | — | 0.8 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=120, schedule=logT |
-| 14230092 | -1.68828 | 18.87703 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 14265803 | -1.65969 | 29.99167 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=55, schedule=logT |
-| 14280208 | -1.69269 | 16.10957 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 14441004 | -1.69695 | 38.33953 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=70, schedule=logT |
-| 14542852 | -1.69856 | 46.69396 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=85, schedule=logT |
-| 14547212 | -1.67492 | 16.11098 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 14550708 | -1.68647 | 16.12232 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 14772102 | -1.725 | 16.11037 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 15011482 | -1.73888 | 10.56096 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=20, schedule=logT |
-| 15037000 | -1.70124 | 35.58098 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=65, schedule=logT |
-| 15345480 | -1.74859 | 13.33155 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 15446758 | -1.70623 | 55.02135 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=100, schedule=logT |
-| 15509635 | -1.64976 | 10.55435 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=20, schedule=logT |
-| 15570002 | -1.67317 | 16.10953 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 15709809 | -1.66647 | 16.11107 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 15755754 | -1.69615 | 13.33175 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 15763085 | -1.65829 | 10.55336 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=20, schedule=logT |
-| 15924209 | -1.71158 | 16.12162 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 15981934 | -1.67195 | 52.1927 | — | 0.5 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=95, schedule=logT |
-| 16164239 | -1.69433 | 10.55375 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=20, schedule=logT |
-| 16173523 | -1.70529 | 21.68349 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=40, schedule=logT |
-| 16248991 | -1.67747 | 29.99284 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=55, schedule=logT |
-| 16319112 | -1.71467 | 24.44577 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=45, schedule=logT |
-| 16350340 | -1.70231 | 21.68058 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=40, schedule=logT |
-| 16516882 | -1.69499 | 16.10133 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 16577430 | -1.69605 | 13.33274 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 16600400 | -1.6835 | 16.12238 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=30, schedule=logT |
-| 16609733 | -1.71667 | 18.87555 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=35, schedule=logT |
-| 16657501 | -1.69571 | 21.66732 | — | 0.3 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=40, schedule=logT |
-| 16678332 | -1.70272 | 13.34189 | — | 1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=25, schedule=logT |
-| 16695257 | -1.70229 | 21.67071 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=40, schedule=logT |
+| 110046 | -1.65216 | 21.66197 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=40, Schedule=logT |
+| 228274 | -1.64456 | 13.34186 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 369954 | -1.7295 | 21.68201 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=40, Schedule=logT |
+| 418527 | -1.68276 | 29.9979 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=55, Schedule=logT |
+| 492757 | -1.66257 | 160.4464 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=290, Schedule=logT |
+| 554682 | -1.70255 | 21.67269 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=40, Schedule=logT |
+| 624355 | -1.72807 | 16.1103 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 631654 | -1.69768 | 32.78706 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=60, Schedule=logT |
+| 654105 | -1.66439 | 43.9005 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=80, Schedule=logT |
+| 658180 | -1.72803 | 16.11431 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 983552 | -1.73856 | 13.32475 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 984673 | -1.70021 | 21.6527 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=40, Schedule=logT |
+| 1010826 | -1.70137 | 41.11479 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=75, Schedule=logT |
+| 1051560 | -1.63919 | 24.42678 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=45, Schedule=logT |
+| 1086364 | -1.70278 | 30.00575 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=55, Schedule=logT |
+| 1153328 | -1.68096 | 18.90382 | — | 0.8 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 1251908 | -1.73153 | 13.33623 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 1430748 | -1.69098 | 54.96528 | — | 0.8 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=100, Schedule=logT |
+| 1494266 | -1.71234 | 88.37365 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=160, Schedule=logT |
+| 1526610 | -1.69344 | 32.79636 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=60, Schedule=logT |
+| 1575578 | -1.68794 | 18.89246 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 1631660 | -1.68455 | 13.33352 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 1730477 | -1.64773 | 41.13364 | — | 0.8 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=75, Schedule=logT |
+| 1769991 | -1.72066 | 13.33555 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 1791529 | -1.70447 | 24.46225 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=45, Schedule=logT |
+| 1914710 | -1.67759 | 18.90088 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 1958910 | -1.72736 | 27.20392 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=50, Schedule=logT |
+| 2094269 | -1.68269 | 16.09928 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 2103206 | -1.73526 | 24.44804 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=45, Schedule=logT |
+| 2254005 | -1.68656 | 13.33501 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 2261070 | -1.67718 | 21.6775 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=40, Schedule=logT |
+| 2330819 | -1.71491 | 18.87588 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 2471202 | -1.6528 | 35.58062 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=65, Schedule=logT |
+| 2475263 | -1.69088 | 13.33376 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 2494091 | -1.69335 | 16.12151 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 2575023 | -1.70921 | 16.11005 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 2622727 | -1.68713 | 13.32421 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 2629801 | -1.6916 | 18.89223 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 2633193 | -1.69039 | 93.90179 | — | 0.7 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=170, Schedule=logT |
+| 2702397 | -1.72828 | 18.89122 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 2892506 | -1.71593 | 27.24112 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=50, Schedule=logT |
+| 3139424 | -1.67747 | 21.65302 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=40, Schedule=logT |
+| 3212296 | -1.72928 | 13.34009 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 3240710 | -1.69005 | 18.88633 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 3259621 | -1.69826 | 21.66867 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=40, Schedule=logT |
+| 3328448 | -1.69081 | 21.66868 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=40, Schedule=logT |
+| 3396452 | -1.70352 | 18.90006 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 3603850 | -1.68343 | 21.66229 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=40, Schedule=logT |
+| 3633003 | -1.67308 | 29.98063 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=55, Schedule=logT |
+| 3713812 | -1.73963 | 38.35781 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=70, Schedule=logT |
+| 3727510 | -1.69772 | 16.11922 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 3730240 | -1.70893 | 18.89008 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 3883519 | -1.68642 | 21.67167 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=40, Schedule=logT |
+| 3996225 | -1.71324 | 21.66471 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=40, Schedule=logT |
+| 4030608 | -1.70571 | 29.99642 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=55, Schedule=logT |
+| 4043709 | -1.67275 | 10.54797 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=20, Schedule=logT |
+| 4068529 | -1.66537 | 21.68022 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=40, Schedule=logT |
+| 4087272 | -1.73407 | 13.34259 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 4187807 | -1.72066 | 13.32422 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 4197361 | -1.68945 | 24.44613 | — | 0.5 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=45, Schedule=logT |
+| 4490197 | -1.7264 | 16.12221 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 4621654 | -1.69278 | 29.99896 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=55, Schedule=logT |
+| 4911238 | -1.73575 | 16.09995 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 4931967 | -1.71426 | 13.33882 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 4955389 | -1.6801 | 16.1227 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 4960753 | -1.67041 | 10.56012 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=20, Schedule=logT |
+| 5049071 | -1.69004 | 18.87654 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 5105258 | -1.74864 | 18.8969 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 5314052 | -1.71041 | 16.10698 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 5406329 | -1.71337 | 18.90137 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 5550256 | -1.7049 | 13.33425 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 5551067 | -1.67663 | 18.90215 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 5672028 | -1.68293 | 16.11056 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 5719349 | -1.66567 | 54.98709 | — | 0.5 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=100, Schedule=logT |
+| 5913160 | -1.67523 | 24.42857 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=45, Schedule=logT |
+| 5918224 | -1.6477 | 21.66974 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=40, Schedule=logT |
+| 5920270 | -1.71192 | 13.3397 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 6007986 | -1.67094 | 24.45737 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=45, Schedule=logT |
+| 6145844 | -1.66589 | 32.80169 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=60, Schedule=logT |
+| 6163735 | -1.69796 | 18.89332 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 6391497 | -1.73133 | 10.55929 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=20, Schedule=logT |
+| 6397791 | -1.72007 | 24.43995 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=45, Schedule=logT |
+| 6582535 | -1.7002 | 16.12169 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 6616820 | -1.68809 | 13.32471 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 6667235 | -1.73309 | 24.45343 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=45, Schedule=logT |
+| 6774234 | -1.69408 | 21.6708 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=40, Schedule=logT |
+| 6857733 | -1.70857 | 16.1208 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 6893474 | -1.71062 | 18.88628 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 6998119 | -1.71608 | 13.32319 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 7165636 | -1.65415 | 18.89277 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 7276912 | -1.68996 | 13.34248 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 7296639 | -1.67606 | 16.11846 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 7308676 | -1.70904 | 10.56023 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=20, Schedule=logT |
+| 7388150 | -1.71376 | 35.57296 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=65, Schedule=logT |
+| 7408152 | -1.70551 | 21.67578 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=40, Schedule=logT |
+| 7429274 | -1.70107 | 13.34513 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 7778359 | -1.73538 | 13.32386 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 7923692 | -1.65815 | 10.55365 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=20, Schedule=logT |
+| 7981098 | -1.73222 | 24.46029 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=45, Schedule=logT |
+| 8085727 | -1.70976 | 21.65251 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=40, Schedule=logT |
+| 8111176 | -1.69573 | 54.98775 | — | 0.8 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=100, Schedule=logT |
+| 8397304 | -1.71318 | 18.90474 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 8421935 | -1.67507 | 35.56046 | — | 0.6 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=65, Schedule=logT |
+| 8453239 | -1.68031 | 16.10103 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 8453439 | -1.7135 | 38.3632 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=70, Schedule=logT |
+| 8458710 | -1.67951 | 43.86256 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=80, Schedule=logT |
+| 8598692 | -1.65938 | 10.54786 | — | 0.3 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=20, Schedule=logT |
+| 8767273 | -1.693 | 38.35255 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=70, Schedule=logT |
+| 8924713 | -1.66932 | 16.10992 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 8991508 | -1.66604 | 13.33607 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 9015879 | -1.71764 | 13.33798 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 9067352 | -1.67964 | 27.20527 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=50, Schedule=logT |
+| 9175173 | -1.67111 | 16.10049 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 9181537 | -1.66824 | 46.69634 | — | 0.7 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=85, Schedule=logT |
+| 9182308 | -1.69881 | 10.54819 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=20, Schedule=logT |
+| 9335413 | -1.69022 | 18.89266 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 9469999 | -1.70814 | 21.6669 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=40, Schedule=logT |
+| 9510406 | -1.70199 | 18.89885 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 9516964 | -1.66673 | 16.11771 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 9692062 | -1.72398 | 35.56694 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=65, Schedule=logT |
+| 9721192 | -1.70144 | 13.34437 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 9732497 | -1.72027 | 13.33572 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 9807541 | -1.68575 | 43.907 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=80, Schedule=logT |
+| 10016117 | -1.66535 | 18.87621 | — | 0.8 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 10289415 | -1.68948 | 18.9011 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 10303962 | -1.69095 | 27.23172 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=50, Schedule=logT |
+| 10321011 | -1.76596 | 60.62406 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=110, Schedule=logT |
+| 10492586 | -1.68098 | 18.90034 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 10617787 | -1.6683 | 46.65434 | — | 0.8 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=85, Schedule=logT |
+| 10680741 | -1.65512 | 32.7968 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=60, Schedule=logT |
+| 10752963 | -1.74174 | 16.11947 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 10759243 | -1.69761 | 24.42823 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=45, Schedule=logT |
+| 10785990 | -1.69339 | 21.65314 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=40, Schedule=logT |
+| 10873220 | -1.65267 | 30.018 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=55, Schedule=logT |
+| 11037872 | -1.69444 | 16.09988 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 11146941 | -1.65302 | 43.8839 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=80, Schedule=logT |
+| 11182766 | -1.68636 | 27.23523 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=50, Schedule=logT |
+| 11251697 | -1.7161 | 16.11344 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 11371769 | -1.69505 | 41.12166 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=75, Schedule=logT |
+| 11402525 | -1.70928 | 38.3356 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=70, Schedule=logT |
+| 11412292 | -1.70872 | 27.20225 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=50, Schedule=logT |
+| 11503114 | -1.69167 | 16.10761 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 11534681 | -1.71107 | 18.89941 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 11605451 | -1.68312 | 27.22755 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=50, Schedule=logT |
+| 11679033 | -1.66707 | 21.67018 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=40, Schedule=logT |
+| 11777311 | -1.6965 | 32.76686 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=60, Schedule=logT |
+| 11802495 | -1.6898 | 27.21565 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=50, Schedule=logT |
+| 11915411 | -1.68097 | 38.33533 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=70, Schedule=logT |
+| 11960737 | -1.6913 | 16.1216 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 12088959 | -1.69584 | 27.23868 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=50, Schedule=logT |
+| 12238274 | -1.66623 | 16.09985 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 12476934 | -1.71499 | 10.55819 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=20, Schedule=logT |
+| 12520071 | -1.68949 | 24.46 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=45, Schedule=logT |
+| 12531925 | -1.68796 | 18.88611 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 12600313 | -1.70384 | 13.34188 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 12876033 | -1.69459 | 66.06701 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=120, Schedule=logT |
+| 12948253 | -1.6636 | 30.00018 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=55, Schedule=logT |
+| 13046662 | -1.73876 | 24.42918 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=45, Schedule=logT |
+| 13183385 | -1.66908 | 16.11235 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 13232651 | -1.65347 | 18.8963 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 13392517 | -1.69585 | 16.1228 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 13414790 | -1.72062 | 13.34046 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 13551483 | -1.67897 | 13.34095 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 13753649 | -1.69922 | 27.22548 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=50, Schedule=logT |
+| 13928994 | -1.68737 | 13.33448 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 14030140 | -1.67294 | 24.46052 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=45, Schedule=logT |
+| 14066739 | -1.67601 | 32.79804 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=60, Schedule=logT |
+| 14106527 | -1.71267 | 35.57785 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=65, Schedule=logT |
+| 14207659 | -1.6417 | 66.11718 | — | 0.8 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=120, Schedule=logT |
+| 14230092 | -1.68828 | 18.87703 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 14265803 | -1.65969 | 29.99167 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=55, Schedule=logT |
+| 14280208 | -1.69269 | 16.10957 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 14441004 | -1.69695 | 38.33953 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=70, Schedule=logT |
+| 14542852 | -1.69856 | 46.69396 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=85, Schedule=logT |
+| 14547212 | -1.67492 | 16.11098 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 14550708 | -1.68647 | 16.12232 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 14772102 | -1.725 | 16.11037 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 15011482 | -1.73888 | 10.56096 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=20, Schedule=logT |
+| 15037000 | -1.70124 | 35.58098 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=65, Schedule=logT |
+| 15345480 | -1.74859 | 13.33155 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 15446758 | -1.70623 | 55.02135 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=100, Schedule=logT |
+| 15509635 | -1.64976 | 10.55435 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=20, Schedule=logT |
+| 15570002 | -1.67317 | 16.10953 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 15709809 | -1.66647 | 16.11107 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 15755754 | -1.69615 | 13.33175 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 15763085 | -1.65829 | 10.55336 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=20, Schedule=logT |
+| 15924209 | -1.71158 | 16.12162 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 15981934 | -1.67195 | 52.1927 | — | 0.5 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=95, Schedule=logT |
+| 16164239 | -1.69433 | 10.55375 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=20, Schedule=logT |
+| 16173523 | -1.70529 | 21.68349 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=40, Schedule=logT |
+| 16248991 | -1.67747 | 29.99284 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=55, Schedule=logT |
+| 16319112 | -1.71467 | 24.44577 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=45, Schedule=logT |
+| 16350340 | -1.70231 | 21.68058 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=40, Schedule=logT |
+| 16516882 | -1.69499 | 16.10133 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 16577430 | -1.69605 | 13.33274 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 16600400 | -1.6835 | 16.12238 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=30, Schedule=logT |
+| 16609733 | -1.71667 | 18.87555 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=35, Schedule=logT |
+| 16657501 | -1.69571 | 21.66732 | — | 0.3 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=40, Schedule=logT |
+| 16678332 | -1.70272 | 13.34189 | — | 1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=25, Schedule=logT |
+| 16695257 | -1.70229 | 21.67071 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=40, Schedule=logT |
 
 #### N = 2744
 
 | Seed | Energy | Runtime (s) | Average steps | Success Probability | Hardware | Parameters |
 |------|--------|-------------|---------------|----------------------|----------|------------|
-| 502033 | -1.69213 | 1636.742 | — | 0.2 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=525, schedule=logT |
-| 3210623 | -1.72202 | 2182.967 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=700, schedule=logT |
-| 4063355 | -1.70641 | 309.3315 | — | 0 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=100, schedule=logT |
-| 5105474 | -1.68596 | 387.2511 | — | 0.1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=125, schedule=logT |
-| 7711527 | -1.7123 | 1868.331 | — | 0.1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=600, schedule=logT |
-| 9551411 | -1.6955 | 309.7285 | — | 0 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=100, schedule=logT |
-| 9569658 | -1.70125 | 387.1228 | — | 0.1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=125, schedule=logT |
-| 11086240 | -1.68613 | 622.1888 | — | 0.1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=200, schedule=logT |
-| 14949383 | -1.67764 | 2179.314 | — | 0.1 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=700, schedule=logT |
-| 16095495 | -1.70227 | 2333.36 | — | 0.3 | NVIDIA Tesla V100-SXM2-32G | MCS_per_temperature=10, number_of_temperatures=750, schedule=logT |
+| 502033 | -1.69213 | 1636.742 | — | 0.2 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=525, Schedule=logT |
+| 3210623 | -1.72202 | 2182.967 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=700, Schedule=logT |
+| 4063355 | -1.70641 | 309.3315 | — | 0 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=100, Schedule=logT |
+| 5105474 | -1.68596 | 387.2511 | — | 0.1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=125, Schedule=logT |
+| 7711527 | -1.7123 | 1868.331 | — | 0.1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=600, Schedule=logT |
+| 9551411 | -1.6955 | 309.7285 | — | 0 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=100, Schedule=logT |
+| 9569658 | -1.70125 | 387.1228 | — | 0.1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=125, Schedule=logT |
+| 11086240 | -1.68613 | 622.1888 | — | 0.1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=200, Schedule=logT |
+| 14949383 | -1.67764 | 2179.314 | — | 0.1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=700, Schedule=logT |
+| 16095495 | -1.70227 | 2333.36 | — | 0.3 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=750, Schedule=logT |
 :::
 :::
 :::

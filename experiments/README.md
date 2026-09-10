@@ -47,6 +47,21 @@ per replica), which the results tables display when present and as an em
 dash otherwise. Use `experiments/sapienza/results/sk/summary.csv` as a
 reference for the expected format.
 
+Another optional column is `parameters`: a free-text, comma-separated
+`name=value` summary of the run's solver settings, shown as-is in the "All"
+section's Parameters column (the Leaderboard ignores it). `sapienza`'s
+Global Annealing (GA) and Population Annealing (PA) submissions populate it;
+[`scripts/generate_results_tables.py`](../scripts/generate_results_tables.py)
+abbreviates their parameter names for display:
+
+| Raw name (in `summary.csv`) | Displayed as | Meaning |
+|---|---|---|
+| `global_steps_per_temperature` (GA only) | $\theta_g$ | Number of global (population-level) Monte Carlo steps performed at each temperature |
+| `MCS_per_global_steps` (GA only) | $\theta_l$ | Number of local (single-spin) Monte Carlo sweeps performed between global steps |
+| `MCS_per_temperature` (PA only) | $\theta_l$ | Number of local (single-spin) Monte Carlo sweeps performed at each temperature |
+| `number_of_temperatures` | Num. temp. | Number of temperatures in the annealing schedule |
+| `schedule` | Schedule | Name of the temperature schedule (e.g. `logT` for logarithmic spacing) |
+
 ## Notes
 
 A group can add a `notes.md` next to a family's `summary.csv` (e.g.

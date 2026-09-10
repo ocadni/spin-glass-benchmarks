@@ -254,8 +254,28 @@ def format_steps(row: Row) -> str:
     return f"{row.average_steps:.7g}" if row.average_steps is not None else "—"
 
 
+
+# Display labels for known "key=value" entries in the free-text `parameters`
+# column, keyed by the raw name used in summary.csv. Currently only
+# sapienza's Global Annealing (GA) and Population Annealing (PA) submissions
+# populate this column; see experiments/README.md for what each means.
+PARAMETER_LABELS = {
+    "global_steps_per_temperature": r"$\theta_g$",
+    "MCS_per_global_steps": r"$\theta_l$",
+    "MCS_per_temperature": r"$\theta_l$",
+    "number_of_temperatures": "Num. temp.",
+    "schedule": "Schedule",
+}
+
+
 def format_parameters(row: Row) -> str:
-    return row.parameters if row.parameters is not None else "—"
+    if row.parameters is None:
+        return "—"
+    entries = []
+    for entry in row.parameters.split(", "):
+        name, _, value = entry.partition("=")
+        entries.append(f"{PARAMETER_LABELS.get(name, name)}={value}")
+    return ", ".join(entries)
 
 
 def format_probability(value: float) -> str:
