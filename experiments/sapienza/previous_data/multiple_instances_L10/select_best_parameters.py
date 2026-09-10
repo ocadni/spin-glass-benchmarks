@@ -3,12 +3,16 @@
 
 Reads GA_alternative_summary.csv and PA_alternative_summary.csv (produced by
 summarize_alternative_results.py), which hold one row per (seed, parameter
-set) with num_runs, success_rate, average_time and a tts_p<target> column.
-For each seed, keeps only the row with the lowest TTS (ties broken by higher
-success_rate, then lower average_time, then the parameter values themselves,
+set) with num_runs, best_energy, success_rate, average_time and a
+tts_p<target> column. For each seed, keeps only the row with the lowest TTS
+(ties broken by higher success_rate, then the parameter values themselves,
 for a deterministic result). Seeds where every parameter set has TTS == inf
-are still included, using the same tie-break rule, so every seed present in
-the input appears exactly once in the output.
+(success_rate == 0, i.e. no parameter set ever solved that seed) are still
+included: among those, the tie-break is instead the lowest best_energy found
+(then average_time, then the parameter values), so the reported "best"
+failed run is the one that got closest to the ground state rather than
+merely the fastest. Every seed present in the input appears exactly once in
+the output.
 
 Usage:
     python3 select_best_parameters.py [--data-dir DIR]
@@ -63,9 +67,14 @@ def select_best_rows(summary_path: Path) -> tuple[list[dict[str, str]], list[str
 
     def sort_key(row: dict[str, str]) -> tuple:
         tts = float(row[tts_column])
+        # When nothing solved this (seed, parameter set) — tts is inf — TTS
+        # and success_rate can't distinguish parameter sets, so fall back to
+        # the lowest energy found rather than the fastest run.
+        third_field = float(row["best_energy"]) if not math.isfinite(tts) else float(row["average_time"])
         return (
             tts,
             -float(row["success_rate"]),
+            third_field,
             float(row["average_time"]),
             tuple(coerce_param(row[name]) for name in param_columns),
         )

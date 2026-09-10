@@ -6895,10 +6895,10 @@ Population Annealing (PA) runs above abbreviates the underlying
 |------|--------|-------------|---------------|----------------------|----------|------------|
 | 502033 | -1.69213 | 1636.742 | — | 0.2 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=525, Schedule=logT |
 | 3210623 | -1.72202 | 2182.967 | — | 0.9 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=700, Schedule=logT |
-| 4063355 | -1.70641 | 309.3315 | — | 0 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=100, Schedule=logT |
+| 4063355 | -1.70702 | 1013.329 | — | 0 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=325, Schedule=logT |
 | 5105474 | -1.68596 | 387.2511 | — | 0.1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=125, Schedule=logT |
 | 7711527 | -1.7123 | 1868.331 | — | 0.1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=600, Schedule=logT |
-| 9551411 | -1.6955 | 309.7285 | — | 0 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=100, Schedule=logT |
+| 9551411 | -1.69627 | 1949.111 | — | 0 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=625, Schedule=logT |
 | 9569658 | -1.70125 | 387.1228 | — | 0.1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=125, Schedule=logT |
 | 11086240 | -1.68613 | 622.1888 | — | 0.1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=200, Schedule=logT |
 | 14949383 | -1.67764 | 2179.314 | — | 0.1 | NVIDIA Tesla V100-SXM2-32G | $\theta_l$=10, Num. temp.=700, Schedule=logT |
