@@ -1,4 +1,4 @@
-## Parameters column (Global Annealing / Population Annealing)
+**Parameters column (Global Annealing / Population Annealing)**
 
 The `parameters` column reported for the Global Annealing (GA) and
 Population Annealing (PA) runs above abbreviates the underlying
