@@ -10,6 +10,7 @@ from functools import partial
 
 sys.path.append("../../../Code/Legacy/packages")
 from utilities import compute_energy as _compute_energy_zero_field
+from device_utils import synchronize
 
 def get_num_spins(J):
     """Infer the system size from a square coupling matrix."""
@@ -178,7 +179,9 @@ def monte_carlo_update_random_zero_field(pop, J, beta, even_indices=None, odd_in
     population = pop.clone()
     pop_size, num_spins = population.shape
 
-    for spin in torch.randperm(num_spins, device=population.device):
+    # Spin order as Python ints (CPU RNG): indexing with a 0-d GPU tensor
+    # would force a GPU->CPU copy, i.e. a device sync, on every spin.
+    for spin in torch.randperm(num_spins).tolist():
         # This is the energy difference E(-s_i) - E(s_i) for the convention
         # used by monte_carlo_update_fast.
         local_field = torch.matmul(population, J[spin, :])
@@ -202,7 +205,9 @@ def monte_carlo_update_random_with_fields(pop, J, beta, even_indices=None,
 
     population = pop.clone()
     pop_size, num_spins = population.shape
-    for spin in torch.randperm(num_spins, device=population.device):
+    # Spin order as Python ints (CPU RNG): indexing with a 0-d GPU tensor
+    # would force a GPU->CPU copy, i.e. a device sync, on every spin.
+    for spin in torch.randperm(num_spins).tolist():
         local_field = torch.matmul(population, J[spin, :]) + fields[spin]
         delta_E = 2 * population[:, spin] * local_field
         acceptance_prob = torch.exp(-beta * delta_E)
@@ -259,6 +264,84 @@ def select_monte_carlo_update(J, fields=None, atol=0.0):
     if fields is None:
         return select_monte_carlo_update_zero_field(J, atol=atol)
     return select_monte_carlo_update_with_fields(J, fields, atol=atol)
+
+
+def quench_zero_temperature(pop, J, fields=None, even_indices=None, odd_indices=None,
+                            max_sweeps=1000):
+    """Quench a population to a local energy minimum at zero temperature.
+
+    Every proposed single-spin flip is accepted only if it strictly lowers
+    the energy (``delta_E < 0``).  Without spin groups, each sweep visits the
+    spins one at a time in a fresh random order, so every update sees the
+    previous ones and the energy never increases; this is valid for any
+    coupling graph.  With the two groups of a bipartite graph (as returned by
+    ``select_monte_carlo_update``), each group is updated in parallel, which
+    is equivalent because spins of one group are not coupled to each other.
+
+    Sweeps are repeated until a full sweep flips no spin in any population
+    member, at which point every member is stable against all single-spin
+    flips.  Returns ``(population, num_sweeps, converged)``; ``num_sweeps``
+    includes that final sweep without flips, and ``converged`` is False only
+    if ``max_sweeps`` was reached first.
+    """
+    fields = normalize_external_fields(J, fields)
+    population = pop.clone()
+    num_spins = population.shape[1]
+
+    for sweep in range(1, max_sweeps + 1):
+        flips = torch.zeros((), dtype=torch.long, device=population.device)
+        if even_indices is not None and odd_indices is not None:
+            for indices in (even_indices, odd_indices):
+                local_field = torch.matmul(population, J[indices, :].T)
+                if fields is not None:
+                    local_field = local_field + fields[indices]
+                flip = population[:, indices] * local_field < 0  # delta_E = 2 s h < 0
+                population[:, indices] = torch.where(
+                    flip, -population[:, indices], population[:, indices]
+                )
+                flips += flip.sum()
+        else:
+            # Spin order as Python ints (CPU RNG): indexing with a 0-d GPU tensor
+            # would force a GPU->CPU copy, i.e. a device sync, on every spin.
+            for spin in torch.randperm(num_spins).tolist():
+                local_field = torch.matmul(population, J[spin, :])
+                if fields is not None:
+                    local_field = local_field + fields[spin]
+                flip = population[:, spin] * local_field < 0  # delta_E = 2 s h < 0
+                population[:, spin] = torch.where(flip, -population[:, spin], population[:, spin])
+                flips += flip.sum()
+        if int(flips) == 0:
+            return population, sweep, True
+
+    return population, max_sweeps, False
+
+
+def run_zero_temperature_quench(population, J, energy_function, fields=None,
+                                even_indices=None, odd_indices=None, max_sweeps=1000):
+    """Quench the final population of an annealer and summarize the result.
+
+    Returns a dict with the wall-clock time of the quench, the number of
+    sweeps, whether it converged, and the minimum and mean energy per spin
+    of the quenched population.  The population passed in is not modified.
+    """
+    synchronize(population.device)
+    start_time = time.time()
+    quenched, num_sweeps, converged = quench_zero_temperature(
+        population, J, fields=fields, even_indices=even_indices,
+        odd_indices=odd_indices, max_sweeps=max_sweeps,
+    )
+    energies = energy_function(quenched, J, take_mean=False)
+    num_spins = get_num_spins(J)
+    min_energy = float(energies.min()) / num_spins
+    mean_energy = float(energies.mean()) / num_spins
+    synchronize(population.device)
+    return {
+        "seconds": time.time() - start_time,
+        "sweeps": num_sweeps,
+        "converged": converged,
+        "min_energy_per_spin": min_energy,
+        "mean_energy_per_spin": mean_energy,
+    }
 
 def read_couplings(file, *, start_from_one=False, return_fields=False,
                    device=None, dtype=torch.float32):

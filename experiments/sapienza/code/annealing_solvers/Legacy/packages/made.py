@@ -7,7 +7,7 @@ import torch.optim as optim
 from tqdm import tqdm
 import random
 from torch.optim.lr_scheduler import ExponentialLR
-from device_utils import empty_cache, get_device
+from device_utils import get_device
 
 device = get_device()
 
@@ -66,7 +66,6 @@ class made(nn.Module):
         x = self.layer(x)
         # x = self.constraint(x)  # Commented out, not used in the forward pass
         x = self.activation(2 * x)  # Apply activation function
-        empty_cache(x.device)
         return x
     
     def forward_n(self, input, n):
@@ -167,7 +166,7 @@ def train_made_improved(dataset, input_size, epochs=50, batch_size=256, patience
 
             # Compute loss
             loss = criterion(output, (batch_data + 1) / 2)
-            tot_loss += loss
+            tot_loss += loss.item()  # .item() so each batch's autograd graph is freed
             count += 1
 
             # Backward pass and optimization

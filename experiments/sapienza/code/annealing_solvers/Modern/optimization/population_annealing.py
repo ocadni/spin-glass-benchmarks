@@ -10,6 +10,7 @@ from geometry import *
 from utilities import *
 from data_loads import *
 from monte_carlo import *
+from device_utils import synchronize
 
 def systematic_resampling(probabilities: torch.Tensor, num_samples: int) -> torch.Tensor:
     """
@@ -42,7 +43,20 @@ def systematic_resampling(probabilities: torch.Tensor, num_samples: int) -> torc
 def population_annealing(J, pop_size, num_steps_MC, Tstart, Tend, Observables,
                                 schedule="linearBeta", num_temps=100,
                                 high_temp_thermalization_steps=200,
-                                reweight_mode="multinomial", fields=None):
+                                reweight_mode="multinomial", fields=None,
+                                return_thermalization_time=False,
+                                zero_temperature_quench=False):
+    """Run population annealing.
+
+    Returns ``(temperatures, observables, elapsed_time)``, where
+    ``elapsed_time`` covers the annealing loop only.  With
+    ``return_thermalization_time=True`` the wall-clock time of the
+    high-temperature thermalization sweeps is appended as a fourth element.
+    With ``zero_temperature_quench=True`` the final population
+    is quenched with ``run_zero_temperature_quench`` (after the timers stop,
+    so the times above exclude it) and its summary dict is appended last.
+    The observables history is not changed by the quench.
+    """
 
     device = J.device
 
@@ -62,6 +76,8 @@ def population_annealing(J, pop_size, num_steps_MC, Tstart, Tend, Observables,
     observ = Observables(J, N, energy_function=energy_function)
 
     # Thermalize the high temperature population
+    synchronize(device)
+    thermalization_start_time = time.time()
     oldT = temperatures[0]
     for i in range(high_temp_thermalization_steps):
         population = mc_update(population, J, beta=1/oldT, even_indices=even_indices, odd_indices=odd_indices)
@@ -97,4 +113,12 @@ def population_annealing(J, pop_size, num_steps_MC, Tstart, Tend, Observables,
         oldT = T
     end_time = time.time()
     elapsed_time = end_time - start_time
-    return temperatures, observ, elapsed_time
+    results = (temperatures, observ, elapsed_time)
+    if return_thermalization_time:
+        results += (start_time - thermalization_start_time,)
+    if zero_temperature_quench:
+        results += (run_zero_temperature_quench(
+            population, J, energy_function, fields=fields,
+            even_indices=even_indices, odd_indices=odd_indices,
+        ),)
+    return results

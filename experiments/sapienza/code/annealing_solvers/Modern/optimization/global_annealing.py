@@ -110,8 +110,21 @@ def global_annealing(J, pop_size, num_steps_MC, swap_step, Tstart, Tend, Observa
                                 schedule="linearBeta", num_temps=100,
                                 high_temp_thermalization_steps=200, batch_size=256,
                                 num_epochs_start=40, num_epochs_retrain=1,
-                                fields=None):
+                                fields=None, return_thermalization_time=False,
+                                zero_temperature_quench=False, learning_rate=1e-3):
+    """Run global annealing.
 
+    Returns ``(temperatures, observables, elapsed_train_time,
+    elapsed_annealing_time)``; with ``return_thermalization_time=True`` the
+    wall-clock time of the high-temperature thermalization sweeps is appended
+    as a fifth element.  ``learning_rate`` is the Adam learning rate of both
+    the initial MADE training and every retraining (default 1e-3, the value
+    that was previously fixed in made.py).
+    With ``zero_temperature_quench=True`` the final population
+    is quenched with ``run_zero_temperature_quench`` (after the timers stop,
+    so the times above exclude it) and its summary dict is appended last.
+    The observables history is not changed by the quench.
+    """
 
     device = J.device
 
@@ -139,13 +152,18 @@ def global_annealing(J, pop_size, num_steps_MC, swap_step, Tstart, Tend, Observa
     observ = Observables(J, N, energy_function=energy_function)
 
     # Thermalize the high temperature population
+    synchronize(device)
+    start_time_0 = time.time()
     oldT = temperatures[0]
     for i in range(high_temp_thermalization_steps):
         population = mc_update(population, J, beta=1/oldT, even_indices=even_indices, odd_indices=odd_indices)
     observ.update(population) #save the minimum and mean energie
     synchronize(device)
     start_time_1 = time.time()
-    model = train_model(population, N, epochs=num_epochs_start)
+    model = train_model(
+        population, N, epochs=num_epochs_start, batch_size=batch_size,
+        learning_rate=learning_rate,
+    )
     synchronize(device)
     start_time_2 = time.time()
     observ.set_start_time()
@@ -157,7 +175,8 @@ def global_annealing(J, pop_size, num_steps_MC, swap_step, Tstart, Tend, Observa
                 population = mc_update(population, J, 1/currT, even_indices, odd_indices)
         #retrain of the model
         model = retrain_model(
-            model, population, epochs=num_epochs_retrain, batch_size=batch_size
+            model, population, epochs=num_epochs_retrain, batch_size=batch_size,
+            learning_rate=learning_rate,
         )
         observ.update(population)
 
@@ -171,6 +190,15 @@ def global_annealing(J, pop_size, num_steps_MC, swap_step, Tstart, Tend, Observa
     synchronize(device)
     end_time = time.time()
 
+    elapsed_thermalization_time = start_time_1 - start_time_0
     elapsed_train_time = start_time_2 - start_time_1
     elapsed_annealing_time = end_time - start_time_2
-    return temperatures, observ, elapsed_train_time, elapsed_annealing_time
+    results = (temperatures, observ, elapsed_train_time, elapsed_annealing_time)
+    if return_thermalization_time:
+        results += (elapsed_thermalization_time,)
+    if zero_temperature_quench:
+        results += (run_zero_temperature_quench(
+            population, J, energy_function, fields=fields,
+            even_indices=even_indices, odd_indices=odd_indices,
+        ),)
+    return results

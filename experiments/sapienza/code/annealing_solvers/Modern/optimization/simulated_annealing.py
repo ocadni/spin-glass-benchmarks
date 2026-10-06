@@ -9,10 +9,24 @@ from geometry import *
 from utilities import *
 from data_loads import *
 from monte_carlo import *
+from device_utils import synchronize
 
 def simulated_annealing(J, pop_size, num_steps_MC, Tstart, Tend, Observables,
                                 schedule="linearBeta", num_temps=100,
-                                high_temp_thermalization_steps=200, fields=None):
+                                high_temp_thermalization_steps=200, fields=None,
+                                return_thermalization_time=False,
+                                zero_temperature_quench=False):
+    """Run simulated annealing.
+
+    Returns ``(temperatures, observables, elapsed_time)``, where
+    ``elapsed_time`` covers the annealing loop only.  With
+    ``return_thermalization_time=True`` the wall-clock time of the
+    high-temperature thermalization sweeps is appended as a fourth element.
+    With ``zero_temperature_quench=True`` the final population
+    is quenched with ``run_zero_temperature_quench`` (after the timers stop,
+    so the times above exclude it) and its summary dict is appended last.
+    The observables history is not changed by the quench.
+    """
 
     device = J.device
 
@@ -32,6 +46,8 @@ def simulated_annealing(J, pop_size, num_steps_MC, Tstart, Tend, Observables,
     observ = Observables(J, N, energy_function=energy_function)
 
     # Thermalize the high temperature population
+    synchronize(device)
+    thermalization_start_time = time.time()
     for i in range(high_temp_thermalization_steps):
         population = mc_update(population, J, beta=1/temperatures[0], even_indices=even_indices, odd_indices=odd_indices)
     observ.update(population) #save the minimum and mean energies
@@ -49,4 +65,12 @@ def simulated_annealing(J, pop_size, num_steps_MC, Tstart, Tend, Observables,
 
     end_time = time.time()
     elapsed_time = end_time - start_time
-    return temperatures, observ, elapsed_time
+    results = (temperatures, observ, elapsed_time)
+    if return_thermalization_time:
+        results += (start_time - thermalization_start_time,)
+    if zero_temperature_quench:
+        results += (run_zero_temperature_quench(
+            population, J, energy_function, fields=fields,
+            even_indices=even_indices, odd_indices=odd_indices,
+        ),)
+    return results

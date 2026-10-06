@@ -62,7 +62,6 @@ def generate_config_fast(model, N_spins, N_config, J):
             
             # Sample new spin values based on probabilities and update the configuration
             config[:, n] = (torch.bernoulli(probs) * 2 - 1)
-            empty_cache(device)
     
     return config
 

@@ -59,6 +59,15 @@ def parse_args() -> argparse.Namespace:
         help="auto prefers CUDA, then Apple MPS, then CPU",
     )
     common.add_argument("--seed", type=int, default=None)
+    common.add_argument(
+        "--quench",
+        action="store_true",
+        help=(
+            "after annealing, quench the final population at T = 0 (single-spin "
+            "flips accepted only if they lower the energy, until none does) and "
+            "report its energies and time separately"
+        ),
+    )
 
     population = parser.add_argument_group("population annealing parameters")
     population.add_argument(
@@ -70,6 +79,10 @@ def parse_args() -> argparse.Namespace:
     global_options.add_argument("--batch-size", type=int, default=256)
     global_options.add_argument("--num-epochs-start", type=int, default=40)
     global_options.add_argument("--num-epochs-retrain", type=int, default=1)
+    global_options.add_argument(
+        "--learning-rate", type=float, default=1e-3,
+        help="Adam learning rate of the initial MADE training and of every retraining",
+    )
 
     parser.add_argument("--json", action="store_true", help="Print the result summary as JSON")
     args = parser.parse_args()
@@ -82,7 +95,8 @@ def parse_args() -> argparse.Namespace:
     if args.t_start <= 0 or args.t_end <= 0:
         parser.error("--t-start and --t-end must be positive")
     if args.annealer == "ga":
-        for option in ("swap_step", "batch_size", "num_epochs_start", "num_epochs_retrain"):
+        for option in ("swap_step", "batch_size", "num_epochs_start", "num_epochs_retrain",
+                       "learning_rate"):
             if getattr(args, option) <= 0:
                 parser.error(f"--{option.replace('_', '-')} must be positive")
     return args
@@ -125,28 +139,65 @@ def run_solver(args: argparse.Namespace) -> dict[str, object]:
         num_temps=args.num_temps,
         high_temp_thermalization_steps=args.thermalization_steps,
         fields=fields,
+        return_thermalization_time=True,
+        zero_temperature_quench=args.quench,
     )
+    quench = None
     if args.annealer == "sa":
-        temperatures, observables, elapsed = simulated_annealing(**common_args)
-        timings = {"elapsed_seconds": elapsed}
+        temperatures, observables, elapsed, thermalization_elapsed, *rest = simulated_annealing(
+            **common_args
+        )
+        quench = rest[0] if rest else None
+        timings = {
+            "thermalization_seconds": thermalization_elapsed,
+            # Annealing loop only, without thermalization.
+            "elapsed_seconds": elapsed,
+            "total_elapsed_seconds": thermalization_elapsed + elapsed,
+        }
     elif args.annealer == "pa":
-        temperatures, observables, elapsed = population_annealing(
+        temperatures, observables, elapsed, thermalization_elapsed, *rest = population_annealing(
             **common_args, reweight_mode=args.reweight_mode
         )
-        timings = {"elapsed_seconds": elapsed}
+        quench = rest[0] if rest else None
+        timings = {
+            "thermalization_seconds": thermalization_elapsed,
+            # Annealing loop only, without thermalization.
+            "elapsed_seconds": elapsed,
+            "total_elapsed_seconds": thermalization_elapsed + elapsed,
+        }
     else:
-        temperatures, observables, train_elapsed, annealing_elapsed = global_annealing(
+        (temperatures, observables, train_elapsed, annealing_elapsed,
+         thermalization_elapsed, *rest) = global_annealing(
             **common_args,
             swap_step=args.swap_step,
             batch_size=args.batch_size,
             num_epochs_start=args.num_epochs_start,
             num_epochs_retrain=args.num_epochs_retrain,
+            learning_rate=args.learning_rate,
         )
+        quench = rest[0] if rest else None
         timings = {
+            "learning_rate": args.learning_rate,
+            "thermalization_seconds": thermalization_elapsed,
             "training_seconds": train_elapsed,
             "annealing_seconds": annealing_elapsed,
+            # Excludes thermalization, like the PA/SA elapsed time.
             "elapsed_seconds": train_elapsed + annealing_elapsed,
+            "total_elapsed_seconds": (
+                thermalization_elapsed + train_elapsed + annealing_elapsed
+            ),
         }
+
+    if quench is not None:
+        # Kept separate from the annealing results above; the times above
+        # exclude the quench.
+        timings.update({
+            "quench_seconds": quench["seconds"],
+            "quench_sweeps": quench["sweeps"],
+            "quench_converged": quench["converged"],
+            "quench_min_energy_per_spin": round(quench["min_energy_per_spin"], 6),
+            "quench_mean_energy_per_spin": round(quench["mean_energy_per_spin"], 6),
+        })
 
     history = observables.observables
     return {
@@ -178,10 +229,19 @@ def print_summary(summary: dict[str, object], as_json: bool) -> None:
     print(f"temperatures: {summary['num_temperatures']} ({summary['t_start']} -> {summary['t_end']})")
     print(f"final minimum energy/spin: {summary['final_min_energy_per_spin']:.6f}")
     print(f"best minimum energy/spin: {summary['best_min_energy_per_spin']:.6f}")
+    print(f"thermalization time: {summary['thermalization_seconds']:.3f} s")
     if "training_seconds" in summary:
         print(f"training time: {summary['training_seconds']:.3f} s")
         print(f"annealing time: {summary['annealing_seconds']:.3f} s")
-    print(f"total elapsed time: {summary['elapsed_seconds']:.3f} s")
+    print(f"elapsed time excluding thermalization: {summary['elapsed_seconds']:.3f} s")
+    print(f"total elapsed time including thermalization: "
+          f"{summary['total_elapsed_seconds']:.3f} s")
+    if "quench_seconds" in summary:
+        status = "converged" if summary["quench_converged"] else "NOT converged"
+        print(f"T = 0 quench: {summary['quench_sweeps']} sweeps ({status}), "
+              f"{summary['quench_seconds']:.3f} s")
+        print(f"quenched minimum energy/spin: {summary['quench_min_energy_per_spin']:.6f}")
+        print(f"quenched mean energy/spin: {summary['quench_mean_energy_per_spin']:.6f}")
 
 
 def main() -> None:
