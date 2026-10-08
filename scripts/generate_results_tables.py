@@ -257,8 +257,9 @@ def format_steps(row: Row) -> str:
 
 # Display labels for known "key=value" entries in the free-text `parameters`
 # column, keyed by the raw name used in summary.csv. Currently only
-# sapienza's Global Annealing (GA) and Population Annealing (PA) submissions
-# populate this column; see experiments/README.md for what each means.
+# sapienza's Global Annealing (GA), Population Annealing (PA) and Simulated
+# Annealing (SA) submissions populate this column; see experiments/README.md
+# for what each means.
 PARAMETER_LABELS = {
     "global_steps_per_temperature": r"$\theta_g$",
     "MCS_per_global_steps": r"$\theta_l$",
