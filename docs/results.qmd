@@ -4,21 +4,20 @@ subtitle: "Benchmark instances, solver runs, and reported metrics"
 date: last-modified
 ---
 
+# Benchmarking Protocol
+
+Each algorithm is run multiple times per instance. For each (algorithm, instance) pair, the following metrics are reported:
+
+
+- **Energy**: the lowest energy per spin found over all runs;
+
+- **Success probability**: the fraction of runs that reach a reference ground state energy for the instance. The reference used by each contributing group is stated in its notes; for the current SK runs, it is the lowest energy found by any of the algorithms. Energies that match an independently known ground state are marked $^\dagger$;
+- **Time to solution** (TTS) [@ronnow2014]: the standard time-to-solution metric  $\mathrm{TTS}_p = \bar{t} \cdot \log(1-p) / \log(1-P_s)$, the expected total time, running independent restarts, needed to be $p$-confident of finding the best-found energy at least once, where $\bar{t}$ is the mean per-run time and $P_s$ is the empirical single-run success probability. This site uses $p = 0.99$, the field's standard convention;
+
+TTS allows algorithms with different trade-offs between running time and success probability to be compared on a common scale. It depends on the hardware on which the runs are executed, which is recorded for every run in the Hardware column. In the current results, the zero-temperature descents run on a single CPU core and the annealing methods on a single GPU. The full parameters of every run are listed in the All section.
+
+
 # Leaderboard
-
-TTS is the standard time-to-solution metric (Ronnow et al. 2014):
-$\mathrm{TTS}_p = \bar{t} \cdot \log(1-p) / \log(1-P_s)$, the expected total
-time, running independent restarts, needed to be $p$-confident of finding the
-best-found energy at least once, where $\bar{t}$ is the mean per-run time and
-$P_s$ is the empirical single-run success probability. This site uses
-$p = 0.99$, the field's standard convention.
-
-An Energy marked with $^\dagger$ matches a provable ground state (see
-[Instance Library](implementation/instances.qmd#verified-ground-states)),
-computed independently of any solver run. When the best energy any submitted
-run found for that instance does not match the reference energy, the Best
-Algorithm column shows "—", since no algorithm can be credited with having
-solved it.
 
 <details open>
 <summary>Show tables</summary>

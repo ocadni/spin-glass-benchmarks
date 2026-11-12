@@ -4,6 +4,7 @@ project:
   render:
     - index.qmd
     - problem_definition.qmd
+    - algorithms.qmd
     # - literature_references.qmd
     - results.qmd
     - file_format.qmd
@@ -21,10 +22,14 @@ website:
         href: index.qmd
       - text: "Problems"
         href: problem_definition.qmd
+      - text: "Algorithms"
+        href: algorithms.qmd
       # - text: "Literature"
       #   href: literature_references.qmd
       - text: "Results"
         href: results.qmd
+      - text: "File Format"
+        href: file_format.qmd
     right:
       - icon: github
         href: "https://github.com/ocadni/spin-glass-benchmarks"

@@ -103,3 +103,5 @@ instances/**/*.txt
 
 *results_part*
 *logs_parts*
+/.quarto/
+**/*.quarto_ipynb

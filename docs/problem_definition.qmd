@@ -368,5 +368,3 @@ constraint satisfaction, higher-order interactions, and planted hardness. Taken
 together, these families provide a compact but expressive set of problems for
 comparing classical, AI/ML-based, quantum-inspired, and quantum optimization
 methods.
-
-# References {.unnumbered}
