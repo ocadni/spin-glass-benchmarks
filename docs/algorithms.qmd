@@ -61,7 +61,7 @@ $$
 \Delta E_i(\mathbf{s}) = 2\, s_i\, h_i^{\mathrm{loc}}(\mathbf{s}) .
 $$
 
-A spin with $\Delta E_i < 0$ is called **unsatisfied**: it is anti-aligned with its local field, and flipping it lowers the energy. A configuration with no unsatisfied spins is a **local minimum** with respect to single-spin flips. In frustrated systems the number of such minima grows exponentially with $N$, and typical local minima lie well above the ground state.
+A spin with $\Delta E_i < 0$ is called **unsatisfied**: it is anti-aligned with its local field, and flipping it lowers the overall energy. A configuration with no unsatisfied spins is a **local minimum** with respect to single-spin flips. In frustrated systems the number of such minima grows exponentially with $N$, and typical local minima lie well above the ground state.
 
 A **sweep** consists of $N$ proposed single-spin updates, one per spin on average. Evaluating $\Delta E_i$ requires a sum over the neighbours of $i$, therefore a single sweep costs $O(N^2)$ operations on the complete SK graph and $O(N)$ on the EA3D lattice, where each spin has six neighbours. This difference should be kept in mind when comparing running times across families.
 
