@@ -9,12 +9,14 @@ All section's table (the Leaderboard shows neither: only energy and TTS).
 
 The family (sk/ea2d/ea3d/rrg) is inferred from the name of the directory a
 summary.csv lives in, and the researcher from the path component right after
-experiments/. For every (family, N, seed) instance seen across all
-summary.csv files, the Leaderboard section reports the single best run:
-ranked first by lowest min_energy, energies within 1e-6 of the minimum
-treated as tied, ties broken by lowest TTS (and, in the
-vanishingly unlikely case both are equal too, by program_name then hardware,
-for a fully deterministic result regardless of file/row order). The All
+experiments/. The researcher is shown as the "Uploader" of every row, linked
+to its experiments/<researcher>/ folder on GitHub, where the code and the
+description of the algorithms live. For every (family, N, seed) instance seen
+across all summary.csv files, the Leaderboard section reports the single best
+run: ranked first by lowest min_energy, energies within 1e-6 of the minimum
+treated as tied, ties broken by lowest TTS (and, in the vanishingly unlikely
+case both are equal too, by program_name, uploader, then hardware, for a fully
+deterministic result regardless of file/row order). The All
 section instead lists every run (with runtime, success probability, average
 steps, and the run's parameters as a free-text column, none of which the
 Leaderboard shows), grouped by algorithm then family, with each researcher's
@@ -36,6 +38,11 @@ EXPERIMENTS_DIR = REPO_ROOT / "experiments"
 INSTANCES_DIR = REPO_ROOT / "instances"
 VERIFIED_GS_DIR = INSTANCES_DIR / "verified_gs"
 RESULTS_QMD = REPO_ROOT / "docs" / "results.qmd"
+
+# Base URL of the experiments/ folder on GitHub; uploader names link to
+# EXPERIMENTS_URL/<researcher>.
+REPO_URL = "https://github.com/ocadni/spin-glass-benchmarks"
+EXPERIMENTS_URL = f"{REPO_URL}/tree/main/experiments"
 
 KNOWN_FAMILIES = {"sk", "ea2d", "ea3d", "rrg"}
 EXPECTED_FIELDS = {
@@ -98,6 +105,10 @@ def infer_family(path: Path) -> str | None:
 
 def infer_researcher(path: Path) -> str:
     return path.relative_to(EXPERIMENTS_DIR).parts[0]
+
+
+def format_uploader(researcher: str) -> str:
+    return f"[{researcher}]({EXPERIMENTS_URL}/{researcher})"
 
 
 def parse_summary_file(path: Path) -> list[Row]:
@@ -197,9 +208,9 @@ def render_table(family: str, rows: list[Row], verified: dict[tuple[str, int, in
     if not rows and not verified_for_family:
         return (
             "TODO: populate from experiments.\n\n"
-            "| N | Seed | Best Algorithm | Hardware | Energy | TTS (s) |\n"
-            "|---|------|-----------------|----------|--------|-----|\n"
-            "| TODO | | | | | |"
+            "| N | Seed | Best Algorithm | Uploader | Hardware | Energy | TTS (s) |\n"
+            "|---|------|-----------------|----------|----------|--------|-----|\n"
+            "| TODO | | | | | | |"
         )
 
     by_instance: dict[tuple[int, int], list[Row]] = {}
@@ -213,7 +224,7 @@ def render_table(family: str, rows: list[Row], verified: dict[tuple[str, int, in
             r for r in instance_rows
             if r.min_energy - minimum_energy <= ENERGY_TOLERANCE
         ]
-        best_by_key[key] = min(tied_rows, key=lambda r: (r.tts, r.program_name, r.hardware))
+        best_by_key[key] = min(tied_rows, key=lambda r: (r.tts, r.program_name, r.researcher, r.hardware))
 
     keys_by_n: dict[int, list[int]] = {}
     for (n, seed) in set(best_by_key) | set(verified_for_family):
@@ -223,26 +234,28 @@ def render_table(family: str, rows: list[Row], verified: dict[tuple[str, int, in
     for n in sorted(keys_by_n):
         lines = [
             f"\n### N = {n}\n",
-            "| Seed | Best Algorithm | Hardware | Energy | TTS (s) |",
-            "|------|----------------|----------|--------|---------|",
+            "| Seed | Best Algorithm | Uploader | Hardware | Energy | TTS (s) |",
+            "|------|----------------|----------|----------|--------|---------|",
         ]
         for seed in sorted(keys_by_n[n]):
             best = best_by_key.get((n, seed))
             reference_energy = verified_for_family.get((n, seed))
             if best is None:
                 # Verified ground state with no submitted solver run yet.
-                lines.append(f"| {seed} | — | — | {reference_energy:.7g}$^\\dagger$ | — |")
+                lines.append(f"| {seed} | — | — | — | {reference_energy:.7g}$^\\dagger$ | — |")
                 continue
             if reference_energy is None:
                 energy_cell = f"{best.min_energy:.7g}"
                 algorithm_cell = best.program_name
+                uploader_cell = format_uploader(best.researcher)
             else:
                 matched = abs(best.min_energy - reference_energy) <= ENERGY_TOLERANCE
                 energy_cell = f"{best.min_energy:.7g}" + ("$^\\dagger$" if matched else "")
                 algorithm_cell = best.program_name if matched else "—"
+                uploader_cell = format_uploader(best.researcher) if matched else "—"
             lines.append(
                 f"| {best.seed} "
-                f"| {algorithm_cell} | {best.hardware} "
+                f"| {algorithm_cell} | {uploader_cell} | {best.hardware} "
                 f"| {energy_cell} | {best.tts:.7g} |"
             )
         blocks.append("\n".join(lines))
@@ -294,12 +307,13 @@ def render_raw_table(rows: list[Row]) -> str:
     for n in sorted(rows_by_n):
         lines = [
             f"\n#### N = {n}\n",
-            "| Seed | Energy | Runtime (s) | Average steps | Success Probability | Hardware | Parameters |",
-            "|------|--------|-------------|---------------|----------------------|----------|------------|",
+            "| Seed | Uploader | Energy | Runtime (s) | Average steps | Success Probability | Hardware | Parameters |",
+            "|------|----------|--------|-------------|---------------|----------------------|----------|------------|",
         ]
-        for row in sorted(rows_by_n[n], key=lambda r: (r.seed, r.hardware, r.tts)):
+        for row in sorted(rows_by_n[n], key=lambda r: (r.seed, r.researcher, r.hardware, r.tts)):
             lines.append(
-                f"| {row.seed} | {row.min_energy:.7g} | {row.average_time:.7g} "
+                f"| {row.seed} | {format_uploader(row.researcher)} "
+                f"| {row.min_energy:.7g} | {row.average_time:.7g} "
                 f"| {format_steps(row)} "
                 f"| {format_probability(row.success_probability)} | {row.hardware} "
                 f"| {format_parameters(row)} |"
@@ -323,7 +337,7 @@ def render_notes_toggles(rows: list[Row], family: str) -> list[str]:
         content = notes_path.read_text(encoding="utf-8").strip()
         if not content:
             continue
-        blocks.append(f'\n<details>\n<summary>Notes</summary>\n\n{content}\n\n</details>\n')
+        blocks.append(f'\n<details>\n<summary>Notes ({researcher})</summary>\n\n{content}\n\n</details>\n')
     return blocks
 
 

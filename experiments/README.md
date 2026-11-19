@@ -11,7 +11,8 @@ in [docs/results.qmd](../docs/results.qmd).
 
 ```
 experiments/
-└── <group_name>/             # e.g. "sapienza"
+└── <group_name>/             # e.g. "sapienza"; shown as the Uploader on the site
+    ├── README.md             # Description of each algorithm (definition, rationale, configuration)
     ├── code/                 # The group's solver code (any layout/language)
     │   └── ...
     └── results/
@@ -20,10 +21,19 @@ experiments/
             └── notes.md      # Optional — additional notes for this family
 ```
 
-`experiments/sapienza/` is a working example: `code/greedy_code/` holds the
-solver source and the scripts used to produce results, and
-`results/sk/summary.csv` + `results/sk/notes.md` hold the submitted SK
-results and notes.
+The folder name is the **uploader** name: every row of the results tables
+shows it in the Uploader column, linked to this folder on GitHub. The
+`README.md` is what readers land on when they follow that link, so it should
+describe every algorithm the group submits; the
+[Algorithms page](https://ocadni.github.io/spin-glass-benchmarks/algorithms.html#sec-adding)
+explains what each description should contain, and its table should get one
+row per new algorithm.
+
+`experiments/sapienza/` is a working example: `README.md` describes its six
+algorithms, `code/greedy_solvers/` and `code/annealing_solvers/` hold the
+solver sources and the scripts used to produce results, and
+`results/<family>/summary.csv` + `results/<family>/notes.md` hold the
+submitted results and notes.
 
 ## Submitting results: summary.csv
 
@@ -39,7 +49,7 @@ These columns are mandatory:
 | `success_probability` | Fraction of runs reaching the target energy |
 | `TTS` | Time-to-solution |
 | `hardware` | Hardware the run was performed on |
-| `program_name` | Name of the algorithm/program that produced the row |
+| `program_name` | Name of the algorithm that produced the row, as listed on the Algorithms page |
 
 You can add further columns beyond these. For example, `sapienza`'s
 `summary.csv` includes an optional `average_steps` column (mean spin flips

@@ -167,8 +167,10 @@ With `--json`, the same information is emitted as JSON fields such as
 ## Submitting Results
 
 `experiments/<group_name>/` is where each participating group submits their
-solver code (`code/`) and benchmark results (`results/<family>/summary.csv`,
-with an optional `notes.md`). Mandatory `summary.csv` columns: `N`, `seed`,
+solver code (`code/`), a `README.md` describing their algorithms, and
+benchmark results (`results/<family>/summary.csv`, with an optional
+`notes.md`). The folder name appears as the Uploader of the results on the
+website, linked to the folder. Mandatory `summary.csv` columns: `N`, `seed`,
 `min_energy`, `average_time`, `success_probability`, `TTS`, `hardware`,
 `program_name` — extra columns are allowed. See
 [experiments/sapienza/](experiments/sapienza/) for a working example.
