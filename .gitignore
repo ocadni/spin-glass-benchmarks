@@ -105,3 +105,6 @@ instances/**/*.txt
 *logs_parts*
 /.quarto/
 **/*.quarto_ipynb
+
+# Compiled programs and raw run output of the tutorial notebook
+example_notebook/output/
