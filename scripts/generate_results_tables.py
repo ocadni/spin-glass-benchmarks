@@ -28,9 +28,11 @@ Usage: python scripts/generate_results_tables.py
 from __future__ import annotations
 
 import csv
+import math
 import re
 import sys
 from dataclasses import dataclass
+from decimal import Decimal
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -256,7 +258,7 @@ def render_table(family: str, rows: list[Row], verified: dict[tuple[str, int, in
             lines.append(
                 f"| {best.seed} "
                 f"| {algorithm_cell} | {uploader_cell} | {best.hardware} "
-                f"| {energy_cell} | {best.tts:.7g} |"
+                f"| {energy_cell} | {format_time(best.tts)} |"
             )
         blocks.append("\n".join(lines))
     blocks.append(":::")
@@ -293,9 +295,19 @@ def format_parameters(row: Row) -> str:
 
 
 def format_probability(value: float) -> str:
-    """Format a probability with at most 5 decimal places, trailing zeros trimmed."""
-    text = f"{value:.5f}".rstrip("0").rstrip(".")
-    return text if text else "0"
+    """Format a probability with 2 significant digits, without exponent, trailing zeros trimmed."""
+    if value == 0 or not math.isfinite(value):
+        return f"{value:g}"
+    return format(Decimal(f"{value:.2g}"), "f")
+
+
+def format_time(value: float) -> str:
+    """Format a time in seconds with 2 decimal places, or with 2 significant digits
+    when that is more precise (times below 0.1 s)."""
+    if value == 0 or not math.isfinite(value):
+        return f"{value:g}"
+    decimals = max(2, 1 - Decimal(f"{abs(value):.2g}").adjusted())
+    return f"{value:.{decimals}f}"
 
 
 def render_raw_table(rows: list[Row]) -> str:
@@ -313,7 +325,7 @@ def render_raw_table(rows: list[Row]) -> str:
         for row in sorted(rows_by_n[n], key=lambda r: (r.seed, r.researcher, r.hardware, r.tts)):
             lines.append(
                 f"| {row.seed} | {format_uploader(row.researcher)} "
-                f"| {row.min_energy:.7g} | {row.average_time:.7g} "
+                f"| {row.min_energy:.7g} | {format_time(row.average_time)} "
                 f"| {format_steps(row)} "
                 f"| {format_probability(row.success_probability)} | {row.hardware} "
                 f"| {format_parameters(row)} |"

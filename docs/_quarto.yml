@@ -8,6 +8,7 @@ project:
     # - literature_references.qmd
     - results.qmd
     - file_format.qmd
+    - submit.qmd
     - project_contract.qmd
 
 website:
@@ -30,6 +31,8 @@ website:
         href: results.qmd
       - text: "File Format"
         href: file_format.qmd
+      - text: "Submit"
+        href: submit.qmd
     right:
       - icon: github
         href: "https://github.com/ocadni/spin-glass-benchmarks"
