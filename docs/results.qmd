@@ -16,7 +16,7 @@ Each algorithm is run multiple times per instance. For each (algorithm, instance
 
 TTS allows algorithms with different trade-offs between running time and success probability to be compared on a common scale. It depends on the hardware on which the runs are executed, which is recorded for every run in the Hardware column. In the current results, the zero-temperature descents run on a single CPU core and the annealing methods on a single GPU. The full parameters of every run are listed in the All section.
 
-Every table row also reports the **Uploader**: the repository folder `experiments/<uploader>/` that contains the implementation of the algorithm, its description, and the submitted results. The uploader name links to that folder. The algorithms themselves are listed on the [Algorithms](algorithms.qmd) page, which also explains how to add new ones.
+Every table row also reports the **Uploader**: the repository folder `experiments/<uploader>/` that contains the implementation of the algorithm, its description, and the submitted results. The uploader name links to that folder. The algorithms themselves are listed on the [Algorithms](algorithms.qmd) page. See [Submit](submit.qmd) for how to contribute algorithms and results.
 
 
 # Leaderboard

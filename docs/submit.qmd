@@ -1,5 +1,96 @@
 ---
 title: "Submit"
+subtitle: "Contribute algorithms and results to the benchmark"
+date: last-modified
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
 ---
 
-Work in progress.
+Contributions are welcome: you can add a new algorithm, contribute another implementation of an existing one, or submit new results. Start from an up-to-date fork of the [repository](https://github.com/ocadni/spin-glass-benchmarks), add your code, documentation, and results, then push your changes to your fork and open a pull request. The maintainers review the submission and merge accepted contributions into the benchmark.
+
+# Prepare an up-to-date fork {#sec-fork}
+
+Fork [ocadni/spin-glass-benchmarks](https://github.com/ocadni/spin-glass-benchmarks) on GitHub. If you already have a fork, sync its `main` branch with the upstream repository before starting a new submission.
+
+Clone your fork and create a branch for your contribution. Replace `YOUR_USERNAME` with your GitHub username:
+
+```bash
+git clone https://github.com/YOUR_USERNAME/spin-glass-benchmarks.git
+cd spin-glass-benchmarks
+git remote add upstream https://github.com/ocadni/spin-glass-benchmarks.git
+git fetch upstream
+git switch -c contribution/my-algorithm upstream/main
+```
+
+For an existing local clone, add the `upstream` remote only if it is missing, then run the last two commands to start a new contribution branch from the latest upstream `main`.
+
+# Adding new algorithms {#sec-adding}
+
+Each contributor or group has a folder `experiments/<uploader>/`. Choose a stable uploader name: it appears in the Uploader column on the [Algorithms](algorithms.qmd#sec-list) and [Results](results.qmd) pages, linked to your folder.
+
+```text
+experiments/<uploader>/
+├── README.md
+├── code/
+│   └── ...
+└── results/
+    └── <family>/
+        ├── summary.csv
+        └── notes.md       # optional
+```
+
+1. **Code.** Place your implementation in `experiments/<uploader>/code/`, in any language and layout. Include the dependencies, setup instructions, and commands needed to reproduce the reported runs.
+2. **Description.** Describe each algorithm in `experiments/<uploader>/README.md`, using the [shared notation](algorithms.qmd#sec-notation). Give its definition, the rationale behind it, and the configuration of the reported runs. The descriptions in [`experiments/sapienza/README.md`](https://github.com/ocadni/spin-glass-benchmarks/blob/main/experiments/sapienza/README.md) can serve as a model.
+3. **Results.** Add one `summary.csv` per problem family in `experiments/<uploader>/results/<family>/`, following the format below. You can add a `notes.md` beside it to explain the benchmarking protocol.
+4. **Listing.** Add a row to the table in `docs/algorithms.qmd`, with links to the algorithm description, your uploader folder, and the implementation. Use an existing class when appropriate; add a new class for a different principle of operation, such as exact solvers, message passing, or quantum and quantum-inspired methods.
+
+The same algorithm may be contributed by several uploaders, for example with different implementations or hardware. Each contribution has its own row, distinguished by the Uploader column. For additional results from an algorithm you have already listed, update your existing submission and describe the new runs.
+
+# Prepare benchmark results {#sec-results}
+
+Run your algorithm on the benchmark instances, using the definitions on the [Problems](problem_definition.qmd) page and the conventions on the [File Format](file_format.qmd) page. The [repository README](https://github.com/ocadni/spin-glass-benchmarks#downloading-instances) explains how to download the full instance sets.
+
+Store results in `experiments/<uploader>/results/<family>/summary.csv`, using the family directory names documented in the [submission reference](https://github.com/ocadni/spin-glass-benchmarks/blob/main/experiments/README.md). Each row summarizes the repeated runs for an algorithm, instance, and reported configuration. Include these required columns:
+
+| Column | Meaning |
+|---|---|
+| `N` | System size (number of spins) |
+| `seed` | Instance seed, identifying the benchmark instance |
+| `min_energy` | Lowest energy **per spin** found over the runs |
+| `average_time` | Mean wall-clock runtime per run, in seconds |
+| `success_probability` | Fraction of runs reaching the stated reference energy |
+| `TTS` | Time to solution, in seconds, at 99% confidence, as defined on the [Results](results.qmd) page |
+| `hardware` | Hardware used for the runs |
+| `program_name` | Algorithm name, matching your entry on the Algorithms page |
+
+Additional columns are allowed. In particular, `average_steps` records mean step counts and `parameters` records solver settings. See [`experiments/README.md`](https://github.com/ocadni/spin-glass-benchmarks/blob/main/experiments/README.md) for details and the [Sapienza submission](https://github.com/ocadni/spin-glass-benchmarks/tree/main/experiments/sapienza) for examples.
+
+In your README or family-specific `notes.md`, state the number of independent runs, solver settings and random seeds, stopping criteria, hardware, and what is included in the runtime. Explain which reference energy and numerical tolerance define success, whether the reference is a verified ground state or a best-known energy, and any parameter tuning or limitations needed to interpret the results. A non-empty `notes.md` is displayed alongside your results on the website.
+
+# Check your submission {#sec-check}
+
+From the repository root, regenerate the results tables and render the website with [Quarto](https://quarto.org/):
+
+```bash
+python scripts/generate_results_tables.py
+quarto render docs --to html
+```
+
+Check for warnings about missing columns or invalid values, and confirm that your results appear under the correct uploader and algorithm. Check the algorithm description and implementation links, and include the regenerated `docs/results.qmd` in your changes. Rendered files in `docs/_site/` are build output and do not need to be committed.
+
+# Open a pull request {#sec-pull-request}
+
+Commit your submission and push the contribution branch to your fork. Replace `<uploader>` with your folder name:
+
+```bash
+git add experiments/<uploader>/ docs/algorithms.qmd docs/results.qmd
+git commit -m "Add algorithm implementation and benchmark results"
+git push -u origin contribution/my-algorithm
+```
+
+On GitHub, open a pull request from that branch in your fork to `main` in [ocadni/spin-glass-benchmarks](https://github.com/ocadni/spin-glass-benchmarks/pulls). In the description, summarize the algorithms, problem families, instance sizes, and results you are contributing, and give the reproduction commands and checks you ran.
+
+The maintainers review the code, documentation, and results and may request changes. Push any revisions to the same branch to update the pull request. Once accepted, the maintainers merge the contribution; the website workflow regenerates the results tables and publishes the updated benchmark.

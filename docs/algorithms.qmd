@@ -33,7 +33,7 @@ This page fixes the notation shared by all descriptions (@sec-notation) and list
 1.  **Zero-temperature descents**: Greedy, Reluctant, and Random descent, which only accept moves that lower the energy and terminate at a local minimum;
 2.  **Annealing methods**: simulated annealing [@kirkpatrick1983sa], population annealing [@hukushima2003population; @machta2010population], and global annealing [@delbono2026; @delbono2025], which sample from a sequence of Boltzmann distributions at decreasing temperature.
 
-The list of algorithms is not fixed. New algorithms are added either to an existing class or as a new class (see @sec-adding).
+The list of algorithms is not fixed. New algorithms are added either to an existing class or as a new class. See [Submit](submit.qmd) for how to contribute an algorithm and benchmark results.
 
 # Notation and conventions {#sec-notation}
 
@@ -74,14 +74,3 @@ Each algorithm name links to its description, and the Implementation column link
 | Annealing | [Simulated Annealing](https://github.com/ocadni/spin-glass-benchmarks/blob/main/experiments/sapienza/README.md#simulated-annealing) | Single-spin Metropolis | None (parallel trajectories) | [sapienza](https://github.com/ocadni/spin-glass-benchmarks/tree/main/experiments/sapienza) | [`code/annealing_solvers/`](https://github.com/ocadni/spin-glass-benchmarks/tree/main/experiments/sapienza/code/annealing_solvers/Modern) |
 | Annealing | [Population Annealing](https://github.com/ocadni/spin-glass-benchmarks/blob/main/experiments/sapienza/README.md#population-annealing) | Single-spin Metropolis | Resampling between temperatures | [sapienza](https://github.com/ocadni/spin-glass-benchmarks/tree/main/experiments/sapienza) | [`code/annealing_solvers/`](https://github.com/ocadni/spin-glass-benchmarks/tree/main/experiments/sapienza/code/annealing_solvers/Modern) |
 | Annealing | [Global Annealing](https://github.com/ocadni/spin-glass-benchmarks/blob/main/experiments/sapienza/README.md#global-annealing) | Single-spin Metropolis and global moves from a MADE network | Shared generative model fitted to the population | [sapienza](https://github.com/ocadni/spin-glass-benchmarks/tree/main/experiments/sapienza) | [`code/annealing_solvers/`](https://github.com/ocadni/spin-glass-benchmarks/tree/main/experiments/sapienza/code/annealing_solvers/Modern) |
-
-# Adding new algorithms {#sec-adding}
-
-A new algorithm is added to the benchmark through the uploader's folder in the repository:
-
-1.  **Code.** Place the implementation in `experiments/<uploader>/code/`, in any language and layout. The folder name `<uploader>` is the name shown in the Uploader column of this page and of the [Results](results.qmd) tables.
-2.  **Description.** Describe each algorithm in `experiments/<uploader>/README.md`, using the notation of @sec-notation. Each description should give a definition, a rationale, and the configuration of the reported runs. The description of the current algorithms, in [`experiments/sapienza/README.md`](https://github.com/ocadni/spin-glass-benchmarks/blob/main/experiments/sapienza/README.md), can serve as a model.
-3.  **Results.** Add one `summary.csv` per problem family in `experiments/<uploader>/results/<family>/`, optionally with a `notes.md` describing the protocol. The `program_name` column should match the algorithm name in the table above. The required columns are listed in [`experiments/README.md`](https://github.com/ocadni/spin-glass-benchmarks/blob/main/experiments/README.md).
-4.  **Listing.** Add a row to the table in @sec-list, with links to the description, the uploader folder, and the implementation. An algorithm based on a principle not covered by the existing classes (for example, exact solvers, message passing, or quantum and quantum-inspired methods) is listed under a new class.
-
-The same algorithm may be contributed by several uploaders, for example with different implementations or hardware. Each contribution then has its own row, distinguished by the Uploader column.
